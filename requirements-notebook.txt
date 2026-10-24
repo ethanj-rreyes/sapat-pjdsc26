@@ -1,0 +1,5 @@
+# Extra packages for the exploratory notebook (notebooks/SAPAT_EDA.ipynb).
+-r requirements.txt
+seaborn>=0.13         # tested 0.13.2
+scikit-learn>=1.3     # tested 1.9.1 (k-means household profiles)
+jupyterlab>=4         # or: notebook>=7

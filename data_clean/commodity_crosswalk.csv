@@ -1,0 +1,65 @@
+psa_commodity,fct_food_id,food_group,grams_per_unit,wfp_commodity,match_type,note
+"RICE, REGULAR-MILLED, 1 KG",A019,cereals,1000.0,"Rice (regular, milled)",proxy,PhilFCT has no regular-milled entry; well-milled used (A012 glutinous rice in mapping file was wrong)
+"RICE, WELL-MILLED, 1 KG",A019,cereals,1000.0,Rice (well milled),matched,
+"RICE, SPECIAL, 1 KG",A019,cereals,1000.0,Rice (special),proxy,Special rice priced; well-milled composition used
+"CORN GRITS, WHITE, 1 KG",A001,cereals,1000.0,Semolina (white),matched,
+"CORN GRITS, YELLOW, 1 KG",A002,cereals,1000.0,Semolina (yellow),matched,
+"WHOLE CORN GRAIN, YELLOW, 1 KG",A002,cereals,1000.0,Maize (yellow),proxy,Whole grain priced; yellow corn grits composition used
+"POTATO, 1 KG",B007,roots & tubers,1000.0,Potatoes (Irish),matched,
+"SWEET POTATO (CAMOTE), 1 KG",B009,roots & tubers,1000.0,Sweet potatoes,proxy,Purple kamote composition used for generic camote
+"GABI TUBERS, 1 KG",B015,roots & tubers,1000.0,Taro,matched,
+"MONGGO, GREEN, 1 KG",C027,pulses & nuts,1000.0,Beans (mung),matched,
+"RAW PEANUT, WITHOUT SHELL, 1 KG",C037,pulses & nuts,1000.0,Groundnuts (shelled),matched,Uses new export C037 Peanut w/o skin
+"RAW PEANUT, UNSHELLED, 1 KG",C034,pulses & nuts,1000.0,Groundnuts (unshelled),matched,
+"FRESH BEEF, PURE MEAT, 1 KG",F015,meat,1000.0,Meat (beef),matched,
+"FRESH BEEF, MEAT WITH BONES, 1 KG",F035,meat,1000.0,"Meat (beef, chops with bones)",proxy,Beef shank (EP 89%) as bone-in beef
+"FRESH PORK, KASIM, 1 KG",F157,meat,1000.0,Meat (pork),proxy,Boston butt lean (paypay) for kasim (shoulder)
+"FRESH PORK, LIEMPO, 1 KG",F147,meat,1000.0,"Meat (pork, with fat)",matched,
+"FRESH PORK, MEAT WITH BONES, 1 KG",F182,meat,1000.0,"Meat (pork, with bones)",proxy,Pork spare rib (EP 46%) as bone-in pork
+"FRESH PORK, SPARE RIBS, 1 KG",F182,meat,1000.0,,matched,
+"FRESH PORK, PATA, FORE (FRONT), 1 KG",F173,meat,1000.0,"Meat (pork, hock)",matched,
+"FRESH CHICKEN, FULLY DRESSED, BROILER, 1 KG",F113,meat,1000.0,"Meat (chicken, whole)",matched,
+"FRESH EGG, CHICKEN, MEDIUM, 1 PC",H003,eggs,55.0,Eggs,matched,Priced per piece; 55 g per medium egg as purchased (assumption)
+"FRESH EGG, DUCK, MEDIUM, 1 PC",H007,eggs,70.0,Eggs (duck),matched,Priced per piece; 70 g per duck egg as purchased (assumption)
+"FRESH FISH, ROUND SCAD, GALUNGGONG, MEDIUM, 1 KG",G105,fish & seafood,1000.0,Fish (roundscad),matched,
+"FRESH FISH, TILAPIA, MEDIUM, 1 KG",G145,fish & seafood,1000.0,Fish (tilapia),matched,
+"FRESH FISH, MILKFISH, BANGUS, MEDIUM, 1 KG",G074,fish & seafood,1000.0,Fish (milkfish),matched,
+"FRESH FISH, TULINGAN (FRIGATE TUNA), MEDIUM, 1 KG",G146,fish & seafood,1000.0,Fish (frigate tuna),matched,
+"FRESH FISH, ALOY/TULINGAN, MEDIUM, 1 KG",G146,fish & seafood,1000.0,,proxy,Frigate tuna composition
+"FRESH FISH, SHORT MACKEREL (HASA HASA/KABAYAS/KABALYAS), MEDIUM, 1 KG",G073,fish & seafood,1000.0,"Fish (mackerel, fresh)",proxy,Indian mackerel (alumahan) composition for short mackerel
+"FRESH FISH, SLIPMOUTH, SAPSAP, MEDIUM, 1 KG",G126,fish & seafood,1000.0,Fish (slipmouth),matched,
+"FRESH FISH, NEMIMTERID, BISUGO, MEDIUM, 1 KG",G087,fish & seafood,1000.0,Fish (threadfin bream),matched,
+"FRESH FISH, CAESIO, DALAGANG-BUKID, MEDIUM, 1 KG",G010,fish & seafood,1000.0,Fish (redbelly yellowtail fusilier),proxy,Goldband fusilier composition
+"FRESH SHRIMP, SUAJE, MEDIUM, 1 KG",G119,fish & seafood,1000.0,Shrimp (endeavor),matched,
+"FRESH SHRIMP, SUGPO, MEDIUM, 1 KG",G117,fish & seafood,1000.0,Shrimp (tiger),matched,
+"FRESH CRABS, ALIMANGO, MEDIUM, 1 KG",G040,fish & seafood,1000.0,Crab,matched,Uses new export G040 mud crab w/o fat (G036 crab fat in mapping file was wrong)
+"STRING BEANS, 1 KG",D232,vegetables,1000.0,Beans (string),matched,
+"BAGUIO BEANS, 1 KG",D206,vegetables,1000.0,"Beans (green, fresh)",matched,
+"EGGPLANT, LONG, PURPLE, 1 KG",D073,vegetables,1000.0,Eggplants,matched,
+"TOMATO, 1 KG",D257,vegetables,1000.0,Tomatoes,matched,
+"BITTER GOURD (AMPALAYA), FRUIT, 1 KG",D018,vegetables,1000.0,Bitter melon,matched,
+"CHAYOTE, 1 KG",D050,vegetables,1000.0,Choko,matched,
+"COMMON GOURD (UPO), 1 KG",D025,vegetables,1000.0,Bottle gourd,matched,
+"SQUASH, 1 KG",D225,vegetables,1000.0,Squashes,matched,
+"CABBAGE, 1 KG",D035,vegetables,1000.0,Cabbage,matched,
+"PECHAY, CHINESE, 1 KG",D054,vegetables,1000.0,Cabbage (chinese),matched,
+"PECHAY, NATIVE, 1 KG",D054,vegetables,1000.0,,proxy,Chinese cabbage composition for native pechay
+"CAMOTE TOPS, 1 KG",D244,vegetables,1000.0,Sweet Potato leaves,matched,
+"KANGKONG, 1 KG",D242,vegetables,1000.0,Water spinach,matched,
+"CARROT, 1 KG",D039,vegetables,1000.0,Carrots,matched,
+"GARLIC, NATIVE, 1 KG",D084,condiments,1000.0,Garlic (small),matched,
+"GARLIC, IMPORTED, 1 KG",D084,condiments,1000.0,Garlic,matched,
+"ONION RED CREOLE (BERMUDA RED), 1 KG",D141,condiments,1000.0,Onions (red),matched,
+"GINGER, LOOSE, 1 KG",D304,condiments,1000.0,Ginger,matched,
+"FRESH FRUIT, BANANA, LAKATAN, MEDIUM, 1 KG",E011,fruits,1000.0,Bananas (lakatan),matched,
+"FRESH FRUIT, BANANA, LATUNDAN, MEDIUM, 1 KG",E012,fruits,1000.0,Bananas (latundan),matched,
+"FRESH FRUIT, BANANA, SABA, MEDIUM, 1 KG",E014,fruits,1000.0,Bananas (saba),matched,
+"FRESH FRUIT, MANGO, KALABAW, RIPE, MEDIUM, 1 KG",E051,fruits,1000.0,Mangoes (carabao),matched,
+"FRESH FRUIT, MANGO, PIKO, RIPE, MEDIUM, 1 KG",E055,fruits,1000.0,Mangoes (piko),matched,
+"FRESH FRUIT, PAPAYA, MEDIUM, 1 KG",E069,fruits,1000.0,Papaya,matched,
+"FRESH FRUIT, PINEAPPLE, PINYA, MEDIUM, 1 KG",E073,fruits,1000.0,Pineapples,matched,
+"FRESH FRUIT, ORANGE, DALANDAN, MEDIUM, 1 KG",E065,fruits,1000.0,Mandarins,matched,
+"CALAMANSI, LOOSE, 1 KG",E023,fruits,1000.0,Calamansi,matched,
+"MATURED COCONUT, MEDIUM, 1 PC",C006,fruits,1000.0,Coconut,matched,Priced per piece; grams per nut calibrated against WFP per-kg prices
+"SRA REFINED SUGAR, 1 KG",M046,sugar,1000.0,Sugar (white),matched,"SRA Metro Manila monitoring, applied to all regions"
+"SRA RAW SUGAR, 1 KG",M042,sugar,1000.0,Sugar (brown),proxy,SRA raw sugar priced; PhilFCT brown sugar composition

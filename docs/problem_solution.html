@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>SAPAT problem–solution map</title>
+<style>
+:root { --bg:#F3F6F1; --surface:#FFFFFF; --ink:#18261D; --ink2:#4A5A4F; --line:#CFD9CC; --leaf:#1F6B43; --leaf2:#E3EEE6; --squash:#D9822B; --sq2:#FBEBD9; }
+* { box-sizing:border-box; }
+body { margin:0; width:1920px; height:1080px; background:var(--bg); color:var(--ink); font-family:"Atkinson Hyperlegible","Inter",sans-serif; }
+.page { padding:40px 72px 30px; height:100%; display:grid; grid-template-rows:auto 1fr auto; gap:28px; }
+h1 { margin:0; font-family:"Bricolage Grotesque","Inter Display","Inter",sans-serif; font-weight:800; font-size:52px; letter-spacing:-0.02em; color:var(--leaf); }
+h1 span { color:var(--squash); }
+.head { display:flex; justify-content:space-between; align-items:end; gap:40px; }
+.head p { margin:0; font-size:22px; color:var(--ink2); max-width:900px; }
+.grid { display:grid; grid-template-columns: 1.25fr 64px 1.05fr 1fr; grid-template-rows: auto repeat(6, minmax(0, 1fr)); column-gap:0; row-gap:10px; }
+.hdr { font-size:15px; text-transform:uppercase; letter-spacing:.09em; font-weight:700; color:var(--ink2); padding:0 22px 4px; align-self:end; }
+.cell { background:var(--surface); border:1px solid var(--line); padding:16px 22px; display:grid; align-content:center; gap:6px; }
+.prob { border-radius:12px 0 0 12px; border-right:none; }
+.prob b { font-size:21px; line-height:1.25; }
+.prob span { font-size:15.5px; color:var(--ink2); line-height:1.35; }
+.arrow { background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line); display:grid; place-items:center; }
+.arrow svg { width:40px; height:24px; }
+.feat { background:var(--leaf2); border-color:#BCD6C5; border-left:none; border-right:none; }
+.feat b { font-family:"Bricolage Grotesque","Inter Display","Inter",sans-serif; font-weight:700; font-size:23px; color:var(--leaf); letter-spacing:-0.01em; }
+.feat span { font-size:15.5px; color:var(--ink); line-height:1.35; }
+.res { border-radius:0 12px 12px 0; border-left:none; }
+.res b { font-size:30px; font-family:"Inter Display","Inter",sans-serif; font-weight:800; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+.res span { font-size:15px; color:var(--ink2); line-height:1.35; }
+.res.planned { background:var(--sq2); border-color:#EDD2B3; }
+.res.planned b { color:var(--squash); font-size:22px; }
+.foot { display:flex; justify-content:space-between; gap:40px; font-size:14px; color:var(--ink2); }
+</style></head>
+<body><div class="page">
+  <div class="head">
+    <h1>SAPAT<span>.</span> What each feature fixes</h1>
+    <p>One engine (PSA prices × PhilFCT nutrients × PDRI needs, solved as a linear program) serves households, LGUs and feeding programs.</p>
+  </div>
+  <div class="grid">
+    <div class="hdr">Problem and evidence</div><div></div><div class="hdr">SAPAT feature</div><div class="hdr">Result in prototype</div>
+
+    <div class="cell prob"><b>Families can't see what an adequate diet costs for their own members, so budgets default to rice.</b><span>Poorest 10% put 44% of home food spending into rice and cereals (FIES 2023). Only 13.8% of children 6–23 months meet minimum dietary diversity (ENNS 2021).</span></div>
+    <div class="arrow"><svg viewBox="0 0 40 24"><path d="M2 12h30M24 4l8 8-8 8" fill="none" stroke="#1F6B43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell feat"><b>Household planner</b><span>Per-member weekly plan and palengke list at this month's regional prices, for families or barangay nutrition scholars.</span></div>
+    <div class="cell res"><b>41% → 62%</b><span>of needs met on the same budget, poorest 10%, all 17 regions</span></div>
+
+    <div class="cell prob"><b>Young children and pregnant or breastfeeding mothers carry the largest gaps.</b><span>26.7% of children under 5 are stunted; 40.6% in the poorest quintile (ENNS 2021).</span></div>
+    <div class="arrow"><svg viewBox="0 0 40 24"><path d="M2 12h30M24 4l8 8-8 8" fill="none" stroke="#1F6B43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell feat"><b>Protect-first budget mode</b><span>When money is short, children under 5 and mothers are protected first, energy before vitamins.</span></div>
+    <div class="cell res"><b>45% → 76%</b><span>of a 3-year-old's needs met on the same budget</span></div>
+
+    <div class="cell prob"><b>People don't know which foods give the most nutrition per peso.</b><span>10 g of protein costs about ₱5 from monggo but ₱20–24 from chicken, galunggong or pork.</span></div>
+    <div class="arrow"><svg viewBox="0 0 40 24"><path d="M2 12h30M24 4l8 8-8 8" fill="none" stroke="#1F6B43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell feat"><b>Best buys and swaps</b><span>Cheapest sources of energy, protein, iron, vitamin A and calcium, by region, every month.</span></div>
+    <div class="cell res"><b>64 foods</b><span>priced monthly across 17 regions, Jan 2018 to Sep 2026</span></div>
+
+    <div class="cell prob"><b>LGUs plan with a food threshold updated every two to three years, so price shocks show up late.</b><span>PSA 2023 food threshold: ₱63 per person a day. A nutritious diet now costs about ₱167 nationally.</span></div>
+    <div class="arrow"><svg viewBox="0 0 40 24"><path d="M2 12h30M24 4l8 8-8 8" fill="none" stroke="#1F6B43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell feat"><b>LGU early warning</b><span>Monthly cost-of-nutritious-diet index per region with watch and alert flags.</span></div>
+    <div class="cell res"><b>8 of 17</b><span>regions flagged during the Sep 2023 rice spike (back-test)</span></div>
+
+    <div class="cell prob"><b>School and community meal programs plan menus by hand on fixed budgets.</b><span>School-based feeding reaches 4.49 million learners in 2026 (Inquirer, 2025).</span></div>
+    <div class="arrow"><svg viewBox="0 0 40 24"><path d="M2 12h30M24 4l8 8-8 8" fill="none" stroke="#1F6B43" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell feat"><b>Feeding program menu optimizer</b><span>Five-day rotating menu with Filipino dishes and a supplier order for the whole class.</span></div>
+    <div class="cell res"><b>90%</b><span>of meal targets met at ₱30 per meal (Eastern Visayas, Sep 2026)</span></div>
+
+    <div class="cell prob"><b>Healthy choices compete with cheaper, filling staples.</b><span>Bought the usual way, the poorest 10%'s food budget meets only 12% of a family's vitamin A needs (team computation).</span></div>
+    <div class="arrow"><svg viewBox="0 0 40 24"><path d="M2 12h30M24 4l8 8-8 8" fill="none" stroke="#D9822B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell feat"><b>Rewards layer</b><span>Points for protein-rich purchases, redeemable for eggs or monggo, linked to 4Ps and Walang Gutom.</span></div>
+    <div class="cell res planned"><b>Planned</b><span>Pilot with a partner LGU after the prototype</span></div>
+  </div>
+  <div class="foot"><span>Results: team computation on PSA retail prices, PhilFCT, PDRI 2015 and FIES 2023; reference family of five. Coverage capped at 100%.</span><span>Team SiniGANG · PJDSC 2026</span></div>
+</div></body></html>

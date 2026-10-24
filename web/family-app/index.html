@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fil">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E8A4C">
+<title>SAPAT Family App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Layout: the SAPAT family app as an Android phone. Wide screens show it in a phone frame beside one short note;
+   phones get it full screen. Four tabs follow the week: Ngayon (eat), Linggo (plan), Palengke (shop), Pamilya. */
+/* ---------- stage */
+.stage { min-height: 100vh; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 56px; padding-block: 8px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.note { max-width: 290px; display: grid; gap: 16px; }
+.note .brand { font: 600 44px/1 var(--font-display); color: var(--leaf); }
+.note .brand span { color: var(--sun); }
+.note p { color: var(--ink-2); }
+.persona { display: flex; gap: 12px; align-items: center; background: var(--surface); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); }
+.persona b { display: block; font-family: var(--font-display); font-weight: 600; }
+.persona small { color: var(--ink-2); font-size: 14px; line-height: 1.35; display: block; }
+.phone { width: 390px; height: 844px; flex: none; border-radius: 54px; padding: 12px; background: var(--bezel); box-shadow: 0 30px 60px -24px rgb(0 0 0 / .4); position: relative; }
+.screen { width: 100%; height: 100%; border-radius: 43px; overflow: hidden; background: var(--bg); position: relative; display: flex; flex-direction: column; }
+.statusbar { height: 34px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; font: 700 14px var(--font-body); }
+.statusbar .cam { width: 12px; height: 12px; border-radius: 50%; background: var(--bezel); }
+.statusbar .sys { display: flex; gap: 5px; align-items: center; }
+.statusbar .sys svg { width: 16px; height: 16px; }
+@media (max-width: 760px) { .note { display: none; } }
+@media (max-width: 520px) {
+  body { background: var(--bg); }
+  .stage { padding: 0; display: block; height: 100%; }
+  .phone { width: 100%; height: 100%; border-radius: 0; padding: 0; background: none; box-shadow: none; }
+  .screen { border-radius: 0; }
+  .statusbar { display: none; }
+}
+
+html, body { margin: 0; }
+main { overflow-y: auto; }
+/* ---------- simulated Android phone (laptop and desktop) */
+.phone { transform-origin: center center; }
+.screen .homebar { position: absolute; left: 50%; bottom: 8px; width: 120px; height: 5px; margin-left: -60px; border-radius: 3px; background: var(--ink); opacity: .35; z-index: 50; pointer-events: none; }
+.phone .btn-side { position: absolute; right: -4px; width: 4px; border-radius: 0 3px 3px 0; background: var(--bezel); }
+.phone .b1 { top: 170px; height: 64px; } .phone .b2 { top: 250px; height: 110px; }
+.splash { position: absolute; inset: 0; z-index: 60; display: grid; place-content: center; justify-items: center; gap: 14px; background: radial-gradient(120% 70% at 50% 35%, #FFEFCC, #FBF6EC 70%); transition: opacity .4s ease, visibility .4s; }
+.splash .logo { width: 96px; height: 96px; border-radius: 28px; background: #1E8A4C; display: grid; place-items: center; box-shadow: 0 16px 30px -12px rgb(30 138 76 / .6); }
+.splash .logo svg { width: 64px; height: 64px; }
+.splash b { font: 600 34px/1 var(--font-display); color: #1E8A4C; } .splash b span { color: #F5A623; }
+.splash small { font: 700 15px var(--font-body); color: #56685C; }
+.splash.gone { opacity: 0; visibility: hidden; }
+.statusbar { position: relative; z-index: 55; }
+@media (max-width: 520px) { .homebar, .btn-side, .splash .tag { display: none; } }
+
+.screen .fab { display: none; }
+</style>
+
+</head>
+<body>
+<div class="stage">
+  <aside class="note" aria-label="About this prototype">
+    <div class="brand">sapat<span>.</span></div>
+    <p id="noteText"></p>
+    <div class="persona" id="persona"></div>
+  </aside>
+  <div class="phone" id="phone">
+    <span class="btn-side b1"></span><span class="btn-side b2"></span>
+    <div class="screen" id="screen">
+      <div class="splash" id="splash" aria-hidden="true"><span class="logo"><svg viewBox="0 0 64 64"><path d="M14 30h36v6c0 9-7 14-15 14h-6c-8 0-15-5-15-14z" fill="#FFF6E3"/><path d="M12 30h40" stroke="#FFF6E3" stroke-width="4" stroke-linecap="round"/><path d="M26 24c-3-3 3-5 0-9M33 23c-3-3 3-5 0-10M40 24c-3-3 3-5 0-9" stroke="#FFD27A" stroke-width="3" fill="none" stroke-linecap="round"/></svg></span><b>sapat<span>.</span></b><small>Sustansya na abot-kaya</small></div>
+      <div class="statusbar" aria-hidden="true"><span id="clock">9:41</span><span class="cam"></span><span class="sys" id="sys"></span></div>
+      <header class="appbar">
+        <button class="iconbtn" id="backBtn" type="button" hidden></button>
+        <div class="tt"><h1 id="title"></h1><div class="sub" id="subtitle"></div></div>
+        <button class="lang" id="langBtn" type="button"><span data-l="tl">TL</span><span data-l="en">EN</span></button>
+        <button class="iconbtn" id="themeBtn" type="button"></button>
+      </header>
+      <main id="main">
+        <section class="view" id="v-today"></section>
+        <section class="view" id="v-week" hidden></section>
+        <section class="view" id="v-shop" hidden></section>
+        <section class="view" id="v-family" hidden></section>
+        <section class="view" id="v-person" hidden></section>
+      </main>
+      <nav class="bottom" id="nav" aria-label="Main"></nav>
+      <div class="scrim" id="scrim" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" id="sheet"></div></div>
+      <div class="toast" id="toast" role="status" hidden></div>
+      <div class="homebar" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/data/sapat_data.js"></script>
+<script src="../shared/data/local_prices.js"></script>
+<script src="../shared/data/places.js"></script>
+<script src="../shared/data/extra_nutrients.js"></script>
+<script src="../shared/sapat-engine.js"></script>
+<script src="../shared/sapat-ui.js"></script>
+<script>
+  // phone status bar for the frame
+  (function () {
+    const I = window.SAPAT_UI;
+    document.getElementById("sys").innerHTML = I.icon("signal") + I.icon("wifi") + I.icon("batt");
+    const tick = () => { document.getElementById("clock").textContent = new Date().toLocaleTimeString("en-PH", { hour: "numeric", minute: "2-digit" }).replace(/\s?[AP]M/i, ""); };
+    tick(); setInterval(tick, 30000);
+  })();
+</script>
+<!-- Family app scripts. Order matters: each file uses names defined by the files above it (see js/README.md). -->
+<script src="js/words.js"></script>
+<script src="js/state.js"></script>
+<script src="js/prices.js"></script>
+<script src="js/planner.js"></script>
+<script src="js/tracking.js"></script>
+<script src="js/shell.js"></script>
+<script src="js/art.js"></script>
+<script src="js/features/swap.js"></script>
+<script src="js/features/balance.js"></script>
+<script src="js/features/guide.js"></script>
+<script src="js/screens/today.js"></script>
+<script src="js/screens/week.js"></script>
+<script src="js/screens/shop.js"></script>
+<script src="js/screens/family.js"></script>
+<script src="js/sheets/eat-out.js"></script>
+<script src="js/sheets/food-and-members.js"></script>
+<script src="js/welcome.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // fit the simulated phone to any laptop screen, and play a short launch splash
+  (function () {
+    const ph = document.getElementById("phone");
+    const fit = () => { if (innerWidth <= 520) { ph.style.transform = ""; ph.style.margin = ""; return; }
+      const k = Math.min(1, (innerHeight - 24) / 868, (innerWidth - 32) / 414); ph.style.transform = k < 1 ? `scale(${k.toFixed(3)})` : "";
+      const lost = 868 * (1 - k); ph.style.margin = k < 1 ? `${-lost / 2}px ${-414 * (1 - k) / 2}px` : ""; };
+    fit(); addEventListener("resize", fit);
+    const sp = document.getElementById("splash"), quick = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(() => sp.classList.add("gone"), quick ? 50 : 1100);
+  })();
+</script>
+
+</body>
+</html>

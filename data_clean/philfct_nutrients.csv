@@ -1,0 +1,62 @@
+fct_food_id,fct_food_name,common_name,report_file,ep_pct,energy_kcal,protein_g,fat_g,carb_g,fiber_g,iron_mg,vit_a_rae_ug,calcium_mg,zinc_mg,vit_c_mg
+A001,"Corn grits, white","Mais, durog, puti","corn grits, white.pdf",100.0,357.0,8.3,1.5,77.5,4.5,0.4,0.0,11.0,,0.0
+A002,"Corn grits, yellow","Mais, durog, dilaw","corn grits, yellow.pdf",100.0,350.0,7.7,0.8,78.1,1.6,1.3,5.0,22.0,,0.0
+B007,Potato,Patatas,potato.pdf,85.0,78.0,2.4,0.1,16.8,2.1,1.1,0.0,36.0,,31.0
+A019,"Rice, well-milled","Bigas, maputi","rice, well-milled.pdf",100.0,356.0,7.4,0.5,80.4,1.3,1.0,0.0,27.0,,0.0
+A012,"Rice, milled, glutinous","Bigas, malagkit","rice, milled.pdf",100.0,355.0,6.9,0.8,80.1,2.8,1.1,0.0,26.0,,0.0
+B009,"Sweet potato, purple","Kamote, murado",sweet potato.pdf,77.0,125.0,0.6,0.4,29.8,4.2,0.4,3.0,21.0,,41.0
+B015,Taro,Gabi,taro.pdf,77.0,141.0,2.3,0.2,32.6,5.0,0.9,3.0,39.0,,9.0
+G150,"Anchovy, long-jawed, dried","Dilis, tuyo",anchovy.pdf,100.0,318.0,69.0,4.7,0.0,0.0,6.5,0.0,2469.0,,0.0
+F113,"Chicken, whole",Manok buo,"chicken, whole, raw.pdf",60.0,215.0,17.4,16.2,0.0,0.0,1.6,160.0,75.0,,4.0
+G036,"Crab, blue swimming, fat",Alimasag alige,crab.pdf,100.0,86.0,11.5,4.4,0.0,0.0,1.0,220.0,283.0,,0.0
+H003,"Egg, chicken, whole","Itlog, manok, buo","egg, chicken, whole.pdf",87.0,139.0,12.3,9.4,1.4,0.0,1.7,201.0,32.0,1.3,0.0
+H007,"Egg, duck, whole","Itlog, pato, buo","egg, duck, whole.pdf",87.0,177.0,11.7,12.6,4.1,0.0,2.8,457.0,71.0,,0.0
+G146,"Tuna, frigate",Tulingan,tulingan.pdf,62.0,119.0,24.0,2.6,0.0,0.0,1.2,90.0,41.0,,0.0
+G073,"Mackerel, Indian",Alumahan,alumahan.pdf,60.0,118.0,21.8,3.4,0.0,0.0,1.4,30.0,46.0,,0.0
+G074,Milkfish,Bangus,bangus.pdf,65.0,137.0,19.8,6.4,0.0,0.0,1.2,135.0,44.0,,0.0
+G010,"Fusilier, goldband",Dalagang bukid,dalagang-bukid.pdf,69.0,128.0,21.5,4.7,0.0,0.0,1.2,20.0,48.0,,0.0
+G105,"Scad, round",Galunggong,galunggong.pdf,49.0,100.0,20.4,2.1,0.0,0.0,1.2,60.0,61.0,,0.0
+G126,"Slipmouth, common",Sapsap,sapsap.pdf,40.0,91.0,18.2,2.0,0.0,0.0,0.3,45.0,57.0,,0.0
+G087,"Bream, doublewhip threadfin",Bisugo,bisugo.pdf,45.0,90.0,19.0,1.5,0.0,0.0,0.6,60.0,81.0,,0.0
+G145,Tilapia,,tilapia.pdf,46.0,107.0,18.1,3.8,0.0,0.0,0.8,65.0,74.0,,0.0
+F015,Beef lean meat,Baka laman,"beef, lean.pdf",100.0,134.0,23.1,4.6,0.0,0.0,2.8,5.0,50.0,,0.0
+F157,"Pork Boston butt, lean","Baboy paypay, laman","pork, lean.pdf",100.0,278.0,17.3,23.2,0.0,0.0,1.3,150.0,29.0,,0.0
+F173,Pork leg,Baboy pata,"pork, pata.pdf",58.0,203.0,20.2,13.6,0.0,0.0,0.9,5.0,32.0,,2.0
+F147,Pork belly,Baboy liempo,"pork, liempo.pdf",97.0,393.0,14.5,37.2,0.0,0.0,1.0,50.0,15.0,,1.0
+G119,"Shrimp, greasy back","Hipon, suwahe","shrimp, suahe.pdf",60.0,78.0,17.7,0.6,0.4,0.0,1.8,290.0,110.0,,0.0
+G117,"Shrimp, giant tiger prawn",Sugpo,"shrimp, tiger.pdf",63.0,93.0,20.0,0.9,1.2,0.0,1.9,55.0,73.0,,0.0
+C027,"Mung bean seed, green, dried","Munggo buto, berde, tuyo",mung bean.pdf,100.0,348.0,23.2,1.6,60.1,18.4,4.6,11.0,100.0,0.6,10.0
+C034,Peanut w/ shell,"Mani, may balat",peanut with shell.pdf,67.0,401.0,17.4,26.6,22.9,6.2,2.5,2.0,61.0,,0.0
+K008,"Oil, coconut","Langis, niyog","oil, coconut.pdf",100.0,892.0,0.0,99.1,0.0,0.0,0.0,0.0,2.0,,0.0
+E011,"Banana, lacatan","Saging, lakatan","banana, lakatan.pdf",69.0,126.0,1.4,0.2,29.6,3.3,0.8,30.0,21.0,,25.0
+E012,"Banana, latundan","Saging, latundan","banana, latundan.pdf",73.0,105.0,1.2,0.3,24.4,2.8,0.7,3.0,17.0,,21.0
+E014,"Banana, saba","Saging, saba","banana, saba.pdf",57.0,110.0,1.1,0.4,25.5,2.9,0.9,16.0,23.0,,32.0
+D206,"Snap bean pod, green","Abitsuwelas/Baguio beans bunga, berde","baguio beans, green.pdf",96.0,36.0,2.0,0.1,6.8,2.6,1.2,30.0,77.0,,17.0
+D232,"String/Yard long bean pod, green","Sitaw bunga, berde",sitaw.pdf,95.0,38.0,2.7,0.3,6.2,3.7,0.8,26.0,40.0,0.6,2.0
+D018,Bitter melon/gourd fruit,Ampalaya bunga,ampalaya.pdf,78.0,23.0,1.0,0.2,4.2,1.3,0.4,10.0,22.0,0.0,2.0
+D025,Bottle gourd fruit,Upo bunga,bottle gourd.pdf,90.0,20.0,0.4,0.1,4.3,0.7,0.2,1.0,12.0,0.0,2.0
+D035,"Cabbage, green","Repolyo, berde",cabbage.pdf,63.0,31.0,1.6,0.1,5.9,2.5,0.6,7.0,31.0,0.0,30.0
+D054,Chinese cabbage,Pechay Baguio/Napa cabbage,pechay.pdf,94.0,21.0,1.7,0.3,2.9,1.2,0.5,45.0,120.0,,34.0
+E023,Calamansi/Philippine lemon,Kalamansi/Calamondin,calamansi.pdf,38.0,44.0,0.4,1.0,8.3,2.4,0.8,0.0,18.0,,45.0
+D039,Carrot,Karot,carrot.pdf,79.0,42.0,1.1,0.3,8.6,2.6,0.2,829.0,25.0,0.3,0.0
+D050,Chayote fruit,Sayote bunga/Vegetable pear fruit,sayote.pdf,79.0,23.0,0.5,0.1,5.1,0.6,0.3,1.0,17.0,0.0,3.0
+C006,"Coconut meat, mature","Niyog, magulang",coconut.pdf,56.0,319.0,3.9,26.1,17.2,8.2,1.5,0.0,32.0,,3.0
+D073,Eggplant,Talong/Aubergine,eggplant.pdf,88.0,29.0,1.2,0.2,5.5,1.6,0.3,4.0,11.0,0.0,3.0
+D084,Garlic bulb,Bawang ulo,garlic.pdf,85.0,129.0,7.0,0.3,24.6,1.7,1.2,0.0,28.0,,7.0
+D304,Ginger,Luya,ginger.pdf,74.0,46.0,1.1,0.8,8.5,1.1,3.0,0.0,32.0,,4.0
+E065,"Orange, Ladu","Dalandan, Ladu",dalandan.pdf,45.0,35.0,0.4,0.2,7.8,1.6,0.6,4.0,28.0,,24.0
+E051,"Mango, Manila super, ripe","Mangga, kalabaw, hinog","mango, carabao.pdf",67.0,70.0,0.6,0.2,16.4,1.7,0.6,97.0,10.0,,46.0
+E055,"Mango, piko, ripe","Mangga, piko, hinog","mango, piko.pdf",58.0,80.0,0.7,0.2,18.9,1.9,0.5,125.0,15.0,,46.0
+D141,"Onion, Bombay bulb","Sibuyas, Bombay ulo","onion, red.pdf",93.0,52.0,1.7,0.3,10.5,2.0,0.6,0.0,40.0,,5.0
+E069,"Papaya fruit, ripe",,"papaya, ripe.pdf",64.0,53.0,0.5,0.3,12.1,1.9,1.0,38.0,34.0,,74.0
+E073,Pineapple,Pinya,pineapple.pdf,58.0,55.0,0.4,0.2,13.0,1.4,0.2,1.0,19.0,,20.0
+D225,Squash fruit,Kalabasa bunga,squash.pdf,77.0,68.0,1.2,0.2,15.3,1.6,0.6,63.0,17.0,0.0,3.0
+D244,Sweet potato lvs,Kamote dahon,kamote dahon.pdf,34.0,49.0,3.9,0.5,7.2,5.0,1.4,481.0,45.0,0.1,7.0
+D257,Tomato,Kamatis,tomato.pdf,99.0,25.0,0.8,0.1,5.2,0.3,0.4,21.0,6.0,0.0,3.0
+D242,Swamp cabbage lvs,Kangkong dahon/Water spinach lvs,kangkong.pdf,59.0,39.0,3.3,0.4,5.5,3.8,1.5,235.0,44.0,0.1,1.0
+M042,"Sugar, brown","Asukal, pula","brown, sugar.pdf",100.0,398.0,0.1,0.3,98.7,0.0,0.4,0.0,148.0,,0.0
+M046,"Sugar, white, refined","Asukal, puti, refinado","white, sugar.pdf",100.0,400.0,0.0,0.0,99.9,0.0,0.0,0.0,0.0,,0.0
+G040,"Crab, mud/mangrove, w/o fat",Alimango laman,alimango without fat.pdf,42.0,103.0,18.5,3.2,0.0,0.0,1.5,210.0,161.0,,0.0
+F035,Beef shank,Baka kenchi,beef shank.pdf,89.0,115.0,21.5,3.2,0.0,0.0,1.8,120.0,36.0,,0.0
+C037,Peanut w/o skin,"Mani, walang balok",peanut without skin.pdf,100.0,617.0,25.8,49.5,17.1,8.6,2.7,0.0,67.0,,0.0
+F182,Pork spare rib,Baboy tadyang,pork spare rib.pdf,46.0,293.0,14.6,26.1,0.0,0.0,1.2,5.0,58.0,,2.0

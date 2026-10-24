@@ -1,0 +1,1241 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SAPAT for LGUs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: a family-first market companion. The household view leads with one plain sentence and the family as faces,
+   then one card per person with five body-benefit chips, then a picture basket and cooking ideas. Numbers live behind
+   "Show the numbers". LGU and feeding views keep data but open with a sentence and a status icon. */
+:root {
+  --bg: #F3F7F2; --surface: #FFFFFF; --surface-2: #EAF2E8; --ink: #1F2D25; --ink-2: #56685C; --line: #DCE6D9;
+  --leaf: #2C7A52; --leaf-soft: #DFF0E4; --leaf-ink: #FFFFFF;
+  --squash: #B8650F; --squash-soft: #FFF2D6; --sun: #F2B33D;
+  --good: #22744A; --good-soft: #DDF1E3; --warn: #865700; --warn-soft: #FDEFCF; --bad: #AE3B2A; --bad-soft: #FADFD8;
+  --ghost: #A6B3A9; --shadow: 0 1px 2px rgb(31 45 37 / .06), 0 6px 20px -10px rgb(31 45 37 / .18);
+  --font-display: "Fredoka", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito", "Segoe UI", Roboto, system-ui, sans-serif;
+  --font-data: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --r: 20px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111915; --surface: #1A251F; --surface-2: #22302A; --ink: #E8F0EA; --ink-2: #A9BAAE; --line: #2D3C34;
+    --leaf: #6CCB97; --leaf-soft: #1F3B2C; --leaf-ink: #0B1A12; --squash: #F5C25E; --squash-soft: #3A2F18; --sun: #F5C25E;
+    --good: #74D09D; --good-soft: #1D3A28; --warn: #EDC062; --warn-soft: #3A3018; --bad: #F2917D; --bad-soft: #40231D; --ghost: #5F6F65;
+    --shadow: 0 1px 2px rgb(0 0 0 / .3); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111915; --surface: #1A251F; --surface-2: #22302A; --ink: #E8F0EA; --ink-2: #A9BAAE; --line: #2D3C34;
+  --leaf: #6CCB97; --leaf-soft: #1F3B2C; --leaf-ink: #0B1A12; --squash: #F5C25E; --squash-soft: #3A2F18; --sun: #F5C25E;
+  --good: #74D09D; --good-soft: #1D3A28; --warn: #EDC062; --warn-soft: #3A3018; --bad: #F2917D; --bad-soft: #40231D; --ghost: #5F6F65;
+  --shadow: 0 1px 2px rgb(0 0 0 / .3); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+svg.i { width: 1.25em; height: 1.25em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.25em; }
+header.top { border-bottom: 1px solid var(--line); background: var(--surface); }
+header.top .wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 12px; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.wordmark { font-family: var(--font-display); font-weight: 600; font-size: 32px; letter-spacing: 0; color: var(--leaf); margin: 0; }
+.wordmark span { color: var(--sun); }
+.tagline { color: var(--ink-2); font-size: 14px; }
+nav.tabs { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+nav.tabs button { font: 700 14px var(--font-body); border: 1px solid transparent; background: none; color: var(--ink-2); padding: 8px 12px; border-radius: 999px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+nav.tabs button[aria-selected="true"] { background: var(--leaf); color: var(--leaf-ink); }
+button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--squash); outline-offset: 2px; }
+main .wrap { padding-block: 20px 40px; }
+.view { display: grid; grid-template-columns: minmax(300px, 370px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (min-width: 881px) { .view > .panel:first-child { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; } }
+@media (max-width: 880px) { .view { grid-template-columns: minmax(0, 1fr); } nav.tabs { margin-left: 0; } .view .results { order: -1; } }
+.panel { background: var(--surface); border: none; box-shadow: var(--shadow); border-radius: var(--r); padding: 18px; display: grid; gap: 14px; min-width: 0; }
+h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+h2 { font-size: 20px; } h3 { font-size: 17px; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); font-weight: 700; display: flex; gap: 6px; align-items: center; }
+label.f { display: grid; gap: 4px; font-size: 13px; color: var(--ink-2); font-weight: 700; }
+select, input[type="number"], input[type="text"] { font: 15px var(--font-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; width: 100%; min-width: 0; }
+input[type="range"] { width: 100%; accent-color: var(--leaf); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hint { font-size: 13px; color: var(--ink-2); margin: 0; }
+.btn { font: 700 14px var(--font-body); border-radius: 10px; padding: 8px 12px; cursor: pointer; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); display: inline-flex; gap: 6px; align-items: center; justify-content: center; }
+.btn.small { padding: 6px 10px; font-size: 13px; }
+.btn[aria-pressed="true"] { background: var(--leaf); color: var(--leaf-ink); border-color: var(--leaf); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--ink); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { font: 700 13px var(--font-body); padding: 9px; border: none; background: var(--bg); color: var(--ink-2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--leaf); color: var(--leaf-ink); }
+.results { display: grid; gap: 16px; min-width: 0; }
+
+/* ---------- family editor */
+.mlist { display: grid; gap: 8px; }
+.mrow { display: grid; grid-template-columns: 38px minmax(0, 1fr) 24px; gap: 10px; align-items: center; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+.mrow .fields { display: grid; grid-template-columns: minmax(0, 1fr) 54px 50px; gap: 6px; }
+.mrow .fields select.st { grid-column: 1 / -1; }
+.mrow input, .mrow select { padding: 5px 7px; font-size: 14px; background: var(--surface); }
+.x { border: none; background: none; color: var(--ink-2); cursor: pointer; font-size: 20px; line-height: 1; border-radius: 6px; padding: 0; }
+.x:hover { color: var(--bad); }
+.budgetval { font-family: var(--font-display); font-weight: 800; font-size: 30px; letter-spacing: -0.02em; color: var(--ink); }
+.budgetval small { font: 600 14px var(--font-body); color: var(--ink-2); letter-spacing: 0; }
+
+/* ---------- avatar */
+.av { --ring: var(--ghost); width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font: 800 15px var(--font-display); color: var(--ink); background: var(--surface-2); box-shadow: 0 0 0 3px var(--ring); position: relative; flex: none; }
+.av.lg { width: 56px; height: 56px; font-size: 21px; }
+.av .badge { position: absolute; right: -6px; bottom: -6px; width: 22px; height: 22px; border-radius: 50%; background: var(--squash); color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--surface); }
+.av .badge svg { width: 13px; height: 13px; stroke-width: 2.2; }
+
+/* ---------- hero */
+.hero { background: var(--leaf-soft); border: 1px solid color-mix(in srgb, var(--leaf) 25%, var(--line)); border-radius: var(--r); padding: 20px; display: grid; gap: 16px; }
+.hero h2 { font-size: clamp(21px, 2.6vw, 28px); line-height: 1.2; font-weight: 800; }
+.hero h2 em { font-style: normal; color: var(--leaf); }
+.family { display: flex; gap: 18px; flex-wrap: wrap; }
+.fam { display: grid; justify-items: center; gap: 6px; width: 74px; text-align: center; }
+.fam span { font-size: 13px; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.fam small { font-size: 12.5px; color: var(--ink-2); line-height: 1.2; }
+.compare { display: grid; gap: 10px; }
+.cmp { display: grid; grid-template-columns: 112px minmax(0, 1fr) 48px; gap: 10px; align-items: center; font-size: 14px; }
+.cmp b { font-family: var(--font-display); font-size: 20px; text-align: right; }
+.meter { height: 14px; border-radius: 7px; background: color-mix(in srgb, var(--ink) 10%, transparent); overflow: hidden; }
+.meter > i { display: block; height: 100%; border-radius: 7px; }
+.notes { display: grid; gap: 8px; }
+.note { display: flex; gap: 10px; align-items: flex-start; font-size: 14.5px; }
+.note svg { margin-top: 2px; color: var(--leaf); }
+.note.warn svg { color: var(--squash); }
+.jump { justify-self: start; }
+@media (min-width: 881px) { .jump { display: none; } }
+
+/* ---------- nutrient chips */
+.nlegend { display: flex; gap: 8px; flex-wrap: wrap; }
+.nl { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 4px 10px 4px 6px; border-radius: 999px; background: var(--surface-2); }
+.nl .ic { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--leaf); }
+.nl .ic svg { width: 15px; height: 15px; }
+.people { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.pcard { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 14px; display: grid; gap: 12px; align-content: start; }
+.phead { display: flex; gap: 12px; align-items: center; }
+.phead div { display: grid; min-width: 0; }
+.phead b { font-size: 16px; line-height: 1.2; }
+.phead span { font-size: 12.5px; color: var(--ink-2); }
+.score { margin-left: auto; text-align: right; font-size: 12px; color: var(--ink-2); line-height: 1.2; }
+.score b { display: block; font-family: var(--font-display); font-size: 18px; color: var(--ink); }
+.nchips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.nc { display: grid; justify-items: center; gap: 3px; padding: 8px 2px 6px; border-radius: 10px; text-align: center; }
+.nc svg { width: 22px; height: 22px; }
+.nc span { font-size: 12px; font-weight: 700; line-height: 1.1; }
+.nc.ok { background: var(--good-soft); color: var(--good); }
+.nc.mid { background: var(--warn-soft); color: var(--warn); }
+.nc.low { background: var(--bad-soft); color: var(--bad); }
+.tip { display: flex; gap: 8px; font-size: 13.5px; align-items: flex-start; background: var(--bg); border-radius: 10px; padding: 9px 10px; }
+.tip svg { color: var(--squash); margin-top: 2px; }
+.statuskey { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); }
+.statuskey i { display: inline-block; width: 12px; height: 12px; border-radius: 4px; vertical-align: -1px; margin-right: 5px; }
+
+/* ---------- basket */
+.basket { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.bgroup { border: 1px solid var(--line); border-radius: var(--r); padding: 12px; display: grid; gap: 8px; align-content: start; background: var(--surface); }
+.bgroup h4 { display: flex; gap: 8px; align-items: center; font-size: 15px; }
+.bgroup h4 .gi { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--leaf-soft); color: var(--leaf); }
+.bgroup h4 .gi svg { width: 20px; height: 20px; }
+.bgroup ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.bgroup li { display: flex; justify-content: space-between; gap: 8px; font-size: 14.5px; }
+.bgroup li b { font-weight: 700; white-space: nowrap; }
+.bgroup li .pr { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; }
+.total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.total b { font-family: var(--font-display); font-size: 24px; }
+
+/* ---------- ulam + smart buys */
+.ulam { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.dish { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface); }
+.dish .gi { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--squash-soft); color: var(--squash); flex: none; }
+.dish .gi svg { width: 22px; height: 22px; }
+.dish b { font-size: 14.5px; line-height: 1.25; }
+.smart { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.sb { border-radius: var(--r); padding: 14px; background: var(--surface-2); display: grid; gap: 6px; align-content: start; }
+.sb .top { display: flex; gap: 8px; align-items: center; font-size: 12.5px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; }
+.sb .top svg { color: var(--leaf); width: 20px; height: 20px; }
+.sb b { font-family: var(--font-display); font-size: 19px; }
+.sb p { margin: 0; font-size: 14px; }
+
+/* ---------- details */
+details.more { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+details.more > summary { cursor: pointer; padding: 14px 18px; font-weight: 700; display: flex; gap: 8px; align-items: center; list-style: none; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more[open] > summary { border-bottom: 1px solid var(--line); }
+details.more .inner { padding: 16px 18px; display: grid; gap: 18px; }
+.cov { display: grid; gap: 14px; }
+.covrow { display: grid; grid-template-columns: minmax(110px, 160px) minmax(0, 1fr); gap: 12px; align-items: center; }
+@media (max-width: 560px) { .covrow { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+.bars { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.bar { display: grid; gap: 3px; }
+.bar .lab { font-size: 12px; color: var(--ink-2); display: flex; justify-content: space-between; gap: 4px; }
+.bar .lab b { color: var(--ink); font-family: var(--font-data); font-weight: 500; }
+.track { position: relative; height: 10px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+.fill { position: absolute; inset: 0 auto 0 0; border-radius: 5px; }
+.ghost { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: 0.55; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); font-weight: 700; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.n, th.n { text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.src { font-size: 12px; color: var(--ink-2); }
+.pill { display: inline-flex; gap: 4px; align-items: center; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill.normal { background: var(--good-soft); color: var(--good); }
+.pill.watch { background: var(--warn-soft); color: var(--warn); }
+.pill.alert { background: var(--bad-soft); color: var(--bad); }
+.pill.plan { background: var(--squash-soft); color: var(--squash); }
+
+/* ---------- LGU + menu */
+.banner { display: flex; gap: 14px; align-items: flex-start; border-radius: var(--r); padding: 18px; border: 1px solid var(--line); background: var(--surface); }
+.banner .big-ic { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; flex: none; }
+.banner .big-ic svg { width: 30px; height: 30px; }
+.banner.normal .big-ic { background: var(--good-soft); color: var(--good); }
+.banner.watch .big-ic { background: var(--warn-soft); color: var(--warn); }
+.banner.alert .big-ic { background: var(--bad-soft); color: var(--bad); }
+.banner h2 { font-size: clamp(19px, 2.2vw, 24px); line-height: 1.25; }
+.banner p { margin: 6px 0 0; color: var(--ink-2); font-size: 14.5px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { border-radius: var(--r); padding: 14px; background: var(--surface); border: 1px solid var(--line); display: grid; gap: 4px; align-content: start; }
+.tile .top { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; }
+.tile .top svg { color: var(--leaf); }
+.tile b { font-family: var(--font-display); font-size: 26px; letter-spacing: -0.01em; }
+.tile span { font-size: 13px; color: var(--ink-2); }
+.pesos { display: flex; gap: 3px; flex-wrap: wrap; }
+.pesos i { width: 15px; height: 15px; border-radius: 50%; display: grid; place-items: center; font: 800 8.5px var(--font-body); font-style: normal; }
+.pesos i.on { background: var(--squash); color: #fff; }
+.pesos i.off { background: var(--surface-2); color: var(--ghost); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-2); align-items: center; }
+.legend i { display: inline-block; width: 18px; height: 8px; border-radius: 4px; vertical-align: middle; margin-right: 5px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.days { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.day { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: grid; gap: 10px; align-content: start; background: var(--surface); }
+.day .dh { display: flex; gap: 10px; align-items: center; }
+.day h4 { font-size: 16px; line-height: 1.25; }
+.day ul { margin: 0; padding: 0; list-style: none; font-size: 13.5px; display: grid; gap: 2px; }
+.day li { display: flex; justify-content: space-between; gap: 8px; }
+.day li span { font-family: var(--font-data); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.dots { display: flex; gap: 5px; }
+.dots i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
+.dots i svg { width: 15px; height: 15px; }
+.dots i.ok { background: var(--good-soft); color: var(--good); }
+.dots i.mid { background: var(--warn-soft); color: var(--warn); }
+.dots i.low { background: var(--bad-soft); color: var(--bad); }
+.ps { display: grid; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.ps > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.7fr); border-bottom: 1px solid var(--line); }
+.ps > div:last-child { border-bottom: none; }
+.ps > div > * { padding: 10px 12px; min-width: 0; }
+.ps .h { background: var(--surface-2); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; color: var(--ink-2); }
+.ps .feat { font-weight: 700; color: var(--leaf); display: flex; gap: 8px; align-items: flex-start; }
+@media (max-width: 640px) { .ps > div { grid-template-columns: minmax(0, 1fr); } .ps .h:not(:first-child) { display: none; } }
+.prose { max-width: 70ch; display: grid; gap: 10px; }
+.prose p, .prose li { margin: 0; }
+.prose ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.status { font-size: 12px; color: var(--ink-2); font-family: var(--font-data); }
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 16px; font-size: 12.5px; color: var(--ink-2); }
+@media (prefers-reduced-motion: no-preference) { .meter > i, .fill { transition: width .4s ease; } }
+
+
+/* ---------- LGU map */
+:root { --seq1: #FBEBDB; --seq2: #F3C597; --seq3: #E09356; --seq4: #B8602A; --seq5: #7A3A14;
+  --div1: #1F6B43; --div2: #8FC4A2; --div3: #E4E8E2; --div4: #EDA77A; --div5: #A3401F; --nodata: #D9DED6; --mapline: #FFFFFF; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --seq1: #3A2A1C; --seq2: #6E4424; --seq3: #A8622C; --seq4: #DC8C48; --seq5: #F7C38C;
+  --div1: #5BC08A; --div2: #2F6B48; --div3: #2A332D; --div4: #8A4A2A; --div5: #F08A5E; --nodata: #26302A; --mapline: #0F1712; } }
+:root[data-theme="dark"] { --seq1: #3A2A1C; --seq2: #6E4424; --seq3: #A8622C; --seq4: #DC8C48; --seq5: #F7C38C;
+  --div1: #5BC08A; --div2: #2F6B48; --div3: #2A332D; --div4: #8A4A2A; --div5: #F08A5E; --nodata: #26302A; --mapline: #0F1712; }
+.mapcard { position: relative; }
+.mapwrap { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 18px; align-items: start; }
+@media (max-width: 720px) { .mapwrap { grid-template-columns: minmax(0, 1fr); } }
+.mapsvg svg { width: 100%; height: auto; max-height: 620px; display: block; }
+.mapsvg path.rg { stroke: var(--mapline); stroke-width: 0.8; cursor: pointer; transition: fill .35s ease, opacity .2s; }
+.mapsvg path.rg:hover, .mapsvg path.rg.hot { stroke: var(--ink); stroke-width: 1.6; }
+.mapsvg path.rg.sel { stroke: var(--ink); stroke-width: 2.4; }
+.mapsvg path.rg:focus-visible { outline: none; stroke: var(--squash); stroke-width: 3; }
+.mapsvg.dim path.rg:not(.hot):not(.sel) { opacity: .45; }
+.mapsvg text { fill: var(--ink-2); font: 700 11px var(--font-body); }
+.legendbar { display: grid; gap: 6px; }
+.legendbar .sw { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+.legendbar .sw i { height: 12px; border-radius: 3px; }
+.legendbar .ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.legendbar .stat { display: grid; gap: 6px; font-size: 13px; }
+.legendbar .stat span { display: flex; gap: 8px; align-items: center; }
+.ranks { display: grid; gap: 2px; margin-top: 12px; }
+.ranks .rk-h { font-size: 12px; font-weight: 700; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.ranks button { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; border: none; background: none; text-align: left; padding: 7px 6px; border-radius: 8px; font-size: 14px; min-height: 40px; color: var(--ink); }
+.ranks button:hover, .ranks button.hot { background: var(--surface-2); }
+.ranks button.sel { background: var(--leaf-soft); }
+.ranks .sq { width: 14px; height: 14px; border-radius: 4px; }
+.ranks b { font-family: var(--font-data); font-weight: 500; font-variant-numeric: tabular-nums; font-size: 13px; }
+.timeline { display: grid; grid-template-columns: auto minmax(0, 1fr) 92px; gap: 12px; align-items: center; }
+.timeline input[type="range"] { width: 100%; accent-color: var(--leaf); }
+.timeline output { font: 700 14px var(--font-body); text-align: right; font-variant-numeric: tabular-nums; }
+.timeline.off { opacity: .45; pointer-events: none; }
+.maptip { position: absolute; z-index: 5; pointer-events: none; background: var(--ink); color: var(--surface); border-radius: 10px; padding: 8px 10px; font-size: 13px; line-height: 1.35; min-width: 150px; box-shadow: 0 8px 20px -8px rgb(0 0 0 / .4); }
+.maptip b { display: block; font-size: 14px; }
+.maphead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.lvlseg { width: 220px; }
+.mapsvg path.rg.nops { opacity: .55; }
+.mapsvg.dim path.rg.nops:not(.hot) { opacity: .3; }
+.det { display: grid; gap: 4px; margin-top: 14px; padding: 12px; border-radius: 12px; background: var(--surface-2); }
+.det b { font-family: var(--font-display); font-size: 17px; }
+.det span, .det small { font-size: 12.5px; color: var(--ink-2); }
+.det .dv { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 4px 0; }
+.det .dv strong { font: 800 22px var(--font-display); font-variant-numeric: tabular-nums; }
+.more2 > summary { list-style: none; cursor: pointer; display: grid; gap: 2px; }
+.more2 > summary::-webkit-details-marker { display: none; }
+
+/* ---------- shared with the mobile app */
+.figwrap { position: relative; display: inline-grid; flex: none; }
+.fig { --ring: var(--line); width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); box-shadow: 0 0 0 3px var(--ring); display: grid; place-items: end center; overflow: hidden; }
+.fig svg { width: 88%; height: 88%; }
+.fig.lg { width: 60px; height: 60px; box-shadow: 0 0 0 4px var(--ring); }
+.figwrap .badge { position: absolute; right: -4px; bottom: -2px; width: 20px; height: 20px; border-radius: 50%; background: var(--sun); color: #3A2600; display: grid; place-items: center; box-shadow: 0 0 0 2px var(--surface); }
+.figwrap .badge svg { width: 12px; height: 12px; stroke-width: 2.6; }
+.themebtn { width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--surface-2); color: var(--ink-2); display: grid; place-items: center; cursor: pointer; }
+.lang { height: 40px; border-radius: 20px; border: none; background: var(--surface-2); padding: 0 6px; display: flex; align-items: center; gap: 2px; font: 800 13px var(--font-body); color: var(--ink-2); cursor: pointer; }
+.lang span { padding: 4px 9px; border-radius: 14px; }
+.lang span.on { background: var(--surface); color: var(--leaf); box-shadow: var(--shadow); }
+.mrow select.diet { grid-column: 1 / -1; }
+.btn { border-radius: 22px; }
+.stepbox { border: none; background: var(--bg); }
+/* ---------- collapsible steps */
+.stepbox { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.stepbox > summary { list-style: none; display: flex; align-items: center; gap: 12px; padding: 12px 14px; min-height: 56px; cursor: pointer; }
+.stepbox > summary::-webkit-details-marker { display: none; }
+.stepbox .sic { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; background: var(--leaf-soft); color: var(--leaf); flex: none; }
+.stepbox .st { flex: 1; min-width: 0; display: grid; }
+.stepbox .st b { font: 600 17px var(--font-display); }
+.stepbox .st small { font-size: 13px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stepbox .chev { color: var(--ink-2); transition: transform .2s; }
+.stepbox[open] .chev { transform: rotate(90deg); }
+.stepbox .sbody { padding: 0 14px 14px; display: grid; gap: 12px; }
+.hint[data-icon] { display: flex; gap: 6px; align-items: center; }
+#inputs { gap: 10px; padding: 12px; }
+/* ---------- price layers */
+select:disabled { opacity: .6; }
+.pricemix { display: grid; gap: 6px; padding: 10px 12px; border-radius: 12px; background: var(--bg); border: 1px dashed var(--line); font-size: 13px; }
+.pricemix .stack { display: flex; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-2); }
+.pricemix .stack i { display: block; height: 100%; }
+.pricemix .keys { display: flex; flex-wrap: wrap; gap: 4px 12px; color: var(--ink-2); }
+.pricemix .keys b { color: var(--ink); font-family: var(--font-data); font-weight: 500; }
+.pricemix .keys i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: 0; }
+.pricemix p { margin: 0; color: var(--ink-2); }
+.lvl { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.lvl.yours { background: var(--squash-soft); color: var(--squash); }
+.lvl.market { background: var(--leaf); color: var(--leaf-ink); }
+.lvl.province { background: var(--leaf-soft); color: var(--leaf); }
+.lvl.region { background: var(--surface-2); color: var(--ink-2); }
+.pricehead { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; }
+.pricehead p { margin: 2px 0 0; }
+td input.pin { width: 84px; padding: 4px 6px; font: 14px var(--font-data); text-align: right; background: var(--bg); }
+td input.pin.set { border-color: var(--squash); background: var(--squash-soft); }
+td .was { display: block; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1 class="wordmark">sapat<span>.</span></h1>
+      <span class="tagline">for LGU nutrition offices</span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Views">
+      <button role="tab" id="tab-plan" aria-selected="false" data-view="plan" data-icon="home" hidden><span data-t="tabFam">Para sa pamilya</span></button>
+      <button role="tab" id="tab-lgu" aria-selected="true" data-view="lgu" data-icon="map">Food affordability map</button>
+      <button role="tab" id="tab-menu" aria-selected="false" data-view="menu" data-icon="pot">Feeding program</button>
+      <button role="tab" id="tab-about" aria-selected="false" data-view="about" data-icon="info">How it works</button>
+    </nav>
+    <button class="lang" id="langBtn" type="button" aria-label="Language" hidden><span data-l="tl">TL</span><span data-l="en">EN</span></button>
+    <button class="themebtn" id="themeBtn" type="button" aria-label="Light or dark"></button>
+  </div>
+</header>
+
+<main><div class="wrap">
+
+<!-- ============================================================ HOUSEHOLD -->
+<section id="view-plan" class="view" role="tabpanel" aria-labelledby="tab-plan" hidden>
+  <div class="panel" id="inputs">
+    <details class="stepbox" open><summary><span class="sic" data-icon="users"></span><span class="st"><b data-t="stFam">Family</b><small id="sumFam"></small></span><svg class="i chev" viewBox="0 0 24 24" data-i="chev"></svg></summary><div class="sbody">
+    <div class="mlist" id="members"></div>
+    <button class="btn small" id="addMember" type="button" data-icon="plus"><span data-t="addM">Add member</span></button>
+    <p class="hint" data-icon="baby"><span data-t="ages">Ages 1 and up. Under 1: breastfeed.</span></p>
+    </div></details>
+
+    <details class="stepbox" open><summary><span class="sic" data-icon="pin"></span><span class="st"><b data-t="stWhere">Where you shop</b><small id="sumWhere"></small></span><svg class="i chev" viewBox="0 0 24 24" data-i="chev"></svg></summary><div class="sbody">
+    <div class="row2">
+      <label class="f"><span data-t="lvReg">Region</span><select id="region"></select></label>
+      <label class="f"><span data-t="pricesFor">Prices for</span><select id="month"></select></label>
+    </div>
+    <label class="f"><span data-t="lvProv">Province</span><select id="province"></select></label>
+    <label class="f"><span data-t="lvCity">City or town</span><select id="citySel"></select></label>
+    <label class="f"><span data-t="lvMkt">Market</span><select id="marketSel"></select></label>
+    <div class="pricemix" id="priceMix" aria-live="polite"></div>
+    </div></details>
+
+    <details class="stepbox" open><summary><span class="sic" data-icon="wallet"></span><span class="st"><b data-t="stBudget">Budget</b><small id="sumBudget"></small></span><svg class="i chev" viewBox="0 0 24 24" data-i="chev"></svg></summary><div class="sbody">
+    <div class="seg" role="group" aria-label="Plan type">
+      <button type="button" id="modeBudget" aria-pressed="true" data-t="myBudget">My budget</button>
+      <button type="button" id="modeFull" aria-pressed="false" data-t="fullPlan">Full healthy plan</button>
+    </div>
+    <div id="budgetBox" style="display:grid;gap:10px">
+      <div class="budgetval" id="budgetShow"></div>
+      <input type="range" id="budgetSlider" min="300" max="8000" step="50" aria-label="Weekly food budget">
+      <label class="f"><span data-t="perWeekP">Per week (₱)</span><input type="number" id="budget" min="0" step="50" inputmode="numeric"></label>
+      <div class="chips" id="presets"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="halal"> <span data-t="halal">No pork for everyone (halal)</span></label>
+    <label class="check"><input type="checkbox" id="estimated"> <span data-t="estim">Include estimated prices</span></label>
+    </div></details>
+    <div class="status" id="solveStatus"></div>
+  </div>
+
+  <div class="results">
+    <div class="hero" id="hero"></div>
+
+    <div class="panel">
+      <div style="display:grid;gap:10px">
+        <div><div class="eyebrow" data-icon="heart"><span data-t="eachDay">Each person, every day</span></div><h2 data-t="enoughQ">Is everyone getting enough?</h2></div>
+        <div class="nlegend" id="nlegend"></div>
+      </div>
+      <div class="people" id="people"></div>
+      <div class="statuskey" id="statusKey"></div>
+    </div>
+
+    <div class="panel">
+      <div class="total"><div><div class="eyebrow" data-icon="basket"><span data-t="listEy">Your palengke list</span></div><h2 data-t="buyH">What to buy this week</h2></div><div><b id="basketTotal"></b></div></div>
+      <div class="basket" id="basket"></div>
+      <p class="hint" id="basketHint">Prices are this month's market averages in your region; sari-sari stores can cost more.</p>
+    </div>
+
+    <div class="panel">
+      <div><div class="eyebrow" data-icon="pot"><span data-t="cookEy">Lutong-bahay ideas</span></div><h2 data-t="cookH">Ulam you can cook from this list</h2></div>
+      <div class="ulam" id="ulam"></div>
+    </div>
+
+    <div class="panel">
+      <div><div class="eyebrow" data-icon="bulb"><span data-t="smartEy">Smart buys this month</span></div><h2 data-t="smartH">Most nutrition for your peso</h2></div>
+      <div class="smart" id="smart"></div>
+    </div>
+
+    <details class="more" id="moreBox">
+      <summary><svg class="i" viewBox="0 0 24 24" data-i="chart"></svg><span data-t="numbers">Show the numbers</span></summary>
+      <div class="inner">
+        <div class="legend"><span><i style="background:var(--good)"></i>SAPAT plan</span><span><i style="background:var(--ink);width:2px;height:12px;opacity:.55;border-radius:0"></i>Same pesos, usual way of buying</span></div>
+        <div class="cov" id="coverage"></div>
+        <div class="pricehead"><div><h3 data-t="pricesUsed">Prices used</h3><p class="hint" data-t="tapPrice">Tap a price to enter what you paid.</p></div><button class="btn small" type="button" id="resetPrices" hidden data-t="clearMine">Clear my prices</button></div>
+        <div class="tablewrap"><table id="market"></table></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ LGU -->
+<section id="view-lgu" class="view" role="tabpanel" aria-labelledby="tab-lgu" hidden>
+  <div class="panel">
+    <div><div class="eyebrow" data-icon="map">For LGU nutrition offices</div><h2>Is healthy food getting harder to afford?</h2></div>
+    <label class="f">Region<select id="lguRegion"></select></label>
+    <label class="f">Month<select id="lguMonth"></select></label>
+    <div class="eyebrow" data-icon="siren">Replay a price shock</div>
+    <div class="chips" id="backtests"></div>
+    <p class="hint" data-icon="info">Watch: +5% vs past 3 months. Alert: +10%, or +15% vs last year.</p>
+  </div>
+  <div class="results">
+    <div class="panel mapcard">
+      <div class="maphead"><div><div class="eyebrow" data-icon="map" id="mapEyebrow">Philippines</div><h2 id="mapTitle"></h2></div><div class="seg lvlseg" id="mapLevel" role="group" aria-label="Map level"></div></div>
+      <div class="chips" id="metricChips" role="group" aria-label="Map shows"></div>
+      <div class="mapwrap">
+        <div class="mapsvg" id="phMap"></div>
+        <div class="mapside">
+          <div class="legendbar" id="mapLegend"></div>
+          <div id="mapDetail"></div>
+          <div class="ranks" id="mapRanks"></div>
+        </div>
+      </div>
+      <div class="timeline" id="timeline">
+        <button type="button" class="btn small" id="playBtn" aria-label="Play months"></button>
+        <input type="range" id="monthSlider" min="0" step="1" aria-label="Month">
+        <output id="monthOut"></output>
+      </div>
+      <p class="src" id="mapNote"></p>
+      <div class="maptip" id="mapTip" role="tooltip" hidden></div>
+    </div>
+    <div class="banner" id="lguBanner"></div>
+    <div class="tiles" id="lguTiles"></div>
+    <div class="panel chart">
+      <div><div class="eyebrow" id="chartEyebrow"></div><h2>Cost of a healthy day, per person</h2></div>
+      <div id="lguChart"></div>
+      <div class="legend"><span><i style="background:var(--leaf)"></i>Healthy diet</span><span><i style="background:var(--squash)"></i>Poorest 10% spend</span><span><i style="background:var(--ghost)"></i>Without calcium target</span></div>
+    </div>
+    <details class="panel more2">
+      <summary><span class="eyebrow" id="tableEyebrow"></span><h2>All regions this month</h2></summary>
+      <div class="tablewrap"><table id="lguTable"></table></div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================ MENU -->
+<section id="view-menu" class="view" role="tabpanel" aria-labelledby="tab-menu" hidden>
+  <div class="panel">
+    <div><div class="eyebrow" data-icon="pot">For school and community feeding</div><h2>Plan a week of meals</h2></div>
+    <div class="row2">
+      <label class="f">Region<select id="menuRegion"></select></label>
+      <label class="f">Prices for<select id="menuMonth"></select></label>
+    </div>
+    <label class="f">Learners<select id="menuAge">
+      <option value="4">Day care, 3–5 years</option>
+      <option value="7" selected>Grades 1–3, 6–9 years</option>
+      <option value="11">Grades 4–6, 10–12 years</option>
+    </select></label>
+    <div class="row2">
+      <label class="f">Number of learners<input type="number" id="menuN" min="1" step="1" value="40" inputmode="numeric"></label>
+      <label class="f">Budget per meal (PHP)<input type="number" id="menuBudget" min="5" step="1" value="30" inputmode="numeric"></label>
+    </div>
+    <label class="f">Each meal gives<select id="menuShare">
+      <option value="0.3333" selected>One third of a day's needs</option>
+      <option value="0.25">One quarter of a day's needs</option>
+      <option value="0.5">Half of a day's needs</option>
+    </select></label>
+    <label class="check"><input type="checkbox" id="menuHalal"> No pork (halal)</label>
+    <p class="hint">Each fish, meat, egg or bean dish is used once a week when there are other choices, so the menu rotates.</p>
+  </div>
+  <div class="results">
+    <div class="banner" id="menuBanner"></div>
+    <div class="days" id="menuDays"></div>
+    <div class="panel">
+      <div><div class="eyebrow" data-icon="basket">Supplier order</div><h2 id="menuListTitle">Ingredients for the week</h2></div>
+      <div class="tablewrap"><table id="menuList"></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ ABOUT -->
+<section id="view-about" class="view" role="tabpanel" aria-labelledby="tab-about" hidden>
+  <div class="panel">
+    <div><div class="eyebrow">SAPAT</div><h2>What it does</h2></div>
+    <p class="hint">SAPAT links three public datasets: what food costs (PSA retail prices, monthly, by region, refined by province or city and by NCR palengke from DA price monitoring where available), what each food contains (DOST-FNRI PhilFCT) and what each person needs (PDRI 2015). A linear program then finds the basket that meets each member's needs at the lowest cost, or does the most with a fixed budget.</p>
+  </div>
+  <div class="results">
+    <div class="panel">
+      <div><div class="eyebrow">Problem and solution</div><h2>What each feature answers</h2></div>
+      <div class="ps" id="psTable"></div>
+    </div>
+    <div class="panel prose">
+      <h3>How the plan is chosen</h3>
+      <ul>
+        <li>Each member gets their own portions: energy, protein, iron, vitamin A and calcium from the PDRI for their age and sex, with extra for pregnancy and breastfeeding.</li>
+        <li>Rules keep meals familiar: rice and corn give at most 65% of energy, at least 35% of protein comes from fish, meat, eggs or beans, vegetables fill a third of the plate, little sugar, and no single food in amounts people would not eat.</li>
+        <li>With a short budget, gaps are spread out but children under 5 and pregnant or breastfeeding mothers are protected first, and energy is protected before vitamins.</li>
+        <li>The comparison spends the same pesos the way households at that income spend them (FIES 2023 food groups) to show what the plan adds.</li>
+      </ul>
+      <h3>Limits</h3>
+      <ul>
+        <li>PSA lists no milk, dilis, malunggay or tokwa, so calcium is the hardest and costliest need to meet. Iron for women 13–49 and in pregnancy needs iron-rich or fortified foods or supplements, as the PDRI itself notes.</li>
+        <li>Prices come in layers. The regional PSA average is always the base. A province or city price replaces it when PSA surveyed that food there; an NCR palengke reading from DA price monitoring (the middle of its low–high range) replaces that; and a price you type in replaces everything. A regional price is carried forward up to 6 months when PSA did not survey it.</li>
+        <li>Official prices stop at the province and, in NCR, at about 20–30 monitored markets. Barangay and sari-sari prices are not published, which is why SAPAT lets families enter what they paid.</li>
+        <li>SAPAT is meal-planning guidance, not medical advice. People with health conditions should follow their doctor or nutritionist.</li>
+      </ul>
+      <p class="hint" id="aboutData"></p>
+    </div>
+  </div>
+</section>
+
+</div></main>
+<footer><div class="wrap">SAPAT prototype by Team SiniGANG for PJDSC 2026. Data: PSA OpenSTAT retail prices; DA-AMAS daily price monitoring (NCR markets); SRA sugar prices; DOST-FNRI PhilFCT and PDRI 2015; PSA FIES 2023; PSA 2023 poverty statistics.</div></footer>
+
+<script src="../shared/data/sapat_data.js"></script>
+<script src="../shared/data/local_prices.js"></script>
+<script src="../shared/data/places.js"></script>
+<script src="../shared/data/extra_nutrients.js"></script>
+<script src="../shared/sapat-ui.js"></script>
+<script src="data/ph_regions.js"></script>
+<script src="data/ph_provinces.js"></script>
+<script src="../shared/sapat-engine.js"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.SAPAT_DATA, S = window.SAPAT;
+  S.setData(D); S.setLocal(window.SAPAT_LOCAL);
+  const UI = window.SAPAT_UI, PL = window.SAPAT_PLACES || {};
+  UI.foods(D, window.SAPAT_EXTRA);
+  // Words for the household view (the LGU, feeding and method pages stay in English for officials)
+  const WEB = {
+    tl: { tabFam: "Para sa pamilya", tagline: "Sustansya na abot-kaya.", stFam: "Pamilya", stWhere: "Saan namimili", stBudget: "Budget", addM: "Magdagdag ng kasama", ages: "Edad 1 pataas. Wala pang 1: gatas ng ina.",
+      lvReg: "Rehiyon", pricesFor: "Presyo ng buwan", lvProv: "Probinsya", lvCity: "Lungsod o bayan", lvMkt: "Palengke", myBudget: "Budget ko", fullPlan: "Buong sapat na plano", perWeekP: "Kada linggo (₱)",
+      halal: "Walang baboy para sa lahat (halal)", estim: "Isama ang tinatayang presyo", eachDay: "Bawat isa, araw-araw", enoughQ: "Sapat ba ang kain ng lahat?", listEy: "Listahan sa palengke", buyH: "Bibilhin ngayong linggo",
+      cookEy: "Lutong-bahay", cookH: "Ulam mula sa listahang ito", smartEy: "Sulit ngayong buwan", smartH: "Pinakamaraming sustansya sa piso mo", numbers: "Ipakita ang mga numero", pricesUsed: "Presyong ginamit", tapPrice: "Ilagay ang presyong binayaran mo.", clearMine: "Ibalik ang opisyal na presyo",
+      wholeRegion: "Buong rehiyon", anyCity: "Kahit saang bayan", anyMarket: "Kahit saang palengke", week: "kada linggo", day: "kada araw", fullShort: "Buong sapat na plano", total: "kabuuan",
+      better: (b) => `Sa <em>${b}</em> kada linggo, mas <em>busog at sapat</em> ang pamilya sa listahan ng SAPAT kaysa sa karaniwang pamimili.`, close: (b) => `Sa <em>${b}</em> kada linggo, halos pinakamainam na ang binibili ninyo.`,
+      fullHead: (c, pl) => `Mga <em>${c}</em> kada linggo ang buong sapat na pagkain ng pamilya sa presyo ng ${pl}.`, usual: "Karaniwang pamimili", sapatList: "Listahan ng SAPAT", share: "Bahagi ng kailangan araw-araw, 5 sustansya.", perPerson: (v) => `${v} kada tao bawat araw.`,
+      fedFirst: (n) => `<b>${n}</b>: inuuna sa pagkain.`, short: (g, f) => `Kulang ng <b>${g}</b> para sa buong sapat na linggo (${f}).`, covers: "Kaya ng budget ang buong sapat na linggo.", tryBudget: "Subukan ang <b>Budget ko</b> para sa totoong gastos.", ironTab: "Mga nanay: humingi ng iron-folic acid sa health center.", change: "Baguhin ang pamilya o budget",
+      allFive: "Sapat ang lahat ng lima.", add: (n, f) => `<b>${n}:</b> dagdagan ng ${f}.`, ironAdd: (f) => `<b>Iron:</b> dagdagan ng ${f} at iron tablets.`, of5: "sa 5", sapat: "sapat", fedFirstS: "inuuna", or: "o",
+      hint: (w) => `Timbang ay bago lutuin, kasama ang buto at balat. Presyo mula sa ${w}; mas mahal minsan sa sari-sari store.`, needMore: "Magdagdag ng kaunting budget para may isda, itlog o monggo.",
+      key: [["good", "Sapat"], ["warn", "Medyo kulang"], ["bad", "Kulang"]], diet: "Uri ng pagkain", sexF: "Babae", sexM: "Lalaki", st: ["Hindi buntis o nagpapasuso", "Buntis", "Nagpapasuso"], name: "Pangalan", ageL: "Edad" },
+    en: { tabFam: "For families", tagline: "Nutrition you can afford.", stFam: "Family", stWhere: "Where you shop", stBudget: "Budget", addM: "Add member", ages: "Ages 1 and up. Under 1: breastfeed.",
+      lvReg: "Region", pricesFor: "Prices for", lvProv: "Province", lvCity: "City or town", lvMkt: "Market", myBudget: "My budget", fullPlan: "Full healthy plan", perWeekP: "Per week (₱)",
+      halal: "No pork for everyone (halal)", estim: "Include estimated prices", eachDay: "Each person, every day", enoughQ: "Is everyone getting enough?", listEy: "Your palengke list", buyH: "What to buy this week",
+      cookEy: "Home-cooked ideas", cookH: "Ulam you can cook from this list", smartEy: "Smart buys this month", smartH: "Most nutrition for your peso", numbers: "Show the numbers", pricesUsed: "Prices used", tapPrice: "Enter the price you paid.", clearMine: "Clear my prices",
+      wholeRegion: "Whole region", anyCity: "Any town", anyMarket: "Any market", week: "a week", day: "a day", fullShort: "Full healthy plan", total: "total",
+      better: (b) => `With <em>${b}</em> a week, the SAPAT list feeds your family <em>better</em> than buying the usual way.`, close: (b) => `With <em>${b}</em> a week, your family is already buying close to the best mix.`,
+      fullHead: (c, pl) => `A fully healthy week for your family costs about <em>${c}</em> at ${pl} prices.`, usual: "Usual way", sapatList: "SAPAT list", share: "Share of daily needs met, 5 nutrients.", perPerson: (v) => `${v} per person a day.`,
+      fedFirst: (n) => `<b>${n}</b> fed first.`, short: (g, f) => `<b>${g}</b> short of a fully healthy week (${f}).`, covers: "Budget covers a fully healthy week.", tryBudget: "Try <b>My budget</b> for your real spend.", ironTab: "Mothers: ask the health center for iron-folic acid tablets.", change: "Change family or budget",
+      allFive: "All five covered.", add: (n, f) => `<b>${n}:</b> add ${f}.`, ironAdd: (f) => `<b>Iron:</b> add ${f} + iron tablets.`, of5: "of 5", sapat: "enough", fedFirstS: "fed first", or: "or",
+      hint: (w) => `Amounts are as bought, with bones and peels. Prices from ${w}; sari-sari stores can cost more.`, needMore: "Add a little more budget to make room for fish, eggs or monggo.",
+      key: [["good", "Enough"], ["warn", "A bit low"], ["bad", "Low"]], diet: "Diet", sexF: "Female", sexM: "Male", st: ["Not pregnant or breastfeeding", "Pregnant", "Breastfeeding"], name: "Name", ageL: "Age" },
+  };
+  let lang = (() => { try { return localStorage.getItem("sapat:lang") || "tl"; } catch (e) { return "tl"; } })();
+  const T = () => WEB[lang], TU = () => UI.W[lang];
+  const NLW = { energy_kcal: "energy", protein_g: "prot", iron_mg: "iron", vit_a_ug: "vitA", calcium_mg: "calcium" };
+  function applyLang() {
+    document.documentElement.lang = lang === "tl" ? "fil" : "en";
+    document.querySelectorAll("[data-t]").forEach((el) => { const v = T()[el.dataset.t]; if (typeof v === "string") el.textContent = v; });
+    $("langBtn").querySelectorAll("span").forEach((x) => x.classList.toggle("on", x.dataset.l === lang));
+    $("statusKey").innerHTML = T().key.map(([c, l]) => `<span><i style="background:var(--${c})"></i>${l}</span>`).join("");
+  }
+  const $ = (id) => document.getElementById(id);
+  const fmt = (x, d = 0) => (x == null || !isFinite(x)) ? "–" : x.toLocaleString("en-PH", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const peso = (x, d = 0) => "₱" + fmt(x, d);
+  const pct = (x) => (x == null || !isFinite(x)) ? "–" : Math.round(x * 100) + "%";
+  const NUT = S.NUTRIENTS, NL = S.NUTRIENT_LABELS;
+  const monthName = (m) => { const [y, mo] = m.split("-"); return new Date(+y, +mo - 1, 1).toLocaleDateString("en-PH", { month: "short", year: "numeric" }); };
+  const monthLong = (m) => { const [y, mo] = m.split("-"); return new Date(+y, +mo - 1, 1).toLocaleDateString("en-PH", { month: "long", year: "numeric" }); };
+  const regionName = (k) => (D.regions.find((r) => r.key === k) || {}).name || k;
+  const lastMonth = D.months[D.months.length - 1];
+  const store = { get(k, d) { try { const v = localStorage.getItem("sapat3:" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem("sapat3:" + k, JSON.stringify(v)); } catch (e) {} } };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------------------------------------------------------------- icons (24x24 line icons)
+  const IP = {
+    bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+    grow: '<path d="M12 20V5M6.5 10.5 12 5l5.5 5.5M5 20h14"/>',
+    drop: '<path d="M12 3c3 4.5 6 7.8 6 11a6 6 0 0 1-12 0c0-3.2 3-6.5 6-11z"/>',
+    eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    bone: '<circle cx="5.5" cy="9" r="2"/><circle cx="5.5" cy="15" r="2"/><circle cx="18.5" cy="9" r="2"/><circle cx="18.5" cy="15" r="2"/><path d="M7.3 10.2h9.4M7.3 13.8h9.4"/>',
+    rice: '<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M7 11c.4-2.2 2.2-3.5 5-3.5s4.6 1.3 5 3.5"/><path d="M9 4.5c0 1 1 1.4 1 2.4M14 4.5c0 1 1 1.4 1 2.4"/>',
+    fish: '<path d="M3 12c3-5 9-6.5 13.5-3L21 6v12l-4.5-3C12 18.5 6 17 3 12z"/><circle cx="8" cy="11" r=".9" fill="currentColor"/>',
+    meat: '<path d="M14.5 3.5a5.5 5.5 0 0 1 3 9.6l-3.4 3.4-5.6-5.6 3.4-3.4a5.5 5.5 0 0 1 2.6-4z"/><path d="M8.5 11l-3.3 3.3"/><circle cx="4" cy="17.5" r="1.6"/><circle cx="6.5" cy="20" r="1.6"/>',
+    egg: '<path d="M12 3c-3.5 0-6.5 5-6.5 9.5a6.5 6.5 0 0 0 13 0C18.5 8 15.5 3 12 3z"/>',
+    bean: '<path d="M7.5 5.5c3-2.8 9-2 11 2.2 2 4.3-.5 10.3-5.5 11-4.5.7-8-2.2-7.2-5.2.6-2.1 2.8-2.4 2.3-4.5-.4-1.6-2-2.3-.6-3.5z"/><path d="M12 9c-1 1.5-1 3.5.5 5"/>',
+    leaf: '<path d="M5 19c0-9 6-14 15-14 0 8.5-5.5 14-15 14z"/><path d="M5 19 13.5 10.5"/>',
+    fruit: '<path d="M12 7.5c-4-2-8 1-7 6.2.9 4.6 4 7.6 7 6.8 3 .8 6.1-2.2 7-6.8 1-5.2-3-8.2-7-6.2z"/><path d="M12 7.5c0-2 .8-3.5 3-4.5"/>',
+    root: '<path d="M7 17c-2.6-3.6 1.2-10 7-11.2 4.4-.9 6.6 2.4 4.6 6.6-2 4.2-8.6 8.1-11.6 4.6z"/><path d="M7 17l-3.5 3.5M11 9.5l1 1M14 12l1 1"/>',
+    spice: '<path d="M12 4c-1.2 2.4-6 4.2-6 9a6 6 0 0 0 12 0c0-4.8-4.8-6.6-6-9z"/><path d="M9.5 11.5c0 3 1 5.5 2.5 6.5M14.5 11.5c0 3-1 5.5-2.5 6.5"/>',
+    sugar: '<path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/>',
+    basket: '<path d="M3 9.5h18l-2 9.5H5L3 9.5z"/><path d="M7.5 9.5 12 4l4.5 5.5M9 13v3M12 13v3M15 13v3"/>',
+    bulb: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',
+    pot: '<path d="M4 10h16v5.5A4.5 4.5 0 0 1 15.5 20h-7A4.5 4.5 0 0 1 4 15.5V10z"/><path d="M2 10h20M9 6.5c0-1.2 1.2-2 3-2s3 .8 3 2"/>',
+    shield: '<path d="M12 3l7 3v5c0 5-3 8.2-7 10-4-1.8-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>',
+    warn: '<path d="M12 4 2.5 20h19L12 4z"/><path d="M12 10v4.5M12 17.2v.1"/>',
+    siren: '<path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 18h14v3H5zM12 3v2M4.2 6.2l1.4 1.4M19.8 6.2l-1.4 1.4"/>',
+    heart: '<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/>',
+    users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.6-3.4 3-5.5 6-5.5s5.4 2.1 6 5.5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.5 13.8c2.5.2 4 1.9 4.5 4.7"/>',
+    pin: '<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    wallet: '<path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a1 1 0 0 1-1-1V7z"/><path d="M4 7V6a2 2 0 0 1 2-2h10v3M15.5 13.5h.1"/>',
+    plus: '<path d="M12 5v14M5 12h14"/>',
+    home: '<path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/>',
+    map: '<path d="M9 4 3 6.5v13.5L9 17.5l6 2.5 6-2.5V4l-6 2.5L9 4z"/><path d="M9 4v13.5M15 6.5V20"/>',
+    info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.1"/>',
+    chart: '<path d="M4 20V4M4 20h16"/><path d="M7 15l4-4 3 3 5-6"/>',
+    coins: '<ellipse cx="9" cy="7" rx="6" ry="2.6"/><path d="M3 7v4c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6V7"/><path d="M9 13.6v3.8c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-4c0-1.4-2.7-2.6-6-2.6"/>',
+    baby: '<circle cx="12" cy="12" r="9"/><path d="M9 10.5h.1M15 10.5h.1M9.5 15c1.4 1.2 3.6 1.2 5 0"/>',
+    up: '<path d="M4 17l6-6 4 4 6-7"/><path d="M15 8h5v5"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    chev: '<path d="M9 5l7 7-7 7"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>',
+    moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+    play: '<path d="M7 4.5v15l12-7.5z" fill="currentColor"/>',
+    pause: '<path d="M7 5v14M17 5v14" stroke-width="3"/>',
+    swap: '<path d="M7 7h12l-3.5-3.5M17 17H5l3.5 3.5"/>',
+  };
+  const icon = (n, cls) => `<svg class="i${cls ? " " + cls : ""}" viewBox="0 0 24 24" aria-hidden="true">${IP[n] || ""}</svg>`;
+  function hydrateIcons(root) {
+    (root || document).querySelectorAll("[data-icon]").forEach((el) => { if (!el.querySelector(":scope > svg.i")) el.insertAdjacentHTML("afterbegin", icon(el.dataset.icon)); });
+    (root || document).querySelectorAll("svg[data-i]").forEach((el) => (el.innerHTML = IP[el.dataset.i] || ""));
+  }
+
+  // Nutrients in family language
+  const NF = {
+    energy_kcal: { icon: "bolt", why: "Energy keeps hunger away and gives strength for work, school and play." },
+    protein_g: { icon: "grow", why: "Protein builds muscles and helps children grow tall." },
+    iron_mg: { icon: "drop", why: "Low iron can cause anemia: tiredness, pale skin and trouble focusing in school." },
+    vit_a_ug: { icon: "eye", why: "Vitamin A protects eyesight and helps the body fight infections." },
+    calcium_mg: { icon: "bone", why: "Calcium builds strong bones and teeth, most of all in growing kids and mothers." },
+  };
+  const GROUP_ICON = { cereals: "rice", roots: "root", pulses: "bean", meat: "meat", eggs: "egg", fish: "fish", vegetables: "leaf", condiments: "spice", fruits: "fruit", sugar: "sugar" };
+  const status = (c) => (c >= 0.9 ? "ok" : c >= 0.6 ? "mid" : "low");
+  Object.keys(NF).forEach((k) => { Object.defineProperty(NF[k], "word", { get: () => TU()[NLW[k]] }); Object.defineProperty(NF[k], "label", { get: () => TU()[NLW[k]] }); });
+  const STATUS_WORD = new Proxy({}, { get: (_, k) => TU().st[k] });
+  const ringColor = (c) => (c >= 0.85 ? "var(--good)" : c >= 0.6 ? "var(--warn)" : "var(--bad)");
+  const firstName = (n) => n.split(" (")[0];
+  const initials = (n) => firstName(n).trim().slice(0, 1).toUpperCase() || "?";
+  function avatar(m, ringC, big) { return UI.figure(m, ringC, big); }
+  function avatarOld(m, ringC, big) {
+    const badge = m.status === "pregnant" ? `<span class="badge" title="Pregnant">${icon("heart")}</span>` : m.status === "lactating" ? `<span class="badge" title="Breastfeeding">${icon("drop")}</span>` : m.age < 5 ? `<span class="badge" title="Young child" style="background:var(--leaf)">${icon("baby")}</span>` : "";
+    return `<span class="av${big ? " lg" : ""}" style="--ring:${ringC}">${esc(initials(m.name))}${badge}</span>`;
+  }
+  const memberAvg = (c) => NUT.reduce((a, k) => a + Math.min(c[k], 1), 0) / NUT.length;
+
+  // ---------------------------------------------------------------- tabs
+  document.querySelectorAll("nav.tabs button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
+  function showView(v) {
+    document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === v)));
+    ["plan", "lgu", "menu", "about"].forEach((x) => ($("view-" + x).hidden = x !== v));
+    if (v === "lgu") renderLGU(); if (v === "menu") renderMenu();
+    store.set("lguview", v);
+  }
+
+  function fillRegions(sel, val) { sel.innerHTML = D.regions.map((r) => `<option value="${r.key}">${r.name}</option>`).join(""); sel.value = val; }
+  function fillMonths(sel, val, from) { sel.innerHTML = D.months.filter((m) => !from || m >= from).slice().reverse().map((m) => `<option value="${m}">${monthName(m)}</option>`).join(""); sel.value = val; }
+
+  // ---------------------------------------------------------------- household state (sample family)
+  const EXAMPLE = [
+    { name: "Jun", age: 38, sex: "M", status: "none" },
+    { name: "Baby", age: 34, sex: "F", status: "pregnant" },
+    { name: "Mika", age: 8, sex: "F", status: "none" },
+    { name: "Paolo", age: 4, sex: "M", status: "none" },
+    { name: "Ana", age: 1, sex: "F", status: "none" },
+  ];
+  const st = store.get("plan", null) || { members: EXAMPLE, region: "R08", month: lastMonth, mode: "budget", budget: null, preset: 1, halal: false, estimated: false };
+  if (!D.monthIndex[st.month]) st.month = lastMonth;
+  let lastCov = null;
+
+  function renderMembers() {
+    $("members").innerHTML = st.members.map((m, i) => `
+      <div class="mrow">
+        ${avatar(m, lastCov && lastCov[i] ? ringColor(memberAvg(lastCov[i])) : "var(--line)")}
+        <div class="fields">
+          <input type="text" id="mn${i}" value="${esc(m.name)}" aria-label="${T().name}">
+          <input type="number" id="ma${i}" value="${m.age}" min="1" max="100" aria-label="${T().ageL}">
+          <select id="ms${i}" aria-label="${T().sexF}/${T().sexM}"><option value="F"${m.sex === "F" ? " selected" : ""}>${T().sexF[0]}</option><option value="M"${m.sex === "M" ? " selected" : ""}>${T().sexM[0]}</option></select>
+          ${m.sex === "F" && m.age >= 13 && m.age <= 55 ? `<select class="st" id="mt${i}" aria-label="${T().st[1]}">
+            ${["none", "pregnant", "lactating"].map((k, n) => `<option value="${k}"${m.status === k ? " selected" : ""}>${T().st[n]}</option>`).join("")}
+          </select>` : ""}
+          <select class="diet" id="md${i}" aria-label="${T().diet}">${UI.DIETS.map((d) => `<option value="${d.k}"${(m.diet || "regular") === d.k ? " selected" : ""}>${T().diet}: ${d[lang]}</option>`).join("")}</select>
+        </div>
+        <button class="x" type="button" data-i="${i}" aria-label="Remove ${esc(m.name)}">×</button>
+      </div>`).join("");
+    st.members.forEach((m, i) => {
+      $("mn" + i).addEventListener("change", (e) => { m.name = e.target.value.trim() || `Member ${i + 1}`; renderMembers(); schedule(); });
+      $("ma" + i).addEventListener("change", (e) => { m.age = Math.max(1, Math.min(100, Math.round(+e.target.value || 1))); if (m.status !== "none" && (m.age < 13 || m.age > 55)) m.status = "none"; renderMembers(); schedule(); });
+      $("ms" + i).addEventListener("change", (e) => { m.sex = e.target.value; if (m.sex === "M") m.status = "none"; renderMembers(); schedule(); });
+      const t = $("mt" + i); if (t) t.addEventListener("change", (e) => { m.status = e.target.value; renderMembers(); schedule(); });
+      $("md" + i).addEventListener("change", (e) => { m.diet = e.target.value; schedule(); });
+    });
+    $("members").querySelectorAll(".x").forEach((b) => b.addEventListener("click", () => { if (st.members.length > 1) { st.members.splice(+b.dataset.i, 1); renderMembers(); schedule(); } }));
+  }
+  $("addMember").addEventListener("click", () => { st.members.push({ name: `Member ${st.members.length + 1}`, age: 10, sex: "F", status: "none" }); renderMembers(); schedule(); });
+
+  fillRegions($("region"), st.region); fillMonths($("month"), st.month, "2019-01");
+  if (!st.prices) st.prices = {};
+  // ---------------------------------------------------------------- price layers: region (base) → province/city → palengke → yours
+  const LEVEL_ORDER = ["yours", "market", "province", "region"];
+  const LEVEL_COLOR = { yours: "var(--squash)", market: "var(--leaf)", province: "color-mix(in srgb, var(--leaf) 45%, var(--surface))", region: "var(--ghost)" };
+  // migrate older saved state (province was a PSA key)
+  if (!st.loc) st.loc = { region: st.region, prov: st.region === "R08" ? "Leyte" : null, city: null, market: null };
+  st.loc.region = st.region;
+  const place = () => UI.place(PL, st.loc);
+  function fillLocal() {
+    const tt = TU(), w = T();
+    const opt = (lv, all) => { const o = UI.placeOptions(D, PL, st.loc, lv, tt); return `<option value="">${all}</option>` + o.opts.map((x) => `<option value="${esc(x.v)}"${x.v === o.cur ? " selected" : ""}>${esc(x.l)}${x.ok === false ? " · " + tt.noPriceYet.toLowerCase() : ""}</option>`).join(""); };
+    const hasProv = (PL[st.loc.region] || { provinces: [] }).provinces.length > 0;
+    $("province").innerHTML = opt("province", w.wholeRegion); $("province").disabled = !hasProv; $("province").closest("label").hidden = !hasProv;
+    $("citySel").innerHTML = opt("city", w.anyCity); $("citySel").disabled = !place().cities.length;
+    $("marketSel").innerHTML = opt("market", w.anyMarket);
+  }
+  fillLocal();
+  $("langBtn").addEventListener("click", () => { lang = lang === "tl" ? "en" : "tl"; try { localStorage.setItem("sapat:lang", lang); } catch (e) {} applyLang(); fillLocal(); renderMembers(); schedule(); });
+  applyLang();
+  $("province").addEventListener("change", (e) => { st.loc = UI.setPlace(st.loc, "province", e.target.value || null); fillLocal(); schedule(); });
+  $("citySel").addEventListener("change", (e) => { st.loc = UI.setPlace(st.loc, "city", e.target.value || null); fillLocal(); schedule(); });
+  $("marketSel").addEventListener("change", (e) => { st.loc = UI.setPlace(st.loc, "market", e.target.value || null); fillLocal(); schedule(); });
+  $("resetPrices").addEventListener("click", () => { st.prices = {}; schedule(); });
+  function placeName() { return (st.loc.market ? UI.marketLabel(D, st.loc, TU()) : null) || st.loc.city || st.loc.prov || regionName(st.region); }
+  function renderPriceMix(foods) {
+    const tt = TU(), note = UI.placeNote(st.loc, place(), tt);
+    $("priceMix").innerHTML = UI.mixBar(foods, tt) + (note ? `<p>${note[1]}</p>` : "");
+    $("basketHint").textContent = T().hint(`${placeName()}, ${monthName(st.month)}`);
+  }
+  $("region").addEventListener("change", (e) => { st.region = e.target.value; st.loc = UI.setPlace(st.loc, "region", st.region); fillLocal(); schedule(); });
+  $("month").addEventListener("change", (e) => { st.month = e.target.value; schedule(); });
+  $("halal").checked = st.halal; $("estimated").checked = st.estimated;
+  $("halal").addEventListener("change", (e) => { st.halal = e.target.checked; schedule(); });
+  $("estimated").addEventListener("change", (e) => { st.estimated = e.target.checked; schedule(); });
+  function setMode(m) { st.mode = m; $("modeBudget").setAttribute("aria-pressed", String(m === "budget")); $("modeFull").setAttribute("aria-pressed", String(m === "full")); $("budgetBox").hidden = m !== "budget"; }
+  $("modeBudget").addEventListener("click", () => { setMode("budget"); schedule(); });
+  $("modeFull").addEventListener("click", () => { setMode("full"); schedule(); });
+  $("budget").addEventListener("change", (e) => { st.budget = Math.max(0, +e.target.value || 0); st.preset = 0; schedule(); });
+  $("budgetSlider").addEventListener("input", (e) => { st.budget = +e.target.value; st.preset = 0; showBudget(); schedule(); });
+  function showBudget() { $("budgetShow").innerHTML = `${peso(st.budget || 0)}<small> ${T().week} · ${peso((st.budget || 0) / 7)} ${T().day}</small>`; }
+
+  const regKey = (r) => (r === "NIR" ? "R06" : r);
+  function inflator(region, month) {
+    const ix = D.index[region]; if (!ix) return 1;
+    const i = ix.months.indexOf(month); const base = D.base2023[region];
+    return i >= 0 && base ? ix.cond[i] / base : 1;
+  }
+  function decileInfo(region, dec) { const r = D.deciles[regKey(region)] || D.deciles.PH; return r[dec]; }
+  function presetBudget(dec) { return decileInfo(st.region, dec).food_home_pc_day * st.members.length * 7 * inflator(st.region, st.month); }
+  const PRESETS = [[1, "Poorest 10%"], [3, "Poorest 30%"], [5, "Middle income"]];
+  function markPresets() {
+    $("presets").innerHTML = PRESETS.map(([d, l]) => `<button type="button" class="btn small" data-d="${d}" aria-pressed="${st.preset === d}">${l}</button>`).join("");
+    $("presets").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { st.preset = +b.dataset.d; schedule(); }));
+  }
+  function nearestDecile(budgetWeek) {
+    const pp = budgetWeek / 7 / st.members.length / inflator(st.region, st.month);
+    const r = D.deciles[regKey(st.region)] || D.deciles.PH;
+    let best = 1, bd = Infinity; Object.entries(r).forEach(([d, v]) => { const dd = Math.abs(v.food_home_pc_day - pp); if (dd < bd) { bd = dd; best = +d; } });
+    return best;
+  }
+
+  // ---------------------------------------------------------------- solve + render
+  let timer = null;
+  function schedule() { clearTimeout(timer); timer = setTimeout(runPlan, 120); }
+  function runPlan() {
+    if (st.mode === "budget" && st.preset) st.budget = Math.round(presetBudget(st.preset) / 10) * 10;
+    if (st.budget == null) st.budget = Math.round(presetBudget(1) / 10) * 10;
+    store.set("plan", st);
+    setMode(st.mode); markPresets(); showBudget();
+    $("budget").value = st.budget; $("budgetSlider").value = Math.min(8000, Math.max(300, st.budget));
+    const pl = place(); const foods = S.foodTable(st.region, st.month, st.estimated, { province: pl.provPsa, city: pl.cityPsa, market: null, overrides: st.prices });
+    renderPriceMix(foods);
+    $("sumFam").textContent = st.members.map((m) => firstName(m.name)).join(", ");
+    $("sumWhere").textContent = `${placeName()} · ${monthName(st.month)}`;
+    $("sumBudget").textContent = st.mode === "budget" ? `${peso(st.budget)} ${T().week}` : T().fullShort;
+    const exclude = st.halal ? foods.filter((f) => f.key.startsWith("pork")).map((f) => f.key) : [];
+    const excludeFor = UI.dietExclude(st.members, foods);
+    const usable = foods.filter((f) => !exclude.includes(f.key));
+    const dec = st.mode === "budget" ? nearestDecile(st.budget || 0) : 1;
+    const shares = decileInfo(st.region, dec);
+    const tracked = S.trackedShare(shares);
+    let plan, full, typ = null, budgetDay = null;
+    try {
+      full = S.solvePlan(st.members, foods, { exclude, excludeFor });
+      if (st.mode === "budget") {
+        budgetDay = (st.budget || 0) / 7;
+        plan = S.solvePlan(st.members, foods, { budgetDay: budgetDay * tracked, exclude, excludeFor });
+        typ = S.typicalPlan(st.members, budgetDay, shares, usable);
+      } else plan = full;
+    } catch (err) { $("solveStatus").textContent = "Could not make a plan: " + err.message; return; }
+    $("solveStatus").textContent = `${usable.length} foods priced · solved in ${plan.ms.toFixed(0)} ms`;
+    const cov = S.coverage(plan); lastCov = cov;
+    renderMembers();
+    renderHero(plan, full, typ, cov, budgetDay, tracked);
+    renderPeople(plan, cov, usable);
+    renderBasket(plan);
+    renderUlam(plan);
+    renderSmart(usable, typ, plan);
+    renderNumbers(plan, typ, cov);
+  }
+
+  function familyScore(cov) { return cov.reduce((a, c) => a + memberAvg(c), 0) / cov.length; }
+
+  function renderHero(plan, full, typ, cov, budgetDay, tracked) {
+    const n = plan.members.length, score = familyScore(cov);
+    const fam = plan.members.map((m, i) => `<div class="fam">${avatar(m, ringColor(memberAvg(cov[i])), true)}<span>${esc(firstName(m.name))}</span><small>${STATUS_WORD[status(memberAvg(cov[i]))]}</small></div>`).join("");
+    let head, compare = "", notes = [];
+    const prot = plan.members.filter((m) => m.age < 5 || m.status !== "none").map((m) => firstName(m.name));
+    if (typ) {
+      const tScore = familyScore(typ.coverage.map((c) => { const o = {}; NUT.forEach((k) => (o[k] = c[k])); return o; }));
+      const gain = Math.round((score - tScore) * 100);
+      head = gain > 0
+        ? T().better(peso(st.budget)) : T().close(peso(st.budget));
+      compare = `<div class="compare">
+        <div class="cmp"><span>${T().usual}</span><div class="meter"><i style="width:${Math.min(tScore, 1) * 100}%;background:var(--ghost)"></i></div><b style="color:var(--ink-2)">${pct(tScore)}</b></div>
+        <div class="cmp"><span><b style="font:700 14px var(--font-body);color:var(--leaf)">${T().sapatList}</b></span><div class="meter"><i style="width:${Math.min(score, 1) * 100}%;background:var(--leaf)"></i></div><b>${pct(score)}</b></div>
+        <p class="hint">${T().share}</p></div>`;
+      if (prot.length) notes.push(["shield", T().fedFirst(prot.join(", "))]);
+      const gapWeek = (full.cost_day - budgetDay * tracked) * 7;
+      if (gapWeek > 50) notes.push(["coins", T().short(peso(gapWeek, 0), peso(full.cost_day * 7 / tracked, 0)), "warn"]);
+      else notes.push(["check", T().covers]);
+    } else {
+      head = T().fullHead(peso(plan.cost_day * 7), esc(placeName()));
+      compare = `<div class="compare"><div class="cmp"><span><b style="font:700 14px var(--font-body);color:var(--leaf)">${T().sapatList}</b></span><div class="meter"><i style="width:${Math.min(score, 1) * 100}%;background:var(--leaf)"></i></div><b>${pct(score)}</b></div><p class="hint">${T().perPerson(peso(plan.cost_day / n))}</p></div>`;
+      notes.push(["bulb", T().tryBudget]);
+    }
+    if (plan.needs.some((nd) => nd.ironFlag)) notes.push(["drop", T().ironTab, "warn"]);
+    $("hero").innerHTML = `<h2>${head}</h2><div class="family">${fam}</div>${compare}
+      <div class="notes">${notes.map(([ic, t, w]) => `<div class="note${w ? " warn" : ""}">${icon(ic)}<span>${t}</span></div>`).join("")}</div>
+      <a class="btn small jump" href="#inputs">${icon("users")}${T().change}</a>`;
+  }
+
+  function bestSources(foods, k, n, m) {
+    return S.cheapestSources(foods, 12)[k].filter((x) => { const f = foods.find((y) => y.key === x.key); return f && !["cereals"].includes(f.group) && !(m && UI.dietOf(m).ex(f)); }).map((x) => UI.fname(x.key, lang).replace(/ \(.*\)$/, "").toLowerCase()).filter((v, i, arr) => arr.indexOf(v) === i).slice(0, n || 2);
+  }
+
+  function renderPeople(plan, cov, foods) {
+    $("nlegend").innerHTML = NUT.map((k) => `<span class="nl"><span class="ic">${icon(NF[k].icon)}</span><b>${NF[k].word}</b></span>`).join("");
+    $("people").innerHTML = plan.members.map((m, i) => {
+      const c = cov[i], nd = plan.needs[i];
+      const chips = NUT.map((k) => { const s = status(c[k]); return `<div class="nc ${s}" title="${NF[k].label}: ${pct(Math.min(c[k], 9.99))} of need">${icon(NF[k].icon)}<span>${NF[k].word}</span></div>`; }).join("");
+      const ok = NUT.filter((k) => c[k] >= 0.9).length;
+      let worst = NUT.slice().sort((a, b) => c[a] - c[b])[0];
+      let tip;
+      if (c[worst] >= 0.9) tip = `${icon("check")}<span>${T().allFive}</span>`;
+      else if (worst === "iron_mg" && nd.ironFlag) tip = `${icon("drop")}<span>${T().ironAdd(bestSources(foods, "iron_mg", 2, m).join(" " + T().or + " "))}</span>`;
+      else tip = `${icon(NF[worst].icon)}<span title="${NF[worst].why}">${T().add(NF[worst].label, bestSources(foods, worst, 2, m).join(" " + T().or + " "))}</span>`;
+      return `<div class="pcard"><div class="phead">${avatar(m, ringColor(memberAvg(c)))}<div><b>${esc(m.name)}</b><span>${m.age} ${TU().yrs} · ${UI.dietOf(m)[lang]}${nd.priority === 3 ? " · " + T().fedFirstS : ""}</span></div><div class="score"><b>${ok} ${T().of5}</b>${T().sapat}</div></div>
+        <div class="nchips">${chips}</div><div class="tip">${tip}</div></div>`;
+    }).join("");
+  }
+
+  function niceQty(r) {
+    if (r.unit === "pcs") return `${r.qty} pc${r.qty === 1 ? "" : "s"}`;
+    const kg = r.qty;
+    if (kg < 0.1) return "a little";
+    if (kg < 1) { const g = Math.round(kg * 1000 / 50) * 50; return g >= 1000 ? "1 kg" : `${g} g`; }
+    const q = Math.round(kg * 4) / 4; const w = Math.floor(q), f = q - w;
+    return `${w || ""}${f === 0.25 ? "¼" : f === 0.5 ? "½" : f === 0.75 ? "¾" : ""} kg`.trim();
+  }
+  function renderBasket(plan) {
+    const rows = S.marketList(plan, 7).filter((r) => r.cost_week >= 1 || r.unit === "pcs");
+    const groups = {}; rows.forEach((r) => (groups[r.group] = groups[r.group] || []).push(r));
+    const order = ["cereals", "fish", "meat", "eggs", "pulses", "vegetables", "roots", "fruits", "condiments", "sugar"];
+    $("basket").innerHTML = order.filter((g) => groups[g]).map((g) => `<div class="bgroup"><h4><span class="gi">${icon(GROUP_ICON[g])}</span>${TU().groups[g] || D.group_labels[g] || g}</h4>
+      <ul>${groups[g].map((r) => `<li><span>${esc(UI.fname(r.key, lang))}</span><span><b>${niceQty(r)}</b> <span class="pr">${peso(r.cost_week)}</span></span></li>`).join("")}</ul></div>`).join("");
+    $("basketTotal").textContent = `${peso(plan.cost_day * 7)} ${T().total}`;
+  }
+
+  function renderUlam(plan) {
+    const tot = plan.foods.map((f, j) => ({ key: f.key, name: f.name, group: f.group, grams: plan.grams.reduce((a, g) => a + g[j], 0) }));
+    const prot = tot.filter((x) => ["fish", "meat", "eggs", "pulses"].includes(x.group) && x.grams * 7 >= 150).sort((a, b) => b.grams - a.grams).slice(0, 4);
+    const veg = tot.filter((x) => x.group === "vegetables" && x.grams > 0).sort((a, b) => b.grams - a.grams);
+    if (!prot.length) { $("ulam").innerHTML = `<p class="hint">${T().needMore}</p>`; return; }
+    $("ulam").innerHTML = prot.map((p, i) => {
+      const v = veg.length ? [veg[(i * 2) % veg.length], veg[(i * 2 + 1) % veg.length]] : [];
+      const name = S.dishName([p, ...v.filter(Boolean)]);
+      return `<div class="dish"><span class="gi">${icon(GROUP_ICON[p.group])}</span><b>${name}</b></div>`;
+    }).join("");
+  }
+
+  function renderSmart(foods, typ, plan) {
+    const cs = S.cheapestSources(foods, 12);
+    const byKey = {}; foods.forEach((f) => (byKey[f.key] = f));
+    const nonCereal = (k) => cs[k].filter((x) => byKey[x.key] && byKey[x.key].group !== "cereals");
+    const cards = [];
+    // Protein: compare the cheapest good protein with chicken (or the priciest common meat)
+    const qp = cs.protein_g.filter((x) => ["fish", "meat", "eggs", "pulses"].includes(byKey[x.key].group));
+    const ref = foods.find((f) => f.key === "chicken") || foods.find((f) => f.key === "pork_kasim");
+    if (qp.length && ref) {
+      const refCost = ref.price_g / ref.protein_g * 10; const ratio = refCost / qp[0].php;
+      let save = "";
+      if (typ) {
+        const meatProt = ["chicken", "pork_kasim"].reduce((a, k) => a + ((typ.grams[k] || 0) * (byKey[k] ? byKey[k].protein_g : 0)), 0);
+        const meatCost = ["chicken", "pork_kasim"].reduce((a, k) => a + ((typ.grams[k] || 0) * (byKey[k] ? byKey[k].price_g : 0)), 0);
+        const half = 0.5 * (meatCost - meatProt * qp[0].php / 10) * 7;
+        if (half > 20) save = ` Swapping half your meat for it saves about <b>${peso(half)}</b> a week.`;
+      }
+      cards.push(["swap", "Best protein for the money", qp[0].name.split(" (")[0], ratio >= 1.5 ? `Gives the same protein as ${ref.name.split(",")[0].toLowerCase()} for about <b>${Math.round(ratio)}× less</b> money.${save}` : `The cheapest way to get protein this month.${save}`]);
+    }
+    const youngest = plan.members.slice().sort((a, b) => a.age - b.age)[0];
+    const yNeed = S.memberNeeds(youngest).values;
+    [["vit_a_ug", "eye", "Best for the eyes"], ["iron_mg", "drop", "Best for the blood"], ["calcium_mg", "bone", "Best for bones"]].forEach(([k, ic, title]) => {
+      const top = nonCereal(k)[0]; if (!top) return;
+      const f = byKey[top.key]; const g = yNeed[k] / f[k];
+      const line = g <= 100 ? `About <b>${peso(g * f.price_g, 0)}</b> a day (${Math.round(g / 10) * 10} g) covers ${esc(firstName(youngest.name))}'s ${NF[k].label.toLowerCase()} need.` : `${NF[k].why}`;
+      cards.push([ic, title, top.name.split(" (")[0], line]);
+    });
+    $("smart").innerHTML = cards.map(([ic, t, food, line]) => `<div class="sb"><div class="top">${icon(ic)}${t}</div><b>${food}</b><p>${line}</p></div>`).join("");
+  }
+
+  function renderNumbers(plan, typ, cov) {
+    $("coverage").innerHTML = plan.members.map((m, i) => {
+      const nd = plan.needs[i];
+      const bars = NUT.map((k) => {
+        const c = cov[i][k], w = Math.min(c, 1) * 100, g = typ ? Math.min(typ.coverage[i][k], 1) * 100 : null;
+        const col = c >= 0.9 ? "var(--good)" : c >= 0.6 ? "var(--warn)" : "var(--bad)";
+        return `<div class="bar"><div class="lab"><span>${NF[k].label}</span><b>${pct(Math.min(c, 9.99))}</b></div><div class="track" title="${fmt(plan.supplied[i][k])} of ${fmt(nd.values[k])} ${S.NUTRIENT_UNITS[k]}"><div class="fill" style="width:${w}%;background:${col}"></div>${g != null ? `<div class="ghost" style="left:calc(${g}% - 1px)"></div>` : ""}</div></div>`;
+      }).join("");
+      return `<div class="covrow"><div><b>${esc(m.name)}</b><div class="hint">${nd.stage}</div></div><div class="bars">${bars}</div></div>`;
+    }).join("");
+    const rows = S.marketList(plan, 7);
+    $("market").innerHTML = `<thead><tr><th>Food</th><th class="n">Per week</th><th class="n">Cost / week</th><th class="n">₱ per kg</th><th>Price from</th></tr></thead><tbody>` +
+      rows.map((r) => {
+        const mine = r.level === "yours";
+        const was = r.level !== "region" && r.region_price ? `<span class="was">region ${peso(r.region_price)}</span>` : "";
+        return `<tr><td>${r.name}</td><td class="n">${r.unit === "pcs" ? r.qty + " pcs" : fmt(r.qty, 2) + " kg"}</td><td class="n">${peso(r.cost_week)}</td>
+          <td class="n"><input class="pin${mine ? " set" : ""}" type="number" min="0" step="1" inputmode="decimal" data-k="${r.key}" value="${Math.round(r.price_kg)}" aria-label="Price per kilo of ${esc(r.name)}">${was}</td>
+          <td><span class="lvl ${r.level}">${S.LEVELS[r.level]}</span>${r.level === "region" && r.source !== "observed" ? `<span class="was">${r.source}</span>` : ""}</td></tr>`;
+      }).join("") + `</tbody>`;
+    $("market").querySelectorAll("input.pin").forEach((inp) => inp.addEventListener("change", (e) => {
+      const v = +e.target.value; const k = e.target.dataset.k;
+      if (v > 0) st.prices[k] = v; else delete st.prices[k];
+      schedule();
+    }));
+    $("resetPrices").hidden = !Object.keys(st.prices).length;
+  }
+
+  // ---------------------------------------------------------------- LGU
+  const lgu = store.get("lgu", null) || { region: "R08", month: lastMonth };
+  fillRegions($("lguRegion"), lgu.region); fillMonths($("lguMonth"), lgu.month, "2019-01");
+  $("lguRegion").addEventListener("change", (e) => { lgu.region = e.target.value; renderLGU(); });
+  $("lguMonth").addEventListener("change", (e) => { lgu.month = e.target.value; renderLGU(); });
+  const BACKTESTS = [["2022-12", "Onion crisis"], ["2023-09", "Rice spike 2023"], ["2026-09", "Rice 2026"]];
+  $("backtests").innerHTML = BACKTESTS.map(([m, l]) => `<button type="button" class="btn small" data-m="${m}">${icon("siren")}${l}</button>`).join("");
+  $("backtests").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { lgu.month = b.dataset.m; $("lguMonth").value = lgu.month; renderLGU(); }));
+
+  function renderLGU() {
+    store.set("lgu", lgu);
+    const ix = D.index[lgu.region]; const i = ix.months.indexOf(lgu.month);
+    const stt = D.stats[lgu.region];
+    const d1 = decileInfo(lgu.region, 1);
+    const d1now = d1.food_home_pc_day * inflator(lgu.region, lgu.month);
+    const level = ix.level[i] || "normal";
+    const share = Math.max(0, Math.min(1, d1now / ix.cond[i]));
+    const tenths = Math.round(share * 10);
+    const chg = ix.vs_prev3[i];
+    const title = { normal: `${regionName(lgu.region)} is steady this month.`, watch: `Watch ${regionName(lgu.region)}: healthy food is getting pricier.`, alert: `Alert in ${regionName(lgu.region)}: healthy food costs jumped.` }[level];
+    $("lguBanner").className = "banner " + level;
+    $("lguBanner").innerHTML = `<span class="big-ic">${icon(level === "normal" ? "shield" : level === "watch" ? "warn" : "siren")}</span><div><h2>${title}</h2>
+      <p>A healthy day of food costs <b>${peso(ix.cond[i])}</b> per person in ${monthLong(lgu.month)}${chg != null ? `, ${chg >= 0 ? "up" : "down"} ${Math.abs(chg * 100).toFixed(1)}% from the past 3 months` : ""}. The poorest families spend about <b>${peso(d1now)}</b>, enough for roughly <b>${tenths} in 10</b> pesos of it.</p></div>`;
+    $("lguTiles").innerHTML = `
+      <div class="tile"><div class="top">${icon("coins")}Poorest 10% can afford</div><div class="pesos">${Array.from({ length: 10 }, (_, k) => `<i class="${k < tenths ? "on" : "off"}">₱</i>`).join("")}</div><span>${tenths} of every 10 pesos a healthy diet needs</span></div>
+      ${stt ? `<div class="tile"><div class="top">${icon("users")}Eat below the food line</div><b>${Math.round(stt.below_ft * 10)} in 10</b><span>people spent less on food than PSA's 2023 food threshold</span></div>
+      <div class="tile"><div class="top">${icon("rice")}Rice-heavy budgets</div><b>${pct(stt.cereal_share)}</b><span>of home food spending goes to rice and cereals</span></div>` : ""}
+      <div class="tile"><div class="top">${icon("bone")}Costliest nutrient</div><b>Calcium</b><span>Without it the diet costs ${peso(ix.cond_nocal[i])}. Milk and dilis in feeding programs help most.</span></div>`;
+    $("chartEyebrow").textContent = regionName(lgu.region);
+    $("tableEyebrow").textContent = monthLong(lgu.month);
+    $("lguChart").innerHTML = lineChart(ix, lgu.month, d1.food_home_pc_day, lgu.region);
+    const ord = { alert: 0, watch: 1, normal: 2 };
+    const rows = D.regions.filter((r) => r.key !== "PH").map((r) => {
+      const x = D.index[r.key]; if (!x) return null; const j = x.months.indexOf(lgu.month); if (j < 0) return null;
+      return { key: r.key, name: r.name, cond: x.cond[j], prev: x.vs_prev3[j], level: x.level[j] };
+    }).filter(Boolean).sort((a, b) => ord[a.level] - ord[b.level] || b.cond - a.cond);
+    const pillIc = { normal: "check", watch: "warn", alert: "siren" };
+    $("lguTable").innerHTML = `<thead><tr><th>Region</th><th>Status</th><th class="n">Healthy day</th><th class="n">Change</th></tr></thead><tbody>` +
+      rows.map((r) => `<tr${r.key === lgu.region ? ' style="background:var(--surface-2)"' : ""}><td>${r.name}</td><td><span class="pill ${r.level}">${icon(pillIc[r.level])}${r.level}</span></td><td class="n">${peso(r.cond)}</td><td class="n">${r.prev == null ? "–" : (r.prev >= 0 ? "▲ " : "▼ ") + Math.abs(r.prev * 100).toFixed(1) + "%"}</td></tr>`).join("") + `</tbody>`;
+    renderMap();
+  }
+
+
+  // ---------------------------------------------------------------- LGU map: province or region heatmap with metric switch, month replay, hover and click
+  const MAP = window.PH_MAP, PROV = window.PH_PROV;
+  const PMI = {}; if (PROV) PROV.months.forEach((m, i) => (PMI[m] = i));
+  const LVL_ORD = { normal: 0, watch: 1, alert: 2 };
+  const regionIdx = (r, m) => { const x = D.index[r]; return x ? x.months.indexOf(m) : -1; };
+  // a "unit" is a province (default) or a region; every metric reads from either
+  const U_REG = Object.keys(MAP.paths).map((k) => ({ key: k, name: regionName(k), region: k, d: MAP.paths[k], kind: "region" }));
+  const U_PROV = PROV ? PROV.provinces.map((p) => ({ key: p.key, name: p.name, region: p.region, d: p.d, kind: "prov", p })) : [];
+  const decAfford = (r, m, cost) => { const d = D.deciles[regKey(r)]; return d && cost ? d[1].food_home_pc_day * inflator(r, m) / cost : null; };
+  const pv = (u, arr, m) => { const i = PMI[m]; return i == null ? null : u.p[arr][i]; };
+  const rv = (u, f, m) => { const x = D.index[u.region], j = regionIdx(u.region, m); return j < 0 ? null : f(x, j); };
+  const METRICS = [
+    { k: "cost", label: "Healthy-day cost", icon: "coins", kind: "seq", unit: "₱ per person per day", timed: true, fmt: (v) => peso(v),
+      get: (u, m) => u.kind === "prov" ? pv(u, "cond", m) : rv(u, (x, j) => x.cond[j], m) },
+    { k: "afford", label: "Poorest 10% can afford", icon: "wallet", kind: "seq", rev: true, unit: "share of a healthy diet", timed: true, fmt: (v) => Math.round(v * 100) + "%",
+      get: (u, m) => decAfford(u.region, m, u.kind === "prov" ? pv(u, "cond", m) : rv(u, (x, j) => x.cond[j], m)) },
+    { k: "chg3", label: "Change vs 3 months", icon: "up", kind: "div", span: 0.10, unit: "vs average of past 3 months", timed: true, fmt: (v) => (v >= 0 ? "+" : "−") + Math.abs(v * 100).toFixed(1) + "%",
+      get: (u, m) => u.kind === "prov" ? pv(u, "vs3", m) : rv(u, (x, j) => x.vs_prev3[j], m) },
+    { k: "yoy", label: "Change vs last year", icon: "up", kind: "div", span: 0.20, unit: "vs same month last year", timed: true, fmt: (v) => (v >= 0 ? "+" : "−") + Math.abs(v * 100).toFixed(1) + "%",
+      get: (u, m) => u.kind === "prov" ? pv(u, "yoy", m) : rv(u, (x, j) => x.yoy[j], m) },
+    { k: "level", label: "Alert level", icon: "siren", kind: "status", unit: "early-warning status", timed: true, fmt: (v) => ["Steady", "Watch", "Alert"][v],
+      get: (u, m) => u.kind === "prov" ? pv(u, "level", m) : rv(u, (x, j) => LVL_ORD[x.level[j]], m) },
+    { k: "rice", label: "Rice price", icon: "rice", kind: "seq", unit: "regular-milled, ₱ per kg", timed: true, provOnly: true, fmt: (v) => peso(v, 2),
+      get: (u, m) => u.kind === "prov" ? pv(u, "kf", m) && u.p.kf.rice_rm[PMI[m]] : null },
+    { k: "fish", label: "Galunggong price", icon: "fish", kind: "seq", unit: "₱ per kg", timed: true, provOnly: true, fmt: (v) => peso(v),
+      get: (u, m) => u.kind === "prov" && PMI[m] != null ? u.p.kf.galunggong[PMI[m]] : null },
+    { k: "below", label: "Below food threshold", icon: "users", kind: "seq", unit: "people, FIES 2023 (regional)", timed: false, fmt: (v) => Math.round(v * 100) + "%",
+      get: (u) => D.stats[u.region] ? D.stats[u.region].below_ft : null },
+    { k: "pov", label: "Poverty incidence", icon: "map", kind: "seq", unit: "families, 2023 (regional)", timed: false, fmt: (v) => fmt(v * 100, 1) + "%",
+      get: (u) => D.stats[u.region] && D.stats[u.region].poverty_fam != null ? D.stats[u.region].poverty_fam / 100 : null },
+  ];
+  METRICS.find((x) => x.k === "rice").get = (u, m) => u.kind === "prov" && PMI[m] != null ? u.p.kf.rice_rm[PMI[m]] : null;
+  const mapSt = Object.assign({ metric: "cost", level: PROV ? "prov" : "region", sel: null }, store.get("lgumap", {}));
+  const units = () => mapSt.level === "prov" && PROV ? U_PROV : U_REG;
+  const metric = () => { const M = METRICS.find((x) => x.k === mapSt.metric) || METRICS[0]; return M.provOnly && mapSt.level !== "prov" ? METRICS[0] : M; };
+  const MONTHS19 = D.months.filter((m) => m >= "2019-01");
+  function drawShapes() {
+    const us = units();
+    $("phMap").innerHTML = `<svg viewBox="0 0 ${MAP.w} ${MAP.h}" role="group" aria-label="Map of the Philippines by ${mapSt.level === "prov" ? "province" : "region"}">
+      ${us.map((u) => `<path class="rg${u.kind === "prov" && !u.p.psa ? " nops" : ""}" data-u="${esc(u.key)}" d="${u.d}" tabindex="0" role="button" aria-label="${esc(u.name)}"></path>`).join("")}
+      <g id="ncrInset"></g></svg>`;
+    const ncrU = us.find((u) => u.region === "NCR"); if (ncrU) {
+      const nums = ncrU.d.match(/-?[\d.]+/g).map(Number), xs = nums.filter((_, i) => i % 2 === 0), ys = nums.filter((_, i) => i % 2 === 1);
+      const b = { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) };
+      const Sx = Math.min(10, 90 / Math.max(b.w, b.h)), ox = 40, oy = 330;
+      $("ncrInset").innerHTML = `<rect x="${ox - 8}" y="${oy - 22}" width="${b.w * Sx + 16}" height="${b.h * Sx + 30}" rx="8" fill="var(--surface)" stroke="var(--line)"/><text x="${ox - 2}" y="${oy - 8}">NCR</text>
+        <line x1="${ox + b.w * Sx + 8}" y1="${oy + b.h * Sx / 2}" x2="${b.x}" y2="${b.y + b.h / 2}" stroke="var(--ink-2)" stroke-dasharray="3 3"/>
+        <path class="rg" data-u="${esc(ncrU.key)}" tabindex="-1" transform="translate(${ox - b.x * Sx} ${oy - b.y * Sx}) scale(${Sx})" d="${ncrU.d}" style="stroke-width:${0.8 / Sx}"></path>`;
+    }
+    $("phMap").querySelectorAll("path.rg").forEach((p) => {
+      const k = p.dataset.u;
+      p.addEventListener("mousemove", (e) => { showTip(k, e); hot(k); });
+      p.addEventListener("mouseleave", () => { tip.hidden = true; hot(null); });
+      p.addEventListener("click", () => pickUnit(k));
+      p.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickUnit(k); } });
+      p.addEventListener("focus", () => { const r = p.getBoundingClientRect(); showTip(k, { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }); hot(k); });
+      p.addEventListener("blur", () => { tip.hidden = true; hot(null); });
+    });
+  }
+  const binOf = (M, v, vals) => {
+    if (v == null) return null;
+    if (M.kind === "status") return v;
+    if (M.kind === "div") { const t = Math.max(-1, Math.min(1, v / M.span)); return t <= -0.5 ? 0 : t < -0.15 ? 1 : t <= 0.15 ? 2 : t < 0.5 ? 3 : 4; }
+    const lo = Math.min(...vals), hi = Math.max(...vals); let t = hi > lo ? (v - lo) / (hi - lo) : 0.5; if (M.rev) t = 1 - t;
+    return Math.min(4, Math.floor(t * 5));
+  };
+  const colorOf = (M, b) => b == null ? "var(--nodata)" : M.kind === "status" ? ["var(--good)", "var(--warn)", "var(--bad)"][b] : M.kind === "div" ? `var(--div${b + 1})` : `var(--seq${b + 1})`;
+  const unitBy = (k) => units().find((u) => u.key === k);
+  function renderMap() {
+    const M = metric(), m = lgu.month, us = units(), vals = {}; us.forEach((u) => (vals[u.key] = M.get(u, m)));
+    const list = Object.values(vals).filter((v) => v != null);
+    if (!mapSt.sel || !unitBy(mapSt.sel)) mapSt.sel = (us.find((u) => u.region === lgu.region) || us[0]).key;
+    $("mapLevel").innerHTML = PROV ? [["prov", "Provinces"], ["region", "Regions"]].map(([k, l]) => `<button type="button" data-l="${k}" aria-pressed="${mapSt.level === k}">${l}</button>`).join("") : "";
+    $("mapLevel").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { mapSt.level = b.dataset.l; mapSt.sel = null; store.set("lgumap", mapSt); drawShapes(); renderMap(); }));
+    $("metricChips").innerHTML = METRICS.filter((x) => !x.provOnly || mapSt.level === "prov").map((x) => `<button type="button" class="btn small" data-k="${x.k}" aria-pressed="${x.k === M.k}">${icon(x.icon)}${x.label}</button>`).join("");
+    $("metricChips").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { mapSt.metric = b.dataset.k; store.set("lgumap", mapSt); renderMap(); }));
+    $("phMap").querySelectorAll("path.rg").forEach((p) => { const k = p.dataset.u; p.style.fill = colorOf(M, binOf(M, vals[k], list)); p.classList.toggle("sel", k === mapSt.sel); });
+    $("mapTitle").textContent = `${M.label}${M.timed ? ", " + monthLong(m) : ""}`;
+    $("mapEyebrow").innerHTML = `${icon("map")}${mapSt.level === "prov" ? "By province" : "By region"} · ${M.unit}`;
+    if (M.kind === "status") $("mapLegend").innerHTML = `<div class="stat">${[["normal", "check", "Steady"], ["watch", "warn", "Watch"], ["alert", "siren", "Alert"]].map(([c, ic, l], b) => `<span><span class="pill ${c}">${icon(ic)}${l}</span>${list.filter((v) => v === b).length}</span>`).join("")}</div>`;
+    else {
+      const lo = Math.min(...list), hi = Math.max(...list);
+      const ends = M.kind === "div" ? [M.fmt(-M.span), "0%", M.fmt(M.span)] : M.rev ? [M.fmt(hi), "", M.fmt(lo)] : [M.fmt(lo), "", M.fmt(hi)];
+      $("mapLegend").innerHTML = `<div class="sw">${[0, 1, 2, 3, 4].map((b) => `<i style="background:${colorOf(M, b)}"></i>`).join("")}</div><div class="ends"><span>${ends[0]}</span><span>${ends[1]}</span><span>${ends[2]}</span></div><div class="ends"><span>${M.kind === "div" ? "cheaper" : M.rev ? "can afford more" : "lower"}</span><span>${M.kind === "div" ? "pricier" : M.rev ? "less" : "higher"}</span></div>`;
+    }
+    // selected unit detail
+    const su = unitBy(mapSt.sel), sv = su ? vals[su.key] : null;
+    let spark = "";
+    if (su) {
+      const ser = MONTHS19.filter((x) => x <= m).slice(-24).map((x) => METRICS[0].get(su, x)).filter((v) => v != null);
+      if (ser.length > 1) { const Wd = 240, H = 56, lo = Math.min(...ser) * 0.98, hi = Math.max(...ser) * 1.02, x = (k) => 4 + k / (ser.length - 1) * (Wd - 8), y = (v) => H - 4 - (v - lo) / (hi - lo || 1) * (H - 8);
+        spark = `<svg viewBox="0 0 ${Wd} ${H}" style="width:100%;height:56px" role="img" aria-label="Healthy-day cost, last 24 months"><polyline points="${ser.map((v, k) => `${x(k).toFixed(1)},${y(v).toFixed(1)}`).join(" ")}" fill="none" stroke="var(--leaf)" stroke-width="2" stroke-linejoin="round"/><circle cx="${x(ser.length - 1)}" cy="${y(ser[ser.length - 1])}" r="3.5" fill="var(--leaf)"/></svg>`; }
+    }
+    const lvNow = su ? METRICS[4].get(su, m) : null;
+    $("mapDetail").innerHTML = su ? `<div class="det"><b>${esc(su.name)}</b><span>${su.kind === "prov" ? regionName(su.region) : "Region"}${su.kind === "prov" && !su.p.psa ? " · no province survey, regional prices" : ""}</span>
+      <div class="dv"><strong>${sv == null ? "–" : M.fmt(sv)}</strong>${lvNow != null && M.k !== "level" ? `<span class="pill ${["normal", "watch", "alert"][lvNow]}">${icon(["check", "warn", "siren"][lvNow])}${["Steady", "Watch", "Alert"][lvNow]}</span>` : ""}</div>
+      <small>Healthy-day cost, last 24 months</small>${spark}</div>` : "";
+    // ranking: worst first
+    const worst = (a, b) => M.rev ? a[1] - b[1] : b[1] - a[1];
+    const ranked = Object.entries(vals).filter(([, v]) => v != null).sort(worst);
+    const rk = ranked.findIndex(([k]) => k === mapSt.sel);
+    const row = ([k, v], n) => `<button type="button" data-u="${esc(k)}" class="${k === mapSt.sel ? "sel" : ""}"><span class="sq" style="background:${colorOf(M, binOf(M, v, list))}"></span><span>${n != null ? "#" + (n + 1) + " " : ""}${esc(unitBy(k).name)}</span><b>${M.fmt(v)}</b></button>`;
+    $("mapRanks").innerHTML = `<div class="rk-h">${M.rev ? "Least able to afford" : M.kind === "status" ? "Most urgent" : "Highest"}</div>` + ranked.slice(0, 5).map((r) => row(r)).join("") + (rk >= 5 ? row(ranked[rk], rk) : "");
+    $("mapRanks").querySelectorAll("button").forEach((b) => { b.addEventListener("click", () => pickUnit(b.dataset.u)); b.addEventListener("mouseenter", () => hot(b.dataset.u)); b.addEventListener("mouseleave", () => hot(null)); });
+    $("timeline").classList.toggle("off", !M.timed);
+    const sl = $("monthSlider"); sl.max = MONTHS19.length - 1; sl.value = Math.max(0, MONTHS19.indexOf(m));
+    $("monthOut").textContent = M.timed ? monthName(m) : "2023 data";
+    $("playBtn").innerHTML = playing ? icon("pause") + "Pause" : icon("play") + "Play";
+    $("mapNote").textContent = mapSt.level === "prov"
+      ? "Province cost uses PSA province prices where surveyed, regional prices otherwise (faded: no province survey). Same reference family and alert rule as the regional index. Highly urbanized cities are drawn inside their province; 2023 boundaries."
+      : "Region boundaries: 2023 PSGC. Negros Island Region is drawn inside VI and VII. Colors split the range into 5 equal steps.";
+  }
+  function hot(k) {
+    $("phMap").classList.toggle("dim", !!k);
+    $("phMap").querySelectorAll("path.rg").forEach((p) => p.classList.toggle("hot", p.dataset.u === k));
+    $("mapRanks").querySelectorAll("button").forEach((b) => b.classList.toggle("hot", b.dataset.u === k));
+  }
+  function pickUnit(k) {
+    const u = unitBy(k); if (!u) return; mapSt.sel = k; store.set("lgumap", mapSt);
+    if (D.index[u.region] && lgu.region !== u.region) { lgu.region = u.region; $("lguRegion").value = u.region; renderLGU(); } else renderMap();
+  }
+  const tip = $("mapTip"), card = $("phMap").closest(".mapcard");
+  function showTip(k, ev) {
+    const u = unitBy(k); if (!u) return; const M = metric(), v = M.get(u, lgu.month), c = METRICS[0].get(u, lgu.month), lv = METRICS[4].get(u, lgu.month);
+    tip.innerHTML = `<b>${esc(u.name)}</b>${u.kind === "prov" ? regionName(u.region) + "<br>" : ""}${M.label}: ${v == null ? "no data" : M.fmt(v)}${lv != null ? `<br>Status: ${["Steady", "Watch", "Alert"][lv]}` : ""}${c != null && M.k !== "cost" ? `<br>Healthy day: ${peso(c)}` : ""}`;
+    tip.hidden = false;
+    const r = card.getBoundingClientRect(); let px = ev.clientX - r.left + 14, py = ev.clientY - r.top + 14;
+    if (px + 200 > r.width) px -= 220; tip.style.left = px + "px"; tip.style.top = py + "px";
+  }
+  drawShapes();
+  let playing = null;
+  function setMonth(m) { lgu.month = m; $("lguMonth").value = m; renderLGU(); }
+  $("monthSlider").addEventListener("input", (e) => setMonth(MONTHS19[+e.target.value]));
+  $("playBtn").addEventListener("click", () => {
+    if (playing) { clearInterval(playing); playing = null; renderMap(); return; }
+    let i = MONTHS19.indexOf(lgu.month); if (i < 0 || i >= MONTHS19.length - 1) i = 0;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    playing = setInterval(() => { i++; if (i >= MONTHS19.length) { clearInterval(playing); playing = null; renderMap(); return; } setMonth(MONTHS19[i]); }, reduce ? 900 : 350);
+    renderMap();
+  });
+
+  function lineChart(ix, selMonth, d1base, region) {
+    const W = 760, H = 280, L = 48, R = 14, T = 14, B = 30;
+    const n = ix.months.length;
+    const d1 = ix.months.map((m) => d1base * inflator(region, m));
+    const ymax = Math.ceil(Math.max(...ix.cond, ...ix.cond_nocal, ...d1) / 50) * 50;
+    const x = (i) => L + (W - L - R) * i / (n - 1), y = (v) => T + (H - T - B) * (1 - v / ymax);
+    const path = (arr) => arr.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+    let g = "";
+    for (let v = 0; v <= ymax; v += 50) g += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="var(--ink-2)">₱${v}</text>`;
+    ix.months.forEach((m, i) => { if (m.endsWith("-01")) g += `<text x="${x(i)}" y="${H - 10}" text-anchor="middle" font-size="11" fill="var(--ink-2)">${m.slice(0, 4)}</text>`; });
+    const gap = path(ix.cond) + d1.slice().reverse().map((v, k) => `L${x(n - 1 - k).toFixed(1)},${y(v).toFixed(1)}`).join("") + "Z";
+    let marks = "";
+    ix.level.forEach((lv, i) => { if (lv !== "normal") marks += `<circle cx="${x(i)}" cy="${y(ix.cond[i])}" r="3.4" fill="${lv === "alert" ? "var(--bad)" : "var(--warn)"}"/>`; });
+    const si = ix.months.indexOf(selMonth);
+    const midI = Math.round(n * 0.55);
+    const sel = si >= 0 ? `<line x1="${x(si)}" x2="${x(si)}" y1="${T}" y2="${H - B}" stroke="var(--ink)" stroke-dasharray="3 3" opacity=".45"/><circle cx="${x(si)}" cy="${y(ix.cond[si])}" r="5.5" fill="var(--leaf)" stroke="var(--surface)" stroke-width="2"/><text x="${Math.min(x(si) + 8, W - 60)}" y="${y(ix.cond[si]) - 10}" font-size="13" font-weight="700" fill="var(--ink)">₱${Math.round(ix.cond[si])}</text>` : "";
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cost of a healthy diet over time">${g}
+      <path d="${gap}" fill="var(--squash)" opacity=".10"/>
+      <text x="${x(midI)}" y="${(y(ix.cond[midI]) + y(d1[midI])) / 2 + 4}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--squash)">Affordability gap</text>
+      <path d="${path(ix.cond_nocal)}" fill="none" stroke="var(--ghost)" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <path d="${path(d1)}" fill="none" stroke="var(--squash)" stroke-width="2"/>
+      <path d="${path(ix.cond)}" fill="none" stroke="var(--leaf)" stroke-width="2.4"/>${marks}${sel}</svg>`;
+  }
+
+  // ---------------------------------------------------------------- Menu
+  const mn = store.get("menu", null) || { region: "R08", month: lastMonth, age: 7, n: 40, budget: 30, share: 0.3333, halal: false };
+  fillRegions($("menuRegion"), mn.region); fillMonths($("menuMonth"), mn.month, "2019-01");
+  $("menuAge").value = String(mn.age); $("menuN").value = mn.n; $("menuBudget").value = mn.budget; $("menuShare").value = String(mn.share); $("menuHalal").checked = mn.halal;
+  [["menuRegion", "region", (v) => v], ["menuMonth", "month", (v) => v], ["menuAge", "age", (v) => +v], ["menuN", "n", (v) => Math.max(1, Math.round(+v || 1))], ["menuBudget", "budget", (v) => Math.max(1, +v || 1)], ["menuShare", "share", (v) => +v]]
+    .forEach(([id, key, cast]) => $(id).addEventListener("change", (e) => { mn[key] = cast(e.target.value); renderMenu(); }));
+  $("menuHalal").addEventListener("change", (e) => { mn.halal = e.target.checked; renderMenu(); });
+
+  function renderMenu() {
+    store.set("menu", mn);
+    const foods = S.foodTable(mn.region, mn.month, false);
+    const exclude = mn.halal ? foods.filter((f) => f.key.startsWith("pork")).map((f) => f.key) : [];
+    let days;
+    try { days = S.menuPlan({ name: "Learner", age: mn.age, sex: "X" }, foods, { share: mn.share, days: 5, budgetMeal: mn.budget, exclude }); }
+    catch (err) { $("menuDays").textContent = "Could not make a menu: " + err.message; return; }
+    const avgCost = days.reduce((a, d) => a + d.cost, 0) / days.length;
+    const avgCov = days.reduce((a, d) => a + NUT.reduce((s, k) => s + Math.min(d.coverage[k], 1), 0) / 5, 0) / days.length;
+    const full = S.menuPlan({ name: "Learner", age: mn.age, sex: "X" }, foods, { share: mn.share, days: 1, exclude })[0];
+    const lvl = avgCov >= 0.9 ? "normal" : avgCov >= 0.75 ? "watch" : "alert";
+    const shortK = NUT.filter((k) => days.reduce((a, d) => a + Math.min(d.coverage[k], 1), 0) / days.length < 0.85);
+    $("menuBanner").className = "banner " + lvl;
+    $("menuBanner").innerHTML = `<span class="big-ic">${icon(lvl === "normal" ? "shield" : "warn")}</span><div><h2>${peso(mn.budget)} a meal covers about ${Math.round(avgCov * 10)} in 10 of what each child should get from it.</h2>
+      <p>${shortK.length ? `Short on ${shortK.map((k) => NF[k].label.toLowerCase()).join(" and ")}. A meal that meets every target costs about <b>${peso(full.cost, 0)}</b>.` : "Every target is met within the budget."} The week costs <b>${peso(avgCost * 5 * mn.n)}</b> for ${fmt(mn.n)} learners.</p></div>`;
+    const DAYN = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    $("menuDays").innerHTML = days.map((d) => {
+      const main = d.items.find((it) => ["fish", "meat", "eggs", "pulses"].includes(it.group));
+      return `<div class="day"><div class="eyebrow">${DAYN[d.day - 1]}</div>
+      <div class="dh"><span class="gi" style="width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--squash-soft);color:var(--squash);flex:none">${icon(main ? GROUP_ICON[main.group] : "leaf")}</span><h4>${d.dish}</h4></div>
+      <div class="dots">${NUT.map((k) => `<i class="${status(d.coverage[k])}" title="${NF[k].label}: ${STATUS_WORD[status(d.coverage[k])]}">${icon(NF[k].icon)}</i>`).join("")}</div>
+      <ul>${d.items.filter((it) => it.grams >= 3).map((it) => `<li>${it.name}<span>${fmt(it.grams)} g</span></li>`).join("")}</ul></div>`;
+    }).join("");
+    const tot = {};
+    days.forEach((d) => d.items.forEach((it) => { tot[it.key] = tot[it.key] || { name: it.name, group: it.group, g: 0, cost: 0 }; tot[it.key].g += it.grams * mn.n; tot[it.key].cost += it.cost * mn.n; }));
+    const rows = Object.values(tot).sort((a, b) => b.cost - a.cost);
+    $("menuList").innerHTML = `<thead><tr><th>Ingredient</th><th class="n">Quantity</th><th class="n">Cost</th></tr></thead><tbody>` +
+      rows.map((r) => `<tr><td>${icon(GROUP_ICON[r.group])} ${r.name}</td><td class="n">${r.g >= 1000 ? fmt(r.g / 1000, 1) + " kg" : fmt(Math.round(r.g / 10) * 10) + " g"}</td><td class="n">${peso(r.cost)}</td></tr>`).join("") + `</tbody>`;
+    $("menuListTitle").textContent = `Ingredients for the week, ${fmt(mn.n)} learners`;
+  }
+
+  // ---------------------------------------------------------------- About
+  const PS = [
+    ["Families cannot see what an adequate diet costs for their own members at local prices; budgets default to rice.", "home", "Family planner", "Live"],
+    ["Children under 5 and pregnant or breastfeeding mothers carry the largest nutrient gaps.", "shield", "Protect-first budget mode", "Live"],
+    ["People do not know which foods give the most nutrition per peso this month.", "bulb", "Smart buys and swaps", "Live"],
+    ["LGUs plan with a food threshold updated every two to three years; price shocks are seen late.", "siren", "LGU early warning", "Live"],
+    ["School and community meal programs plan menus by hand on fixed budgets.", "pot", "Feeding program menus", "Live"],
+    ["Healthy choices compete with cheaper, filling staples.", "coins", "Rewards for protein-rich purchases (with 4Ps, Walang Gutom)", "Planned"],
+  ];
+  $("psTable").innerHTML = `<div><span class="h">Problem</span><span class="h">SAPAT feature</span><span class="h">Status</span></div>` +
+    PS.map(([p, ic, f, s]) => `<div><span>${p}</span><span class="feat">${icon(ic)}${f}</span><span><span class="pill ${s === "Live" ? "normal" : "plan"}">${s === "Live" ? "In prototype" : "Planned"}</span></span></div>`).join("");
+  $("aboutData").textContent = `Data bundle generated ${D.generated}: ${D.foods.length} foods, ${D.regions.length - 1} regions plus national, ${monthName(D.months[0])} to ${monthName(lastMonth)}.`;
+
+  // ---------------------------------------------------------------- boot
+  hydrateIcons();
+  renderMembers(); setMode(st.mode); runPlan();
+  const v0 = (location.hash || "").replace("#", "") || store.get("lguview", "lgu");
+  showView(["lgu", "menu", "about"].includes(v0) ? v0 : "lgu");
+  // light / dark switch (follows the device until the viewer picks one)
+  const isDark = () => document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const themeIcon = () => { $("themeBtn").innerHTML = icon(isDark() ? "sun" : "moon"); };
+  try { const t = localStorage.getItem("sapat:lgutheme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  themeIcon();
+  $("themeBtn").addEventListener("click", () => { const t = isDark() ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("sapat:lgutheme", t); } catch (e) {} themeIcon(); });
+})();
+</script>
+
+
+</body></html>

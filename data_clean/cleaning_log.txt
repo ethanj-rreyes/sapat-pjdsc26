@@ -1,0 +1,13 @@
+[PSA] 2,531,844 table cells -> 721,299 non-missing prices (28%); 0 duplicate rows dropped
+[PSA] 197 commodities, 2018-01 to 2026-09; levels: {'province': 529097, 'region': 171517, 'national': 20685}
+[PSA] outlier flag (>4 robust SD from 13-month rolling median): 7,214 rows (1.00%) flagged, kept
+[SRA] 79 months 2018-09 to 2026-09; outlet used: {'wet': 79} (wet market preferred)
+[FCT] 61 PhilFCT entries (71 rows in mapping file); added from PDFs: ['G040', 'F035', 'C037', 'F182']
+[FCT] zinc reported for 13/61 entries -> excluded from analysis
+[WFP] retail actual: 112,365 rows, 97 markets, 2000-01 to 2023-11; unmatched admin1: 0
+[CAL] coconut: 731 region-months overlap; median implied weight = 1000 g per medium nut (IQR 963-1072)
+[PANEL] 95,887 rows; 64 foods x 19 geos (incl. PH, NIR); foods with <17 regions: {'CAMOTE TOPS, 1 KG': 7, 'COMMON GOURD (UPO), 1 KG': 14, 'CORN GRITS, WHITE, 1 KG': 7, 'CORN GRITS, YELLOW, 1 KG': 7, 'FRESH CRABS, ALIMANGO, MEDIUM, 1 KG': 15, 'FRESH EGG, DUCK, MEDIUM, 1 PC': 7, 'FRESH FISH, ALOY/TULINGAN, MEDIUM, 1 KG': 6, 'FRESH FISH, CAESIO, DALAGANG-BUKID, MEDIUM, 1 KG': 13, 'FRESH FISH, NEMIMTERID, BISUGO, MEDIUM, 1 KG': 8, 'FRESH FISH, SHORT MACKEREL (HASA HASA/KABAYAS/KABALYAS), MEDIUM, 1 KG': 3, 'FRESH FISH, SLIPMOUTH, SAPSAP, MEDIUM, 1 KG': 10, 'FRESH FISH, TULINGAN (FRIGATE TUNA), MEDIUM, 1 KG': 5, 'FRESH FRUIT, BANANA, SABA, MEDIUM, 1 KG': 13, 'FRESH FRUIT, MANGO, PIKO, RIPE, MEDIUM, 1 KG': 4, 'FRESH FRUIT, ORANGE, DALANDAN, MEDIUM, 1 KG': 7, 'FRESH FRUIT, PAPAYA, MEDIUM, 1 KG': 5, 'FRESH PORK, PATA, FORE (FRONT), 1 KG': 4, 'FRESH PORK, SPARE RIBS, 1 KG': 5, 'FRESH SHRIMP, SUAJE, MEDIUM, 1 KG': 11, 'GABI TUBERS, 1 KG': 6, 'GARLIC, IMPORTED, 1 KG': 16, 'KANGKONG, 1 KG': 8, 'PECHAY, CHINESE, 1 KG': 5, 'PECHAY, NATIVE, 1 KG': 16, 'RAW PEANUT, UNSHELLED, 1 KG': 9, 'RAW PEANUT, WITHOUT SHELL, 1 KG': 2, 'STRING BEANS, 1 KG': 16, 'SWEET POTATO (CAMOTE), 1 KG': 6, 'WHOLE CORN GRAIN, YELLOW, 1 KG': 7}
+[VAL] 28,937 region-month-food overlaps; overall MAPE 10.7%, median APE 4.8%
+[FIES] {2021: 165029, 2023: 163268} households; unmatched region codes: 0; food-group sum / FOOD_HOME median = 0.933
+[THRESH] food & poverty thresholds parsed for 18 geos (expect 18 = PH + 17 regions); missing: []
+[MERGE] region_year_panel: 34 rows (17 regions x 2 years)

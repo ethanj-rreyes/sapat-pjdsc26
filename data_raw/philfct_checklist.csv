@@ -1,0 +1,72 @@
+category,commodity,unit,rows,markets,median_price_php,philfct_search_term,fct_food_id,fct_food_name,ep_pct,energy_kcal,protein_g,fat_g,carb_g,fiber_g,iron_mg,vit_a_rae_ug,calcium_mg,zinc_mg,notes,priority
+cereals and tubers,Maize (white),KG,69,11,28.0,"Corn, white, grits/mature",,,,,,,,,,,,,,1
+cereals and tubers,Maize (yellow),KG,201,25,25.86,"Corn, yellow, mature",,,,,,,,,,,,,,1
+cereals and tubers,Maize flour (white),KG,1,1,29.63,"Corn grits, white",,,,,,,,,,,,,,1
+cereals and tubers,Maize flour (yellow),KG,4,2,32.37,"Corn grits, yellow",,,,,,,,,,,,,,1
+cereals and tubers,Potatoes (Irish),KG,797,97,99.08,"Potato, raw",,,,,,,,,,,,,,1
+cereals and tubers,"Rice (milled, superior)",KG,11,6,41.3,"Rice, well-milled, raw",,,,,,,,,,,,,,1
+cereals and tubers,Rice (premium),KG,598,81,45.6,"Rice, well-milled, raw",,,,,,,,,,,,,,1
+cereals and tubers,"Rice (regular, milled)",KG,2369,97,38.26,"Rice, regular milled, raw",,,,,,,,,,,,,,1
+cereals and tubers,Rice (special),KG,3235,97,50.74,"Rice, well-milled, raw",,,,,,,,,,,,,,1
+cereals and tubers,Rice (well milled),KG,3518,98,42.525000000000006,"Rice, well-milled, raw",,,,,,,,,,,,,,1
+cereals and tubers,Semolina (white),KG,668,34,34.93,"Corn grits, white",,,,,,,,,,,,,,1
+cereals and tubers,Semolina (yellow),KG,720,52,29.6,"Corn grits, yellow",,,,,,,,,,,,,,1
+cereals and tubers,Sweet potatoes,KG,469,78,46.23,"Sweet potato (kamote), raw",,,,,,,,,,,,,,1
+cereals and tubers,Taro,KG,919,74,53.23,"Taro (gabi), raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Anchovies,KG,2764,77,138.75,"Dilis, dried",,,,,,,,,,,,,,1
+"meat, fish and eggs",Chicken,KG,68,9,130.0,"Chicken, whole, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Crab,KG,2393,75,318.57,"Alimango/crab, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Eggs,Unit,1644,97,7.25,"Egg, chicken, whole, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Eggs (duck),Unit,781,38,8.8,"Egg, duck, whole, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (frigate tuna),KG,753,75,158.0,"Tulingan, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs","Fish (mackerel, fresh)",KG,809,79,200.0,"Alumahan, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (milkfish),KG,3389,95,192.5,"Bangus, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (redbelly yellowtail fusilier),KG,1193,62,274.0,"Dalagang-bukid, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (roundscad),KG,3272,97,187.5,"Galunggong, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (slipmouth),KG,1212,62,167.5,"Sapsap, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (threadfin bream),KG,1039,69,275.0,"Bisugo, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Fish (tilapia),KG,3074,90,147.5,"Tilapia, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Meat (beef),KG,1027,96,358.75,"Beef, lean, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs","Meat (beef, chops with bones)",KG,1157,96,300.0,"Beef, with bone, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs","Meat (chicken, whole)",KG,1012,97,182.5,"Chicken, whole, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Meat (pork),KG,1122,95,296.25,"Pork, lean, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs","Meat (pork, hock)",KG,711,74,180.0,"Pork, pata/hock, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs","Meat (pork, with bones)",KG,3170,80,270.0,"Pork, with bone, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs","Meat (pork, with fat)",KG,156,17,240.0,"Pork, liempo/belly, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Shrimp (endeavor),KG,916,68,400.0,"Suahe/shrimp, raw",,,,,,,,,,,,,,1
+"meat, fish and eggs",Shrimp (tiger),KG,2376,74,556.0,"Sugpo, raw",,,,,,,,,,,,,,1
+pulses and nuts,Beans (mung),KG,2577,80,99.88,"Mungbean (monggo), mature, dried",,,,,,,,,,,,,,1
+pulses and nuts,Groundnuts (shelled),KG,821,75,100.0,"Peanut, shelled, raw",,,,,,,,,,,,,,1
+pulses and nuts,Groundnuts (unshelled),KG,291,42,82.25,"Peanut, in pod, raw",,,,,,,,,,,,,,1
+oil and fats,Oil (cooking),750 ML,102,18,50.0,Coconut oil / vegetable oil,,,,,,,,,,,,,,2
+vegetables and fruits,Bananas (lakatan),KG,2876,95,69.38,"Banana, lakatan",,,,,,,,,,,,,,2
+vegetables and fruits,Bananas (latundan),KG,2468,96,45.63,"Banana, latundan",,,,,,,,,,,,,,2
+vegetables and fruits,Bananas (saba),KG,1420,80,35.83,"Banana, saba, raw",,,,,,,,,,,,,,2
+vegetables and fruits,"Beans (green, fresh)",KG,2007,96,86.25,"Baguio beans, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Beans (string),KG,2200,96,62.5,"Sitaw, pods, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Bitter melon,KG,3375,98,85.63,"Ampalaya, fruit, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Bottle gourd,KG,2012,81,34.69,"Upo, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Cabbage,KG,3165,97,78.75,"Cabbage, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Cabbage (chinese),KG,1742,95,73.75,"Pechay baguio / petsay, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Calamansi,KG,2357,96,67.36,"Calamansi, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Carrots,KG,1126,96,94.41999999999999,"Carrot, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Choko,KG,2630,82,36.25,"Sayote, fruit, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Coconut,KG,3186,82,23.63,"Coconut, mature, meat",,,,,,,,,,,,,,2
+vegetables and fruits,Eggplants,KG,3528,98,68.0,"Eggplant, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Garlic,KG,747,57,141.25,"Garlic, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Garlic (large),KG,170,18,104.525,"Garlic, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Garlic (small),KG,84,15,223.75,"Garlic, native, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Ginger,KG,2523,95,113.33,"Ginger, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Mandarins,KG,692,39,51.25,Dalandan/mandarin,,,,,,,,,,,,,,2
+vegetables and fruits,Mangoes (carabao),KG,2412,94,136.25,"Mango, carabao, ripe",,,,,,,,,,,,,,2
+vegetables and fruits,Mangoes (piko),KG,263,25,108.75,"Mango, piko, ripe",,,,,,,,,,,,,,2
+vegetables and fruits,Onions (red),KG,1079,94,144.26,"Onion, red/bulb, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Onions (white),KG,259,71,100.0,"Onion, white, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Papaya,KG,788,87,42.480000000000004,"Papaya, ripe",,,,,,,,,,,,,,2
+vegetables and fruits,Pineapples,KG,957,67,53.75,Pineapple,,,,,,,,,,,,,,2
+vegetables and fruits,Squashes,KG,2875,82,36.88,"Squash (kalabasa), fruit, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Sweet Potato leaves,KG,897,78,37.5,"Talbos ng kamote, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Tomatoes,KG,1568,97,67.5,"Tomato, ripe, raw",,,,,,,,,,,,,,2
+vegetables and fruits,Water spinach,KG,918,77,37.120000000000005,"Kangkong, leaves, raw",,,,,,,,,,,,,,2
+miscellaneous food,Sugar (brown),KG,161,18,44.0,"Sugar, brown",,,,,,,,,,,,,,3
+miscellaneous food,Sugar (white),KG,160,18,53.27,"Sugar, refined",,,,,,,,,,,,,,3

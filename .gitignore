@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/extensions.json
+
+# Raw files too large for GitHub or not ours to redistribute (see data_raw/README.md)
+data_raw/fies_2021_volume_2_household_summary.csv
+data_raw/fies_2023_vol2_household_summary_694509957977.csv
+data_raw/food_reports/
+
+# Scratch
+*.csv.bak
+*.tmp

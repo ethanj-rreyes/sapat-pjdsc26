@@ -1,0 +1,8 @@
+* text=auto eol=lf
+*.gz   binary
+*.pdf  binary
+*.png  binary
+*.ipynb text eol=lf
+# Generated bundles: collapse in diffs
+web/shared/data/*.js linguist-generated=true -diff
+web/lgu-dashboard/data/*.js linguist-generated=true -diff
