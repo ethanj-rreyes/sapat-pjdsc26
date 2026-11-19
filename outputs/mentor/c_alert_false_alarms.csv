@@ -1,0 +1,17 @@
+rule,flagged_months,episodes,sustained,short_lived,short_lived_share,false_alarms_per_region_year,"Pork shortage, Feb 2021","Onion crisis, Dec 2022","Rice spike, Aug-Sep 2023",level,geography,units
+>= 5% vs 3-mo avg,184,120,73,47,0.392,0.304,16,7,8,Watch (current),region,18
+>= 10% vs 3-mo avg or >= 15% y/y,58,40,24,16,0.400,0.104,12,2,7,Alert (current),region,18
+>= 3% vs 3-mo avg,372,196,95,101,0.515,0.654,18,12,12,sweep: 3-mo rule only,region,18
+>= 5% vs 3-mo avg,184,120,73,47,0.392,0.304,16,7,8,sweep: 3-mo rule only,region,18
+>= 7.5% vs 3-mo avg,81,65,44,21,0.323,0.136,11,2,7,sweep: 3-mo rule only,region,18
+>= 10% vs 3-mo avg,37,32,22,10,0.312,0.065,9,1,5,sweep: 3-mo rule only,region,18
+>= 12.5% vs 3-mo avg,11,9,5,4,0.444,0.026,3,0,1,sweep: 3-mo rule only,region,18
+>= 15% vs 3-mo avg,1,1,1,0,0.000,0.000,0,0,0,sweep: 3-mo rule only,region,18
+>= 5% vs 3-mo avg,858,550,318,232,0.422,0.322,76,31,39,Watch (current),province,83
+>= 10% vs 3-mo avg or >= 15% y/y,254,200,119,81,0.405,0.112,57,9,34,Alert (current),province,83
+>= 3% vs 3-mo avg,1736,930,409,521,0.560,0.723,83,52,53,sweep: 3-mo rule only,province,83
+>= 5% vs 3-mo avg,858,550,318,232,0.422,0.322,76,31,39,sweep: 3-mo rule only,province,83
+>= 7.5% vs 3-mo avg,384,311,199,112,0.360,0.155,52,11,34,sweep: 3-mo rule only,province,83
+>= 10% vs 3-mo avg,175,158,106,52,0.329,0.072,43,5,23,sweep: 3-mo rule only,province,83
+>= 12.5% vs 3-mo avg,47,42,23,19,0.452,0.026,12,0,4,sweep: 3-mo rule only,province,83
+>= 15% vs 3-mo avg,11,11,9,2,0.182,0.003,0,0,0,sweep: 3-mo rule only,province,83

@@ -11,7 +11,7 @@ function showWelcome() {
   const draw = () => {
     const tt = T(), [h, p] = tt.welcome[i], last = i === tt.welcome.length - 1;
     el.innerHTML = `<button class="btn link wskip" type="button" id="wSkip">${tt.skip}</button>
-      <div class="wslide" key="${i}"><div class="wart">${art[i]()}</div><div class="wbrand">sapat<span>.</span></div><h2>${h}</h2><p>${p}</p></div>
+      <div class="wslide" key="${i}"><div class="wart">${art[i]()}</div><div class="wbrand">sapat<span>.</span></div><h2>${h}</h2><p>${p}</p>${last ? `<p class="quiet left">${icon("shield")}${tt.medDisc}</p>` : ""}</div>
       <div class="wfoot"><div class="dots">${tt.welcome.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div>
       <button class="btn primary block big" type="button" id="wNext">${last ? icon("heart") + tt.start : tt.next}</button></div>`;
     $("wSkip").addEventListener("click", chooser);

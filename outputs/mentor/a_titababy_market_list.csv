@@ -1,0 +1,14 @@
+food,group,grams_day,cost_day,source,qty,unit,cost_week
+"Rice, regular-milled",cereals,1425.48,72.77,observed,9.98,kg,509.39
+Carrot,vegetables,187.29,31.71,observed,1.31,kg,221.97
+Monggo (mung beans),pulses,241.57,29.67,observed,1.69,kg,207.72
+Kangkong,vegetables,333.20,13.33,observed,2.33,kg,93.30
+"Pechay, native",vegetables,68.42,8.97,observed,0.48,kg,62.78
+"Pechay, Chinese",vegetables,46.00,6.46,observed,0.32,kg,45.24
+"Peanuts, unshelled",pulses,58.54,5.74,observed,0.41,kg,40.20
+"Sugar, brown",sugar,59.10,4.36,observed,0.41,kg,30.55
+"Egg, chicken",eggs,22.92,4.28,observed,3.00,pcs,29.99
+"Coconut, mature",fruits,88.65,2.87,observed,1.00,pcs,20.11
+Kalabasa (squash),vegetables,46.00,2.45,observed,0.32,kg,17.17
+Sitaw (string beans),vegetables,14.94,1.35,observed,0.10,kg,9.45
+"Sugar, refined",sugar,3.75,0.31,observed,0.03,kg,2.14

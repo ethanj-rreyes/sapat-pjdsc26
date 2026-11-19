@@ -1,0 +1,52 @@
+region,decile,n_foods,top3_cost_share,top3,n_groups
+NCR,1,10,0.7689,"Rice, regular-milled, Monggo (mung beans), Carrot",6
+NCR,2,13,0.6232,"Rice, regular-milled, Monggo (mung beans), Carrot",8
+NCR,3,14,0.5474,"Rice, regular-milled, Monggo (mung beans), Carrot",8
+CAR,1,10,0.7319,"Rice, regular-milled, Monggo (mung beans), Carrot",6
+CAR,2,10,0.6134,"Rice, regular-milled, Monggo (mung beans), Pechay, Chinese",6
+CAR,3,12,0.5701,"Rice, regular-milled, Pechay, Chinese, Baguio beans",8
+R01,1,9,0.8192,"Rice, regular-milled, Carrot, Monggo (mung beans)",6
+R01,2,11,0.6789,"Rice, regular-milled, Carrot, Monggo (mung beans)",7
+R01,3,12,0.5923,"Rice, regular-milled, Carrot, Monggo (mung beans)",8
+R02,1,10,0.7011,"Corn grits, yellow, Monggo (mung beans), Carrot",6
+R02,2,11,0.5828,"Corn grits, yellow, Monggo (mung beans), Carrot",6
+R02,3,12,0.4964,"Corn grits, yellow, Monggo (mung beans), Rice, regular-milled",6
+R03,1,9,0.8029,"Rice, regular-milled, Monggo (mung beans), Carrot",6
+R03,2,12,0.7025,"Rice, regular-milled, Monggo (mung beans), Egg, duck",6
+R03,3,13,0.6345,"Rice, regular-milled, Egg, duck, Monggo (mung beans)",6
+R4A,1,10,0.7117,"Rice, regular-milled, Egg, chicken, Corn grits, yellow",6
+R4A,2,11,0.6169,"Rice, regular-milled, Egg, chicken, Egg, duck",6
+R4A,3,14,0.5585,"Rice, regular-milled, Egg, chicken, Egg, duck",6
+R4B,1,8,0.6951,"Corn grits, yellow, Monggo (mung beans), Rice, regular-milled",6
+R4B,2,9,0.5688,"Corn grits, yellow, Monggo (mung beans), Egg, duck",6
+R4B,3,13,0.5751,"Corn grits, yellow, Egg, duck, Monggo (mung beans)",7
+R05,1,9,0.7787,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R05,2,10,0.7516,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R05,3,13,0.6844,"Rice, regular-milled, Monggo (mung beans), Carrot",6
+R06,1,11,0.5809,"Corn grits, yellow, Monggo (mung beans), Rice, regular-milled",6
+R06,2,13,0.5045,"Corn grits, yellow, Monggo (mung beans), Rice, regular-milled",6
+R06,3,14,0.4560,"Corn grits, yellow, Monggo (mung beans), Rice, regular-milled",6
+R07,1,9,0.8628,"Rice, regular-milled, Carrot, Monggo (mung beans)",5
+R07,2,11,0.7400,"Rice, regular-milled, Carrot, Monggo (mung beans)",5
+R07,3,13,0.6354,"Rice, regular-milled, Carrot, Monggo (mung beans)",5
+R08,1,8,0.8173,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R08,2,13,0.6702,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R08,3,13,0.6088,"Rice, regular-milled, Carrot, Monggo (mung beans)",5
+R09,1,11,0.6233,"Corn grits, yellow, Monggo (mung beans), Carrot",5
+R09,2,17,0.4949,"Corn grits, yellow, Monggo (mung beans), Carrot",7
+R09,3,17,0.4367,"Corn grits, yellow, Monggo (mung beans), Rice, regular-milled",7
+R10,1,10,0.7405,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R10,2,13,0.7061,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R10,3,16,0.6337,"Rice, regular-milled, Monggo (mung beans), Carrot",6
+R11,1,8,0.9044,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R11,2,11,0.7743,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R11,3,13,0.7016,"Rice, regular-milled, Monggo (mung beans), Carrot",5
+R12,1,11,0.6630,"Rice, regular-milled, Monggo (mung beans), Carrot",6
+R12,2,14,0.5579,"Rice, regular-milled, Monggo (mung beans), Carrot",7
+R12,3,15,0.5184,"Rice, regular-milled, Monggo (mung beans), Carrot",7
+R13,1,9,0.8446,"Rice, regular-milled, Carrot, Monggo (mung beans)",6
+R13,2,12,0.6832,"Rice, regular-milled, Carrot, Monggo (mung beans)",6
+R13,3,14,0.6158,"Rice, regular-milled, Carrot, Monggo (mung beans)",6
+BARMM,1,11,0.5933,"Corn grits, yellow, Carrot, Monggo (mung beans)",7
+BARMM,2,13,0.4740,"Corn grits, yellow, Egg, duck, Pechay, native",7
+BARMM,3,15,0.4557,"Egg, duck, Corn grits, yellow, Pechay, native",7
