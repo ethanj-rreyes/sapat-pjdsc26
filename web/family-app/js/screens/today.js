@@ -1,4 +1,5 @@
-/* SAPAT family app · Ngayon (Today): tonight's ulam, the other meals, the family, one swap and one health note.
+/* SAPAT family app · Ngayon (Today). Its one job: what we eat today, and logging it. Tonight's ulam with "Kinain namin" first,
+ * then the other meals; the family row (that's Pamilya's job), the weekly swap and the health note fold under "Higit pa".
  * One of several ordered scripts; see js/README.md. */
 "use strict";
 
@@ -25,7 +26,7 @@ function renderToday() {
       <h2 class="dish">${esc(mealName(items, hero, todayIdx))}</h2>
       <p class="cost">${tt.forAll(pesoN(sumT(items.map((x) => [x.key, x.g]))))}${calc(() => explainList(items.map((x) => [x.key, x.g]), esc(mealName(items, hero, todayIdx)), n))}</p>
       <p class="crange">${tt.rangeS(pesoR(cr))}</p>
-      <div class="bens">${benefits(items)}</div>
+      <div class="bens">${benefits(items, 1)}</div>
       <div class="ings">${chips}</div>
       <div class="mact"><button class="btn primary big" type="button" data-eat="${todayIdx}-${hero}">${icon("check")}${tt.ate}</button>${hero % 2 ? `<button class="btn" type="button" data-swap="${todayIdx}-${hero}">${icon("swap")}${tt.swap}</button>` : ""}</div>
       <button class="btn link" type="button" data-other="${hero}">${tt.other}</button>
@@ -36,9 +37,7 @@ function renderToday() {
     ${heroHtml}
     ${rest.length ? `<div class="strip" role="list">${rest.map((mi) => { const e = eaten(mi), o = outOf(mi);
       return `<button class="mchip m${mi}${e ? " done" : ""}" type="button" role="listitem" data-other="${mi}"><span class="mi">${icon(e ? "check" : MI[mi])}</span><span><small>${tt.meals[mi]}</small><b>${o ? tt.kind[o.kind][2] : e ? tt.eaten : tt.notyetAte}</b></span></button>`; }).join("")}</div>` : ""}
-    <div class="card famcard full"><div class="head"><h2>${tt.famRow}</h2></div><div class="famrow">${st.members.map((m, i) => famBubble(m, i, todayIdx)).join("")}</div></div>
-    ${swapCard()}
-    ${healthNudge()}
+    ${moreBox("today", [[tt.famRow, `<div class="card famcard"><div class="famrow">${st.members.map((m, i) => famBubble(m, i, todayIdx)).join("")}</div></div>`], [tt.moreSwap, swapCard()], [tt.moreHealth, healthNudge()]])}
     ${st.example ? `<p class="quiet full">${icon("info")}${tt.example}<button class="btn link" type="button" id="clearEx">${tt.clear}</button></p>` : ""}`;
   $("v-today").querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => go(b.dataset.go)));
   wireMeals($("v-today")); wireSwap($("v-today"));

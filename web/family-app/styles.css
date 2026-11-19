@@ -667,3 +667,74 @@ select:focus { border-color: var(--leaf); outline: none; }
 details.nums > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 800; color: var(--leaf); padding: 6px 0; min-height: 44px; }
 details.nums > summary::-webkit-details-marker { display: none; }
 details.nums[open] > summary .chev { transform: rotate(90deg); }
+/* one job per tab: "Higit pa", the one-line budget card, three members to a row, a compact market header */
+.more > summary .htx small { display: block; color: var(--ink-2); font-size: 13px; font-weight: 700; line-height: 1.3; }
+.morein { display: grid; gap: 12px; }
+.morein > .card { box-shadow: none; background: var(--bg); padding: 14px; }
+.budline { gap: 12px; }
+.budline .bl1 { display: flex; align-items: center; gap: 12px; }
+.budline .htx { flex: 1; display: grid; }
+.budline .htx small { font-size: 13px; font-weight: 800; color: var(--ink-2); }
+.budline .htx b { font: 600 24px/1.15 var(--font-display); }
+.budline .budres { margin: 0; display: grid; gap: 10px; }
+.btn.sm { min-height: 44px; padding: 0 14px; font-size: 15px; gap: 6px; }
+.btn.sm svg { width: 18px; height: 18px; }
+.members { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.mcard { padding: 12px 4px 12px; gap: 4px; border-radius: 22px; }
+.mcard .fig.lg { width: 58px; height: 58px; box-shadow: 0 0 0 3px var(--ring); }
+.mcard .nm { font-size: 16px; }
+.mcard small { font-size: 12px; line-height: 1.25; }
+.mcard .word { font-size: 12px; padding: 2px 8px 2px 5px; }
+.mcard .why { display: none; }
+.addcard { min-height: 0; }
+.addcard .plus { width: 44px; height: 44px; }
+.hero.shop { grid-template-columns: 72px 1fr; justify-items: start; text-align: left; column-gap: 14px; align-items: center; padding: 14px 16px 16px; }
+.hero.shop .bayong { width: 72px; margin: 0; grid-row: 1; }
+.hero.shop h2 { font-size: 19px; grid-row: 1; }
+.hero.shop .cmp { grid-column: 1 / -1; }
+.checklist .chk { padding-top: 10px; padding-bottom: 10px; }
+.paid small { display: flex; align-items: center; justify-content: flex-end; gap: 2px; white-space: nowrap; }
+.hero:not(.shop) .pot { width: 96px; margin: -6px 0 -8px; }
+.hero .dish { font-size: 24px; }
+.bens { gap: 4px; }
+.ben { padding: 4px 12px 4px 6px; font-size: 13px; line-height: 1.3; }
+.ben svg { width: 16px; height: 16px; }
+.hero .ings, .meals.plain .ings { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; max-width: 100%; padding-bottom: 2px; }
+.hero .ings::-webkit-scrollbar, .meals.plain .ings::-webkit-scrollbar { display: none; }
+.hero .ings > *, .meals.plain .ings > * { flex: none; }
+.famcard .fam .fig.lg, .famcard .fig.lg { width: 52px; height: 52px; }
+.famcard { gap: 10px; }
+.meals.plain .meal { gap: 8px; padding: 12px 0; }
+.meals.plain .mtop .mt b { font-size: 17px; }
+.meals.plain .mact .btn { min-height: 44px; }
+.hero.shop .prow { grid-column: 1 / -1; width: 100%; background: var(--surface); border-radius: 18px; padding: 8px 12px; }
+.chkhead { display: flex; justify-content: flex-end; font-size: 13px; font-weight: 700; color: var(--ink-2); margin: -4px 0 -6px; }
+.chk .tx b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chk { min-height: 56px; }
+.checklist .chk { padding-top: 6px; padding-bottom: 6px; }
+.budline .htx b small { font: 700 15px var(--font-body); color: var(--ink-2); }
+.swapic { flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--soft); }
+.swapic svg { width: 20px; height: 20px; }
+.chk { min-height: 50px; }
+.hero.shop .bayong { width: 60px; }
+.hero.shop { padding-top: 10px; }
+.ingrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ingrow .ings { flex: 1; min-width: 0; }
+.budline .htx b { white-space: nowrap; }
+.chk .tx { flex: 1 1 auto; overflow: hidden; }
+.chk .tx b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chk .paid { flex: none; }
+.checklist { overflow: hidden; }
+.checklist { grid-template-columns: minmax(0, 1fr); }
+.checklist > * { min-width: 0; }
+.chk .tx { display: grid; }
+.chk .tx b { white-space: normal; }
+.chk .tx small { line-height: 1.25; }
+.chk { min-height: 52px; }
+.hero.shop .prow { padding: 4px 10px; min-height: 48px; }
+.hero.shop .prow .bubble { width: 36px; height: 36px; }
+.hero.shop .prow .tx small { font-size: 12px; }
+.hero.shop .prow .tx b { font-size: 16px; }
+.morein .famcard .famrow { margin: 0; padding: 2px 0; }
+.budline { grid-template-columns: minmax(0, 1fr); }
+.budline > * { min-width: 0; }

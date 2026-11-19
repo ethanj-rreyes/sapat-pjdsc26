@@ -8,10 +8,10 @@ const BEN_ICON = { protein_g: "grow", iron_mg: "drop", vit_a_ug: "eye", calcium_
 const benefitFor = (m, k) => { const a = +m.age, mom = m.status === "pregnant" || m.status === "lactating";
   if (k === "iron_mg") return mom || a < 5 || (m.sex === "F" && a >= 13 && a <= 49);
   if (k === "vit_a_ug") return mom || a < 6; if (k === "calcium_mg") return mom || a < 19; return mom || a < 13; };
-function benefits(items) {
+function benefits(items, max) {
   const need = {}; BEN_NUT.forEach((k) => (need[k] = st.members.reduce((a, m) => a + (targets(m)[k] || 0), 0)));
   const got = {}; BEN_NUT.forEach((k) => (got[k] = items.reduce((a, x) => a + (FBY[x.key][k] || 0) * x.g, 0)));
-  return BEN_NUT.map((k) => [k, need[k] ? got[k] / need[k] : 0]).filter(([, r]) => r >= 0.1).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([k]) => {
+  return BEN_NUT.map((k) => [k, need[k] ? got[k] / need[k] : 0]).filter(([, r]) => r >= 0.1).sort((a, b) => b[1] - a[1]).slice(0, max || 2).map(([k]) => {
     const tt = T(), ms = st.members.filter((m) => benefitFor(m, k)), kids = ms.filter((m) => m.age < 13), grown = ms.filter((m) => m.age >= 13).map((m) => m.name);
     const w = ms.length === 0 || ms.length >= st.members.length ? tt.forFam : kids.length >= 2 ? tt.forKids(grown) : ms.length === 1 ? tt.forWho(ms[0].name) : tt.forWho2(ms.slice(0, -1).map((m) => m.name).join(", "), ms[ms.length - 1].name);
     return `<span class="ben">${icon(BEN_ICON[k])}<span><b>${tt.ben[k]}</b> ${esc(w)}</span></span>`;

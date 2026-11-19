@@ -87,6 +87,10 @@ const W2 = {
     pName: "Pangalan ng profile", pNamePh: "hal. Pamilya Santos", pNameDef: (n) => `Pamilya ni ${n}`, step: (a, b) => `Hakbang ${a} sa ${b}`,
     addPerson: "Magdagdag ng tao", tapEdit: "Pindutin para baguhin", me: "Ako", region: "Rehiyon", province: "Probinsya", pickRegion: "Pumili ng rehiyon",
     budgetHint: (n) => `Tantiya ng karaniwang gastos sa pagkain ng ${n} tao sa rehiyon ninyo.`,
+    // one job per tab: what's kept, and what folds under "Higit pa"
+    pricesEst: "Tantiya ang mga presyo", bestShort: (p) => `Kaya ng budget: ${p} ng kailangan`, moreH: "Higit pa", moreSwap: "Isang palit", moreHealth: "Paalala", perWeekB: (b) => `${b} kada linggo`, change: "Baguhin",
+    balShort: "Balanse", cmpShort: "Bili vs SAPAT", trendShort: "Presyo", situShort: "Rehiyon", whereShort: (p) => `Namimili sa ${p}`,
+    sulitShort: "Pinakasulit", priceShort: "Lahat ng presyo", srcShort: "Pinagkunan", setShort: "Mga setting", dataShort: "Pinagkunan ng datos",
     // numbers at a glance: words first, one typical price, one-sentence gap, the "Tantiya" bubble
     forAll: (c) => `Mga ${c} para sa buong pamilya`, rangeS: (r) => `Saklaw ng presyo sa palengke: ${r}`,
     gapShort: (g) => `Kulang ng mga ${g} para sa buong sapat na linggo.`,
@@ -190,6 +194,10 @@ const W2 = {
     pName: "Profile name", pNamePh: "e.g. Santos family", pNameDef: (n) => `${n}'s family`, step: (a, b) => `Step ${a} of ${b}`,
     addPerson: "Add a person", tapEdit: "Tap to edit", me: "Me", region: "Region", province: "Province", pickRegion: "Choose a region",
     budgetHint: (n) => `Estimates of what families of ${n} in your region usually spend on food.`,
+    // one job per tab: what's kept, and what folds under "More"
+    pricesEst: "Prices are estimates", bestShort: (p) => `This budget covers ${p} of needs`, moreH: "More", moreSwap: "One swap", moreHealth: "Reminder", perWeekB: (b) => `${b} a week`, change: "Change",
+    balShort: "Balance", cmpShort: "Usual vs SAPAT", trendShort: "Prices", situShort: "Region", whereShort: (p) => `Shopping in ${p}`,
+    sulitShort: "Best value", priceShort: "All prices", srcShort: "Sources", setShort: "Settings", dataShort: "Data sources",
     // numbers at a glance: words first, one typical price, one-sentence gap, the "Tantiya" bubble
     forAll: (c) => `About ${c} for the whole family`, rangeS: (r) => `Market price range: ${r}`,
     gapShort: (g) => `About ${g} short of a fully healthy week.`,

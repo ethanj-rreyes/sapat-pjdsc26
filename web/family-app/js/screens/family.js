@@ -1,4 +1,5 @@
-/* SAPAT family app · Pamilya (Family): household and settings, and one member's day (Lakas, Paglaki, Dugo, Mata, Buto).
+/* SAPAT family app · Pamilya (Family). Its one job: who eats, and how they're doing. Profile and members (three to a row);
+ * settings and data sources fold under "Higit pa". Also one member's day (Lakas, Paglaki, Dugo, Mata, Buto).
  * One of several ordered scripts; see js/README.md. */
 "use strict";
 
@@ -10,15 +11,14 @@ function renderFamily() {
     <div class="card full"><div class="head"><span class="bubble">${icon("users")}</span><h2>${tt.famH}</h2><span class="meta">${tt.ofBudget}</span></div>
       <div class="members">${st.members.map((m, i) => { const s = score(memberDay(i, todayIdx)); return `<button class="mcard" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<span class="nm">${esc(m.name)}</span><small>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}</small><span class="word ${scoreState(s)}">${scoreWord(s)}</span>${(m.diet || "regular") !== "regular" ? `<span class="dietchip">${icon(UI.dietOf(m).icon)}${UI.dietOf(m)[st.lang]}</span>` : ""}</button>`; }).join("")}
         <button class="mcard addcard" type="button" id="addM"><span class="plus">${icon("plus")}</span><span>${tt.add}</span></button></div>${st.members.some((m) => m.status === "pregnant" || m.status === "lactating" || m.age < 5) ? `<p class="quiet left">${icon("shield")}${tt.bnsFam}</p>` : ""}</div>
-    <div class="card">
+    ${moreBox("family", [[tt.setShort, `<div class="card">
       <div class="setrow"><span class="bubble">${icon("globe")}</span><span class="tx"><b>${tt.langH}</b><small>${tt.langS}</small></span><span class="seg" style="width:120px" id="langSeg"><button type="button" data-l="tl" aria-pressed="${st.lang === "tl"}">TL</button><button type="button" data-l="en" aria-pressed="${st.lang === "en"}">EN</button></span></div>
       <label class="setrow"><span class="bubble">${icon("heart")}</span><span class="tx"><b>${tt.halal}</b><small>${tt.halalS}</small></span><input type="checkbox" class="toggle" id="halal"${st.halal ? " checked" : ""}></label>
       <button class="setrow" type="button" id="guideRow"><span class="bubble">${icon("heart")}</span><span class="tx"><b>${tt.guideH}</b><small>${tt.guideS}</small></span>${chev()}</button>
       <button class="setrow" type="button" id="againW"><span class="bubble sun">${icon("heart")}</span><span class="tx"><b>${tt.again}</b><small>${tt.againS}</small></span>${chev()}</button>
       <label class="setrow"><span class="bubble">${icon("moon")}</span><span class="tx"><b>${tt.theme}</b><small>${tt.themeS}</small></span><input type="checkbox" class="toggle" id="dark"${isDark() ? " checked" : ""}></label>
-    </div>
-    <details class="card"><summary class="head"><span class="bubble">${icon("db")}</span><h2>${tt.dataH}</h2>${chev()}</summary>
-      <div class="src">${tt.src.map((s, k) => `<div>${icon(["tag", "pot", "shield", "info"][k])}<span>${s}</span></div>`).join("")}</div></details>`;
+    </div>`], [tt.dataShort, `<details class="card"><summary class="head"><span class="bubble">${icon("db")}</span><h2>${tt.dataH}</h2>${chev()}</summary>
+      <div class="src">${tt.src.map((s, k) => `<div>${icon(["tag", "pot", "shield", "info"][k])}<span>${s}</span></div>`).join("")}</div></details>`]])}`;
   $("v-family").querySelectorAll("[data-who]").forEach((b) => b.addEventListener("click", () => { st.who = +b.dataset.who; go("person"); }));
   $("addM").addEventListener("click", addMember);
   $("profBtn").addEventListener("click", openProfiles);
