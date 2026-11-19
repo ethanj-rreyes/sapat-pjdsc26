@@ -1,0 +1,51 @@
+member,nutrient,adequacy,scenario
+"Jun (38, tatay)",energy_kcal,0.8823,typical
+"Jun (38, tatay)",protein_g,0.7161,typical
+"Jun (38, tatay)",iron_mg,0.5567,typical
+"Jun (38, tatay)",vit_a_ug,0.1168,typical
+"Jun (38, tatay)",calcium_mg,0.2515,typical
+"Baby (34, buntis)",energy_kcal,0.8823,typical
+"Baby (34, buntis)",protein_g,0.5122,typical
+"Baby (34, buntis)",iron_mg,0.1576,typical
+"Baby (34, buntis)",vit_a_ug,0.0815,typical
+"Baby (34, buntis)",calcium_mg,0.2114,typical
+Mika (8),energy_kcal,0.8823,typical
+Mika (8),protein_g,1.0000,typical
+Mika (8),iron_mg,0.4509,typical
+Mika (8),vit_a_ug,0.1242,typical
+Mika (8),calcium_mg,0.1637,typical
+Paolo (4),energy_kcal,0.8823,typical
+Paolo (4),protein_g,1.0000,typical
+Paolo (4),iron_mg,0.4140,typical
+Paolo (4),vit_a_ug,0.1140,typical
+Paolo (4),calcium_mg,0.1913,typical
+Ana (1),energy_kcal,0.8823,typical
+Ana (1),protein_g,1.0000,typical
+Ana (1),iron_mg,0.3174,typical
+Ana (1),vit_a_ug,0.0777,typical
+Ana (1),calcium_mg,0.1434,typical
+"Jun (38, tatay)",energy_kcal,0.6139,sapat
+"Jun (38, tatay)",protein_g,0.6000,sapat
+"Jun (38, tatay)",iron_mg,0.6090,sapat
+"Jun (38, tatay)",vit_a_ug,0.3863,sapat
+"Jun (38, tatay)",calcium_mg,0.2491,sapat
+"Baby (34, buntis)",energy_kcal,0.8801,sapat
+"Baby (34, buntis)",protein_g,0.5751,sapat
+"Baby (34, buntis)",iron_mg,0.2297,sapat
+"Baby (34, buntis)",vit_a_ug,0.6000,sapat
+"Baby (34, buntis)",calcium_mg,0.3229,sapat
+Mika (8),energy_kcal,0.8491,sapat
+Mika (8),protein_g,1.0000,sapat
+Mika (8),iron_mg,0.6154,sapat
+Mika (8),vit_a_ug,0.8500,sapat
+Mika (8),calcium_mg,0.2360,sapat
+Paolo (4),energy_kcal,0.8672,sapat
+Paolo (4),protein_g,1.0000,sapat
+Paolo (4),iron_mg,0.6000,sapat
+Paolo (4),vit_a_ug,0.8500,sapat
+Paolo (4),calcium_mg,0.3319,sapat
+Ana (1),energy_kcal,0.9624,sapat
+Ana (1),protein_g,1.0000,sapat
+Ana (1),iron_mg,0.6000,sapat
+Ana (1),vit_a_ug,0.8500,sapat
+Ana (1),calcium_mg,0.4631,sapat
