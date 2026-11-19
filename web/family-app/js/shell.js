@@ -42,6 +42,7 @@ function go(t) {
   const titles = { today: `${hi}, ${st.members[meIdx()].name}!`, week: tt.tabs[1], shop: tt.tabs[2], family: tt.tabs[3], person: st.members[st.who].name };
   const subs = { today: tt.kumain, week: placeName(), shop: placeName(), family: "", person: dateStr };
   $("title").textContent = titles[t]; $("subtitle").textContent = subs[t];
+  $("sampBadge").hidden = !isSample(); $("sampBadge").textContent = tt.sample; // so no one mistakes Tita Baby's sample for real data
   $("backBtn").hidden = t !== "person";
   window.scrollTo(0, 0); if ($("main") && $("main").scrollTop) $("main").scrollTop = 0;
   render();

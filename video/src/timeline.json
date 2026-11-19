@@ -1,0 +1,317 @@
+{
+ "total": 172.274,
+ "segments": [
+  {
+   "id": "s1_hook",
+   "start": 1.2,
+   "lines": [
+    {
+     "file": "s1_hook_0.wav",
+     "start": 1.2,
+     "dur": 0.914,
+     "text": "Kumain ka na ba?"
+    },
+    {
+     "file": "s1_hook_1.wav",
+     "start": 2.394,
+     "dur": 3.354,
+     "text": "Have you eaten? It's how Filipinos say, I care."
+    },
+    {
+     "file": "s1_hook_2.wav",
+     "start": 6.028,
+     "dur": 4.47,
+     "text": "But for millions of families, the honest answer is: busog, pero hindi sapat."
+    },
+    {
+     "file": "s1_hook_3.wav",
+     "start": 10.778,
+     "dur": 1.314,
+     "text": "Full, but not nourished."
+    }
+   ],
+   "end": 12.092
+  },
+  {
+   "id": "s2_problem",
+   "start": 12.642,
+   "lines": [
+    {
+     "file": "s2_problem_0.wav",
+     "start": 12.642,
+     "dur": 4.799,
+     "text": "One in four Filipino children under five is stunted, and four in ten among the poorest."
+    },
+    {
+     "file": "s2_problem_1.wav",
+     "start": 17.721,
+     "dur": 4.895,
+     "text": "The poorest tenth of families spend forty-four percent of their food budget on rice and cereals,"
+    },
+    {
+     "file": "s2_problem_2.wav",
+     "start": 22.896,
+     "dur": 5.082,
+     "text": "because no one can see what a healthy diet costs for their own family, at this month's prices."
+    },
+    {
+     "file": "s2_problem_3.wav",
+     "start": 28.258,
+     "dur": 4.571,
+     "text": "A nutritious diet now costs about one hundred sixty-seven pesos per person a day."
+    },
+    {
+     "file": "s2_problem_4.wav",
+     "start": 33.109,
+     "dur": 2.119,
+     "text": "The official food threshold is sixty-three."
+    }
+   ],
+   "end": 35.228
+  },
+  {
+   "id": "s3_intro",
+   "start": 35.778,
+   "lines": [
+    {
+     "file": "s3_intro_0.wav",
+     "start": 35.778,
+     "dur": 4.528,
+     "text": "So we built SAPAT: sustansya na abot-kaya. Nutrition within reach."
+    },
+    {
+     "file": "s3_intro_1.wav",
+     "start": 40.586,
+     "dur": 5.834,
+     "text": "SAPAT plans the healthiest week a family's budget can buy, for each person, at local market prices."
+    }
+   ],
+   "end": 46.42
+  },
+  {
+   "id": "s4_engine",
+   "start": 46.97,
+   "lines": [
+    {
+     "file": "s4_engine_0.wav",
+     "start": 46.97,
+     "dur": 3.987,
+     "text": "It links four public datasets: PSA market prices, every month."
+    },
+    {
+     "file": "s4_engine_1.wav",
+     "start": 51.237,
+     "dur": 1.999,
+     "text": "FNRI food composition tables."
+    },
+    {
+     "file": "s4_engine_2.wav",
+     "start": 53.516,
+     "dur": 3.523,
+     "text": "The Philippine Dietary Reference Intakes, for each person's needs."
+    },
+    {
+     "file": "s4_engine_3.wav",
+     "start": 57.319,
+     "dur": 3.513,
+     "text": "And the Family Income and Expenditure Survey, for real spending."
+    },
+    {
+     "file": "s4_engine_4.wav",
+     "start": 61.112,
+     "dur": 5.269,
+     "text": "A linear program picks the most nutritious mix the budget can buy, following healthy food rules,"
+    },
+    {
+     "file": "s4_engine_5.wav",
+     "start": 66.661,
+     "dur": 2.67,
+     "text": "and protects children under five and mothers first."
+    },
+    {
+     "file": "s4_engine_6.wav",
+     "start": 69.611,
+     "dur": 2.455,
+     "text": "It runs right in the browser, in milliseconds."
+    }
+   ],
+   "end": 72.066
+  },
+  {
+   "id": "s5a_week",
+   "start": 72.616,
+   "lines": [
+    {
+     "file": "s5a_week_0.wav",
+     "start": 72.616,
+     "dur": 5.811,
+     "text": "Here's the family app, with an example family of five in Leyte, on twelve hundred ninety pesos a week."
+    },
+    {
+     "file": "s5a_week_1.wav",
+     "start": 78.707,
+     "dur": 4.128,
+     "text": "The Week tab plans every meal as real Filipino ulam, like ginisang monggo."
+    },
+    {
+     "file": "s5a_week_2.wav",
+     "start": 83.115,
+     "dur": 6.306,
+     "text": "And it's honest: this budget reaches sixty-three percent of needs, against forty-six percent spent the usual way."
+    }
+   ],
+   "end": 89.421
+  },
+  {
+   "id": "s5b_market",
+   "start": 89.971,
+   "lines": [
+    {
+     "file": "s5b_market_0.wav",
+     "start": 89.971,
+     "dur": 8.462,
+     "text": "The Market tab turns the plan into one list, in the units stalls actually sell: kilos, pieces, bundles, with price ranges from PSA data."
+    },
+    {
+     "file": "s5b_market_1.wav",
+     "start": 98.713,
+     "dur": 3.639,
+     "text": "Tap the calculator on any price to see exactly how it was computed."
+    }
+   ],
+   "end": 102.352
+  },
+  {
+   "id": "s5c_today",
+   "start": 102.902,
+   "lines": [
+    {
+     "file": "s5c_today_0.wav",
+     "start": 102.902,
+     "dur": 2.894,
+     "text": "Today answers the daily question, Ano'ng ulam natin?"
+    },
+    {
+     "file": "s5c_today_1.wav",
+     "start": 106.076,
+     "dur": 2.513,
+     "text": "Log meals in one tap, even when you eat out."
+    },
+    {
+     "file": "s5c_today_2.wav",
+     "start": 108.869,
+     "dur": 4.21,
+     "text": "And each week, SAPAT suggests one cheaper swap, like monggo instead of pork."
+    }
+   ],
+   "end": 113.079
+  },
+  {
+   "id": "s5d_family",
+   "start": 113.629,
+   "lines": [
+    {
+     "file": "s5d_family_0.wav",
+     "start": 113.629,
+     "dur": 7.692,
+     "text": "And Family shows how each member is doing, from energy and growth to blood, eyes, and bones, with the cheapest food to close each gap."
+    }
+   ],
+   "end": 121.321
+  },
+  {
+   "id": "s6a_map",
+   "start": 121.871,
+   "lines": [
+    {
+     "file": "s6a_map_0.wav",
+     "start": 121.871,
+     "dur": 7.474,
+     "text": "For local governments, the dashboard maps the cost of a healthy day in every province, every month, with Watch and Alert levels."
+    },
+    {
+     "file": "s6a_map_1.wav",
+     "start": 129.625,
+     "dur": 5.208,
+     "text": "Replaying the 2023 rice spike, it flagged eight of seventeen regions."
+    }
+   ],
+   "end": 134.833
+  },
+  {
+   "id": "s6b_feeding",
+   "start": 135.383,
+   "lines": [
+    {
+     "file": "s6b_feeding_0.wav",
+     "start": 135.383,
+     "dur": 3.218,
+     "text": "Its feeding program planner builds a five-day Filipino menu."
+    },
+    {
+     "file": "s6b_feeding_1.wav",
+     "start": 138.881,
+     "dur": 4.226,
+     "text": "At thirty pesos a meal, it covers about nine in ten of each child's needs."
+    }
+   ],
+   "end": 143.107
+  },
+  {
+   "id": "s7_results",
+   "start": 143.657,
+   "lines": [
+    {
+     "file": "s7_results_0.wav",
+     "start": 143.657,
+     "dur": 0.668,
+     "text": "Does it work?"
+    },
+    {
+     "file": "s7_results_1.wav",
+     "start": 144.605,
+     "dur": 7.412,
+     "text": "Across every region, at the poorest ten percent's food budget, the usual way of spending meets forty-one percent of a family's needs."
+    },
+    {
+     "file": "s7_results_2.wav",
+     "start": 152.297,
+     "dur": 2.122,
+     "text": "Planned with SAPAT: sixty-two percent."
+    },
+    {
+     "file": "s7_results_3.wav",
+     "start": 154.699,
+     "dur": 2.834,
+     "text": "For a three-year-old: forty-five to seventy-six."
+    },
+    {
+     "file": "s7_results_4.wav",
+     "start": 157.813,
+     "dur": 3.117,
+     "text": "Same money, better food, in all fifty-one cases."
+    }
+   ],
+   "end": 160.93
+  },
+  {
+   "id": "s8_close",
+   "start": 161.48,
+   "lines": [
+    {
+     "file": "s8_close_0.wav",
+     "start": 161.48,
+     "dur": 4.638,
+     "text": "SAPAT doesn't ask families to spend more. It helps every peso do more."
+    },
+    {
+     "file": "s8_close_1.wav",
+     "start": 166.398,
+     "dur": 2.676,
+     "text": "SAPAT. Sustansya na abot-kaya."
+    }
+   ],
+   "end": 169.074
+  }
+ ]
+}

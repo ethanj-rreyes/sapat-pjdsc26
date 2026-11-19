@@ -6,6 +6,7 @@
 function renderFamily() {
   const tt = T();
   $("v-family").innerHTML = `
+    <div class="card full"><button class="setrow" type="button" id="profBtn"><span class="bubble sun">${icon("users")}</span><span class="tx"><b>${esc(profileName(pid))}${isSample() ? ` <span class="sbadge">${tt.sample}</span>` : ""}</b><small>${isSample() ? tt.sampleNote : tt.profileS}</small></span>${chev()}</button></div>
     <div class="card full"><div class="head"><span class="bubble">${icon("users")}</span><h2>${tt.famH}</h2><span class="meta">${tt.ofBudget}</span></div>
       <div class="members">${st.members.map((m, i) => { const s = score(memberDay(i, todayIdx)); return `<button class="mcard" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<span class="nm">${esc(m.name)}</span><small>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}</small><span class="word ${scoreState(s)}">${scoreWord(s)}</span>${(m.diet || "regular") !== "regular" ? `<span class="dietchip">${icon(UI.dietOf(m).icon)}${UI.dietOf(m)[st.lang]}</span>` : ""}</button>`; }).join("")}
         <button class="mcard addcard" type="button" id="addM"><span class="plus">${icon("plus")}</span><span>${tt.add}</span></button></div></div>
@@ -20,6 +21,7 @@ function renderFamily() {
       <div class="src">${tt.src.map((s, k) => `<div>${icon(["tag", "pot", "shield", "info"][k])}<span>${s}</span></div>`).join("")}</div></details>`;
   $("v-family").querySelectorAll("[data-who]").forEach((b) => b.addEventListener("click", () => { st.who = +b.dataset.who; go("person"); }));
   $("addM").addEventListener("click", addMember);
+  $("profBtn").addEventListener("click", openProfiles);
   $("againW").addEventListener("click", showWelcome);
   $("guideRow").addEventListener("click", () => openGuide(null));
   $("langSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.l)));

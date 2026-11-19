@@ -1,4 +1,4 @@
-/* SAPAT family app · The launch welcome: three screens shown each time the app opens (prototype setting).
+/* SAPAT family app · The launch welcome: three screens shown each time the app opens (prototype setting), then the profile chooser (profiles.js).
  * One of several ordered scripts; see js/README.md. */
 "use strict";
 
@@ -14,10 +14,11 @@ function showWelcome() {
       <div class="wslide" key="${i}"><div class="wart">${art[i]()}</div><div class="wbrand">sapat<span>.</span></div><h2>${h}</h2><p>${p}</p></div>
       <div class="wfoot"><div class="dots">${tt.welcome.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div>
       <button class="btn primary block big" type="button" id="wNext">${last ? icon("heart") + tt.start : tt.next}</button></div>`;
-    $("wSkip").addEventListener("click", done);
-    $("wNext").addEventListener("click", () => { if (last) done(); else { i++; draw(); } });
+    $("wSkip").addEventListener("click", chooser);
+    $("wNext").addEventListener("click", () => { if (last) chooser(); else { i++; draw(); } });
     $("wNext").focus({ preventScroll: true });
   };
   const done = () => { el.classList.add("out"); setTimeout(() => el.remove(), reduced() ? 0 : 280); };
+  const chooser = () => showChooser(el, done); // after the welcome: Tita Baby's sample, a saved family, or a new profile
   draw();
 }

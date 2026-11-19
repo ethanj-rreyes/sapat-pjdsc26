@@ -48,8 +48,9 @@ function openPortion(key) {
   upd();
 }
 function addMember() { st.members.push({ name: T().newM, age: 10, sex: "F", status: "none" }); save(); solve(); editMember(st.members.length - 1); }
-function editMember(i) {
-  const m = st.members[i];
+// opts (optional): { list, onDone } edits a member of another list (the new-profile setup) and calls onDone instead of re-planning.
+function editMember(i, opts) {
+  const list = (opts && opts.list) || st.members, m = list[i];
   const fix = () => { if (m.sex === "M" || m.age < 13 || m.age > 55) m.status = "none"; };
   const draw = () => {
     const tt = T(), canStatus = m.sex === "F" && m.age >= 13 && m.age <= 55;
@@ -61,15 +62,20 @@ function editMember(i) {
       ${canStatus ? `<div class="seg" id="stSeg">${["none", "pregnant", "lactating"].map((k, n) => `<button type="button" data-s="${k}" aria-pressed="${m.status === k}">${tt.status[n]}</button>`).join("")}</div>` : ""}
       <div style="display:grid;gap:8px"><span class="lbl">${tt.diet}</span><div class="diets" id="dietSeg">${UI.DIETS.map((d) => `<button type="button" data-d="${d.k}" aria-pressed="${(m.diet || "regular") === d.k}"><span class="bubble">${icon(d.icon)}</span><span><b>${d[st.lang]}</b><small>${d[st.lang + "S"]}</small></span></button>`).join("")}</div></div>
       <button class="btn primary block" type="button" id="mDone">${icon("check")}${tt.done}</button>
-      ${st.members.length > 1 ? `<button class="btn link block" type="button" id="mDel" style="color:var(--bad)">${tt.remove}</button>` : ""}`);
+      ${list.length > 1 ? `<button class="btn link block" type="button" id="mDel" style="color:var(--bad)">${tt.remove}</button>` : ""}`);
     const keep = () => { m.name = $("mName").value.trim() || m.name; };
     $("am").addEventListener("click", () => { keep(); m.age = Math.max(1, m.age - 1); fix(); draw(); });
     $("ap").addEventListener("click", () => { keep(); m.age = Math.min(100, m.age + 1); fix(); draw(); });
     $("sexSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { keep(); m.sex = b.dataset.s; fix(); draw(); }));
     if ($("stSeg")) $("stSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { keep(); m.status = b.dataset.s; draw(); }));
     $("dietSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { keep(); m.diet = b.dataset.d; $("dietSeg").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); }));
-    $("mDone").addEventListener("click", () => { keep(); closeSheet(); save(); solve(); render(); });
-    if ($("mDel")) $("mDel").addEventListener("click", () => { st.members.splice(i, 1); st.who = 0; closeSheet(); save(); solve(); go("family"); });
+    if (opts && opts.onDone) {
+      $("mDone").addEventListener("click", () => { keep(); closeSheet(); opts.onDone(); });
+      if ($("mDel")) $("mDel").addEventListener("click", () => { list.splice(i, 1); closeSheet(); opts.onDone(); });
+    } else {
+      $("mDone").addEventListener("click", () => { keep(); closeSheet(); save(); solve(); render(); });
+      if ($("mDel")) $("mDel").addEventListener("click", () => { st.members.splice(i, 1); st.who = 0; closeSheet(); save(); solve(); go("family"); });
+    }
   };
   draw();
 }

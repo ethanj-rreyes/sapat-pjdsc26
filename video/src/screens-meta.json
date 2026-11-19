@@ -1,0 +1,27 @@
+{
+ "week": {
+  "mainTop": 64.09375,
+  "navTop": 766,
+  "tallH": 1880.296875
+ },
+ "shop": {
+  "mainTop": 64.09375,
+  "navTop": 766,
+  "tallH": 1712.140625
+ },
+ "today": {
+  "mainTop": 91.6875,
+  "navTop": 766,
+  "tallH": 1549.828125
+ },
+ "family": {
+  "mainTop": 64,
+  "navTop": 766,
+  "tallH": 1447.140625
+ },
+ "person": {
+  "mainTop": 64.09375,
+  "navTop": 766,
+  "tallH": 1555.5
+ }
+}
