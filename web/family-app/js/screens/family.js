@@ -47,7 +47,7 @@ function renderPerson() {
     const c = foodsNow.filter((f) => FBY[f.key][gk] > 0 && !["sugar", "condiments", "cereals"].includes(f.group) && !(st.halal && f.key.startsWith("pork")) && !UI.dietOf(m).ex(f))
       .map((f) => { const ps = UI.portions(FBY[f.key]); const p = ps.find((x) => FBY[f.key][gk] * x[3] >= 0.08 * Tg[gk]) || ps[ps.length - 1]; const add = FBY[f.key][gk] * p[3]; return { f, p, add, cost: p[3] * f.price_g, per: p[3] * f.price_g / add }; })
       .filter((c) => c.add / Tg[gk] >= 0.05).sort((a, b) => a.per - b.per)[0];
-    if (c) { tipItem = c; tip = `<button class="tipcard" type="button" id="tipAdd">${pic(c.f.group, "sm")}<span class="tx"><b>${tt.tipLine(gaps[0][1].toLowerCase(), UI.plabel(c.p, st.lang), esc(fname(c.f.key).toLowerCase()))}</b><span>${tt.tipAdds(Math.round(c.add / Tg[gk] * 100), about(c.cost)) + calc(() => explainFood(c.f.key, c.p[3], UI.plabel(c.p, st.lang)))}</span></span><span class="add">${icon("plus")}</span></button>`; }
+    if (c) { tipItem = c; tip = `<button class="tipcard" type="button" id="tipAdd">${pic(c.f.group, "sm")}<span class="tx"><b>${tt.tipLine(gaps[0][1].toLowerCase(), UI.plabel(c.p, st.lang), esc(fname(c.f.key).toLowerCase()))}</b><span>${tt.tipAdds(needTxt(Math.min(g[gk] / Tg[gk], 1)), needTxt(Math.min((g[gk] + c.add) / Tg[gk], 1)), about(c.cost)) + calc(() => explainFood(c.f.key, c.p[3], UI.plabel(c.p, st.lang)))}</span></span><span class="add">${icon("plus")}</span></button>`; }
   }
   const coreFull = CORE.reduce((a, k) => a + Math.min(g[k] / Tg[k], 1), 0) / CORE.length;
   const BODY = [["energy_kcal", "bolt"], ["protein_g", "grow"], ["iron_mg", "drop"], ["vit_a_ug", "eye"], ["calcium_mg", "bone"]];
@@ -59,7 +59,7 @@ function renderPerson() {
     <div class="card"><div class="head"><span class="bubble">${icon("heart")}</span><span class="htx"><h2>${s == null ? tt.notyet : scoreWord(s)}</h2><small>${tt.bodyS}</small></span></div><div class="body5">${bodyRows}</div></div>
     ${tip}
     <div class="card"><div class="head"><span class="bubble">${icon("bowl")}</span><h2>${tt.eatenToday}</h2><button class="iconbtn" type="button" id="addX" aria-label="${tt.other}">${icon("plus")}</button></div>
-      ${md.items.length ? md.items.map((x) => `<div class="item">${pic(FBY[x.key].group, "sm")}<div class="tx"><b>${esc(x.lab || fname(x.key))}</b><small>${x.lab ? tt.estTag + " · " : ""}${x.extra != null ? tt.extra + (x.p ? " · " + UI.plabel(x.p, st.lang) : "") : tt.fromMeal + " " + tt.meals[x.meal].toLowerCase()}</small></div>${x.extra != null ? `<button class="x" type="button" data-delx="${x.extra}" aria-label="${tt.remove}">${icon("x")}</button>` : ""}</div>`).join("") : `<p class="quiet">${tt.mealEmpty}</p>`}
+      ${md.items.length ? md.items.map((x) => `<div class="item">${pic(FBY[x.key].group, "sm")}<div class="tx"><b>${esc(x.lab || fname(x.key))}</b><small>${x.lab ? estTip(tt.estTag) + " · " : ""}${x.extra != null ? tt.extra + (x.p ? " · " + UI.plabel(x.p, st.lang) : "") : tt.fromMeal + " " + tt.meals[x.meal].toLowerCase()}</small></div>${x.extra != null ? `<button class="x" type="button" data-delx="${x.extra}" aria-label="${tt.remove}">${icon("x")}</button>` : ""}</div>`).join("") : `<p class="quiet">${tt.mealEmpty}</p>`}
     </div>
     <details class="card"><summary class="head"><span class="bubble">${icon("chart")}</span><h2>${tt.numbers}</h2>${chev()}</summary>
       <div class="energy">

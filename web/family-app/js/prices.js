@@ -30,19 +30,44 @@ function spreadOf(key) {
 const pRange = (key, grams) => { const f = priceBy[key]; if (!f) return [0, 0]; const [lo, hi] = spreadOf(key), c = grams * f.price_g; return [c * lo, c * hi]; };
 const sumR = (list) => list.reduce((a, [k, g]) => { const r = pRange(k, g); return [a[0] + r[0], a[1] + r[1]]; }, [0, 0]);
 const rnd = (x, up) => { const sp = x < 100 ? 1 : x < 1000 ? 5 : 10; return (up ? Math.ceil(x / sp) : Math.floor(x / sp)) * sp; };
-function pesoR(r) { const [lo, hi] = r; if (hi < 1) return st.lang === "tl" ? "wala pang ₱1" : "under ₱1"; const a = Math.max(1, rnd(lo)), b = Math.max(a, rnd(hi, true)); return a === b ? "₱" + fmt(a) : `₱${fmt(a)}–${fmt(b)}`; }
+function pesoR(r) { const [lo, hi] = r; if (hi < 1) return st.lang === "tl" ? "wala pang ₱1" : "under ₱1"; const a = Math.max(1, Math.round(lo)), b = Math.max(a, Math.round(hi)); return a === b ? "₱" + fmt(a) : `₱${fmt(a)}–${fmt(b)}`; }
 const mid = (r) => (r[0] + r[1]) / 2;
-const about = (x) => (x < 1 ? (st.lang === "tl" ? "wala pang ₱1" : "under ₱1") : (st.lang === "tl" ? "mga " : "about ") + peso(x < 20 ? Math.round(x) : rnd(x)));
-// "₱48–56 kada kilo · mga ₱3 kada tasang kanin (luto)"
+const about = (x) => (x < 0.5 ? (st.lang === "tl" ? "wala pang ₱1" : "under ₱1") : (st.lang === "tl" ? "mga " : "about ") + peso(Math.round(x)));
+// ---------------------------------------------------------------- numbers people read at a glance
+// Money is rounded to the nearest peso, percentages to whole numbers. A price shows one typical amount first (the PSA average for the
+// place) with its range in small text under it. A % of need always comes with a word (Sapat / Halos sapat / Kulang pa) and a bar.
+const pesoN = (x) => (x < 0.5 ? (st.lang === "tl" ? "wala pang ₱1" : "under ₱1") : peso(Math.round(x)));
+const pTyp = (key, grams) => { const f = priceBy[key]; return f ? grams * f.price_g : 0; };
+const sumT = (list) => list.reduce((a, [k, g]) => a + pTyp(k, g), 0);
+const typR = (t, r) => `<span class="ptr"><b>${pesoN(t)}</b><small>${pesoR(r)}</small></span>`;
+const needState = (r) => (r >= 0.9 ? "ok" : r >= 0.6 ? "mid" : "low");
+const needTxt = (r) => { const tt = T(), s = needState(r); return s === "ok" ? tt.good : s === "mid" ? tt.mid : tt.low; };
+const needWord = (r) => `<span class="word ${needState(r)}">${icon(UI.SWI[needState(r)])}${needTxt(r)}</span>`;
+const pct = (r) => Math.round(r * 100) + "%";
+// "Tantiya": one short explanation, in a bubble, of what an estimated price or nutrient means
+const estTip = (label) => `<span class="esttip" role="button" tabindex="0" data-tip="est" aria-label="${T().estWhatL}">${label || T().planned}${icon("info")}</span>`;
+function showTip(el) {
+  document.querySelectorAll(".tipbub").forEach((b) => b.remove());
+  const host = $("screen") || document.body, hr = host.getBoundingClientRect(), r = el.getBoundingClientRect();
+  const b = document.createElement("div"); b.className = "tipbub"; b.setAttribute("role", "tooltip"); b.innerHTML = `<b>${T().estWhatH}</b><span>${T().estWhat}</span>`;
+  host.appendChild(b);
+  const w = b.offsetWidth, left = Math.min(Math.max(12, r.left - hr.left + r.width / 2 - w / 2), hr.width - w - 12);
+  const below = r.bottom - hr.top + 8, top = below + b.offsetHeight > hr.height - 90 ? r.top - hr.top - b.offsetHeight - 8 : below;
+  b.style.left = left + "px"; b.style.top = top + "px";
+}
+document.addEventListener("click", (e) => { const t = e.target.closest("[data-tip]"); if (t) { e.preventDefault(); e.stopPropagation(); showTip(t); return; } if (!e.target.closest(".tipbub")) document.querySelectorAll(".tipbub").forEach((b) => b.remove()); }, true);
+document.addEventListener("keydown", (e) => { const t = e.target.closest && e.target.closest("[data-tip]"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); showTip(t); } if (e.key === "Escape") document.querySelectorAll(".tipbub").forEach((b) => b.remove()); });
+// "₱52 kada kilo" with "₱48–56" under it: only the unit people buy in. The second unit (per cup, per piece) is in the breakdown.
 function priceLine(key) {
   const f = FBY[key], u = UI.buyUnits(f), per = st.lang === "tl" ? "kada" : "per";
-  return `<span>${pesoR(pRange(key, u[0][2]))} ${per} ${UI.ul(u[0], st.lang)}${calc(() => explainFood(key, u[0][2], "1 " + UI.ul(u[0], st.lang)) + explainFood(key, u[1][2], "1 " + UI.ul(u[1], st.lang)))}</span><small>${about(mid(pRange(key, u[1][2])))} ${per} ${UI.ul(u[1], st.lang)}</small>`;
+  return `<span>${pesoN(pTyp(key, u[0][2]))} ${per} ${UI.ul(u[0], st.lang)}${calc(() => explainFood(key, u[0][2], "1 " + UI.ul(u[0], st.lang)) + explainFood(key, u[1][2], "1 " + UI.ul(u[1], st.lang)))}</span><small>${pesoR(pRange(key, u[0][2]))}</small>`;
 }
+const unit2Line = (key) => { const u = UI.buyUnits(FBY[key]); return `${about(pTyp(key, u[1][2]))} ${st.lang === "tl" ? "kada" : "per"} ${UI.ul(u[1], st.lang)}`; };
 
 // ---------------------------------------------------------------- "Paano kinuwenta?": a small icon beside every price opens its breakdown
 let CALC = {}, calcN = 0;
 const calc = (fn) => { const id = "c" + ++calcN; CALC[id] = fn; return `<span class="calc" role="button" tabindex="0" data-calc="${id}" aria-label="${T().calcH}">${icon("calc")}</span>`; };
-const php = (x, d) => "₱" + fmt(x, d == null ? (x < 10 ? 2 : x < 100 ? 1 : 0) : d);
+const php = (x) => (x < 0.5 ? "<₱1" : "₱" + fmt(Math.round(x))); // whole pesos, even in the breakdown
 const gtxt = (g) => (g >= 1000 ? fmt(g / 1000, 2).replace(/\.?0+$/, "") + " kg" : fmt(g) + " g");
 function srcLine(key) {
   const tt = T(), f = priceBy[key], kg = f.price_g * 1000, mo = UI.monthName(lastMonth, st.lang);

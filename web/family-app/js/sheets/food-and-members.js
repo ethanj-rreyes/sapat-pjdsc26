@@ -33,7 +33,7 @@ function openPortion(key) {
     <div style="display:flex;gap:16px;align-items:center">${pic(f.group, "lg")}<div style="display:grid;gap:6px;justify-items:start"><span style="color:var(--ink-2);font-weight:700">${tt.meals[keep.meal]} · ${keep.who.map((w) => esc(st.members[w].name)).join(", ")}</span>${priceBy[key] ? `<span class="pl">${priceLine(key)}</span>` : ""}</div></div>
     <div class="portions" id="pp">${ps.map((p, k) => `<button type="button" data-k="${k}" aria-pressed="${k === sel}"><b>${UI.pshort(p, st.lang)}</b><small>${p[2] ? UI.U[st.lang][p[2]] + " · " : ""}${fmt(p[3])} g</small></button>`).join("")}</div>
     <div class="qty"><button class="step" type="button" id="qm" aria-label="−">${icon("minus")}</button><output id="qo" aria-live="polite"></output><button class="step" type="button" id="qp" aria-label="+">${icon("plus")}</button></div>
-    <div class="preview" id="pv"></div>
+    <details class="nums"><summary>${tt.numbers}${chev()}</summary><div class="preview" id="pv"></div></details>
     <button class="btn primary block" type="button" id="doAdd">${icon("plus")}${tt.addFood}</button>`, () => { openAdd(keep.meal, null); addState.who = keep.who; });
   const upd = () => {
     const g = ps[sel][3] * mult, n = nutr(key, g);

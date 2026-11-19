@@ -61,7 +61,7 @@ function compareCard() {
   try { usual = meanCore(S.typicalPlan(st.members, st.budget / 7, deciles()[nearestDecile()], foodsNow).coverage); } catch (e) { return ""; }
   const best = meanCore(S.coverage(plan)), pc = (x) => Math.round(x * 100) + "%";
   return `<div class="card cmpc"><div class="head"><span class="bubble">${icon("heart")}</span><h2>${tt.cmpH(peso(st.budget))}</h2></div>
-    <div class="vs"><div><span>${tt.cmpUsual}</span><div class="bar"><i class="grow" style="--w:${Math.min(usual, 1) * 100}%;background:var(--ghost)"></i></div><b>${pc(usual)}</b></div>
-    <div><span>${tt.cmpSapat}</span><div class="bar"><i class="grow" style="--w:${Math.min(best, 1) * 100}%;background:var(--leaf)"></i></div><b>${pc(best)}</b></div></div>
+    <div class="vs"><div><span>${tt.cmpUsual}</span><div class="bar"><i class="grow" style="--w:${Math.min(usual, 1) * 100}%;background:var(--ghost)"></i></div><b>${pc(usual)}</b>${needWord(usual)}</div>
+    <div><span>${tt.cmpSapat}</span><div class="bar"><i class="grow" style="--w:${Math.min(best, 1) * 100}%;background:var(--leaf)"></i></div><b>${pc(best)}</b>${needWord(best)}</div></div>
     <p class="quiet left">${tt.cmpS}</p></div>`;
 }

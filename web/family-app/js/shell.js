@@ -58,7 +58,7 @@ const chev = () => icon("chev").replace('class="i"', 'class="i chev"');
 const MI = ["sun", "bowl", "cup", "moon"];
 const famBubble = (m, i, d) => { const md = memberDay(i, d), s = score(md); return `<button class="fam" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<b>${esc(m.name)}</b><span class="word ${scoreState(s)}">${scoreWord(s)}</span></button>`; };
 function mealCard(d, mi, opts) {
-  const tt = T(), items = week.days[d][mi], eaten = !!wk.eaten[d + "-" + mi], cost = pesoR(mealRange(items));
+  const tt = T(), items = week.days[d][mi], eaten = !!wk.eaten[d + "-" + mi], cost = items.length ? typR(sumT(items.map((x) => [x.key, x.g])), mealRange(items)) : "";
   const chips = items.filter((x) => !["condiments", "sugar"].includes(FBY[x.key].group) && (mi === 0 || FBY[x.key].group !== "cereals")).map((x) => `<span class="ing">${pic(FBY[x.key].group, "xs")}${esc(fname(x.key))}</span>`).join("");
   return `<div class="meal${eaten ? " done" : ""}">
     <div class="mtop"><span class="bubble ${mi === 2 ? "sun" : ""}">${icon(MI[mi])}</span><span class="mt"><small>${tt.meals[mi]} · ${tt.mealHint[mi]}</small><b>${esc(mealName(items, mi, d))}</b></span><span class="mc">${cost}${calc(() => explainList(items.map((x) => [x.key, x.g]), esc(mealName(items, mi, d)), st.members.length))}</span></div>

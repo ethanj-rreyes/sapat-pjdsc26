@@ -25,8 +25,8 @@ function renderWeek() {
     <div class="card">
       <div class="head"><span class="bubble">${icon("wallet")}</span><h2>${tt.budgetCard}</h2></div>
       <div class="budres" id="budRes">
-      <div class="cmp"><div class="lab"><span>${tt.bestCan(Math.round(best * 100) + "%")}</span></div><div class="bar"><i style="width:${Math.min(best, 1) * 100}%;background:var(--leaf)"></i></div></div>
-      ${gap > 50 ? `<details class="helpnote"><summary>${icon("heart")}<span><b>${tt.gapShort(peso(gap))}</b><small>${tt.fullCost(peso(fullWeek))}</small></span>${chev()}</summary><p>${tt.help(peso(gap))}</p></details>` : `<div class="helpnote ok">${icon("check")}<span>${tt.covers}</span></div>`}
+      <div class="cmp"><div class="lab"><span>${tt.bestCan(pct(best))}</span>${needWord(best)}</div><div class="bar"><i style="width:${Math.min(best, 1) * 100}%;background:${ringCol(best)}"></i></div></div>
+      ${gap > 50 ? `<details class="helpnote"><summary>${icon("heart")}<span><b>${tt.gapShort(pesoN(gap))}</b></span>${chev()}</summary><p>${tt.help}</p><p class="quiet left">${tt.fullCost(pesoN(fullWeek))}</p></details>` : `<div class="helpnote ok">${icon("check")}<span>${tt.covers}</span></div>`}
       </div>
       <div id="weekBud"></div>
     </div>
@@ -46,7 +46,7 @@ function renderWeek() {
     value: st.budget, mode: st.bmode, region: st.loc.region, n: st.members.length,
     onChange: (v) => $("budRes").classList.toggle("stale", v != null && v !== st.budget),
     onMode: (m) => { st.bmode = m; save(); },
-    onApply: (v) => { st.budget = v; st.preset = 0; save(); solve(); render(); toast(T().applied(peso(v), plan ? Math.round(bestShare() * 100) + "%" : "–")); $("budRes").scrollIntoView({ block: "nearest" }); },
+    onApply: (v) => { st.budget = v; st.preset = 0; save(); solve(); render(); toast(T().applied(peso(v), plan ? pct(bestShare()) : "–", plan ? needTxt(bestShare()) : "")); $("budRes").scrollIntoView({ block: "nearest" }); },
   });
   $("v-week").querySelectorAll("[data-day]").forEach((b) => b.addEventListener("click", () => { st.day = +b.dataset.day; save(); render(); }));
   wireMeals($("v-week"));
