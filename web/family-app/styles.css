@@ -632,3 +632,19 @@ select:focus { border-color: var(--leaf); outline: none; }
 .mfield input:focus { border: none; }
 .bigmoney small { font-size: 14px; font-weight: 700; color: var(--ink-2); }
 .bigmoney small.warn { color: var(--bad); }
+/* budget input (js/features/budget.js) */
+.bud { display: grid; gap: 14px; }
+.bud .bmode { margin: 0 auto; width: 100%; }
+.bquick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bquick button { min-height: 48px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); font: 800 16px var(--font-body); color: var(--ink); }
+.bquick button[aria-pressed="true"] { border-color: var(--leaf); background: var(--leaf-soft); color: var(--leaf); }
+.bunsure { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 4px 0; text-align: left; line-height: 1.3; }
+.bunsure svg { flex: none; }
+.mfield input::placeholder { color: var(--ink-2); opacity: .35; }
+.budres { margin: 4px 0 18px; }
+.btyp { display: grid; gap: 8px; }
+.btyp .opt .amt { font: 600 20px var(--font-display); color: var(--leaf); }
+.bpend { text-align: center; margin-top: -6px; }
+.card .bigmoney { box-shadow: none; background: var(--soft); }
+.budres { transition: none; }
+.budres.stale { opacity: .4; }

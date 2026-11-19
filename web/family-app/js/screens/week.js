@@ -3,10 +3,12 @@
 "use strict";
 
 // ---------------------------------------------------------------- WEEK (plan + money, calmly)
+// Share of the family's needs the budget-limited plan meets (capped at 100% per nutrient), as in "Pinakamabuting kaya ng budget".
+function bestShare() { const cov = S.coverage(plan); return cov.reduce((a, c) => a + CORE.reduce((x, k) => x + Math.min(c[k], 1), 0) / CORE.length, 0) / cov.length; }
 function renderWeek() {
   const tt = T();
   if (!plan) { $("v-week").innerHTML = `<div class="card"><p class="quiet">${tt.noPlan}</p></div>`; return; }
-  const cov = S.coverage(plan), best = cov.reduce((a, c) => a + CORE.reduce((x, k) => x + Math.min(c[k], 1), 0) / CORE.length, 0) / cov.length;
+  const best = bestShare();
   const fullWeek = planFull ? planFull.cost_day * 7 / tracked : 0, gap = planFull ? planFull.cost_day * 7 - st.budget * tracked : 0;
   const d = st.day;
   const ix = D.index[st.loc.region], stt = D.stats[regKey(st.loc.region)];
@@ -21,10 +23,12 @@ function renderWeek() {
   $("v-week").innerHTML = `
     <div class="hello full"><h2>${tt.weekHead(peso(st.budget))}</h2></div>
     <div class="card">
-      <div class="budget"><button class="step" type="button" id="bm" aria-label="−">${icon("minus")}</button><output>${peso(st.budget)}<small>${tt.perWeek} · ${peso(st.budget / 7)} ${tt.perDay}</small></output><button class="step" type="button" id="bp" aria-label="+">${icon("plus")}</button></div>
-      <div class="seg" id="presetSeg">${[1, 3, 5].map((dd, k) => `<button type="button" data-d="${dd}" aria-pressed="${st.preset === dd}">${tt.presets[k]}</button>`).join("")}</div>
+      <div class="head"><span class="bubble">${icon("wallet")}</span><h2>${tt.budgetCard}</h2></div>
+      <div class="budres" id="budRes">
       <div class="cmp"><div class="lab"><span>${tt.bestCan(Math.round(best * 100) + "%")}</span></div><div class="bar"><i style="width:${Math.min(best, 1) * 100}%;background:var(--leaf)"></i></div></div>
       ${gap > 50 ? `<details class="helpnote"><summary>${icon("heart")}<span><b>${tt.gapShort(peso(gap))}</b><small>${tt.fullCost(peso(fullWeek))}</small></span>${chev()}</summary><p>${tt.help(peso(gap))}</p></details>` : `<div class="helpnote ok">${icon("check")}<span>${tt.covers}</span></div>`}
+      </div>
+      <div id="weekBud"></div>
     </div>
     <div class="card">
       <div class="days" role="tablist">${tt.days.map((n, k) => `<button type="button" role="tab" data-day="${k}" aria-selected="${k === d}">${k === todayIdx ? "●" + n : n}</button>`).join("")}</div>
@@ -37,10 +41,13 @@ function renderWeek() {
     ${stt ? `<details class="card"><summary class="head"><span class="bubble">${icon("map")}</span><h2>${tt.situH(regionName(st.loc.region))}</h2>${chev()}</summary>
       <div class="stats"><div class="stat"><b>${Math.round(stt.food_share_income * 100)}%</b><small>${tt.s1}</small></div><div class="stat"><b>${Math.round(stt.below_ft * 10)} ${tt.in10}</b><small>${tt.s2}</small></div><div class="stat"><b>${Math.round(stt.cereal_share * 100)}%</b><small>${tt.s3}</small></div><div class="stat"><b>${stt.poverty_fam == null ? "–" : fmt(stt.poverty_fam, 0) + "%"}</b><small>${tt.s4}</small></div></div>
       <p class="quiet">${tt.fies}</p></details>` : ""}`;
-  const setB = (v) => { st.budget = Math.max(200, Math.round(v / 50) * 50); st.preset = 0; save(); solve(); render(); };
-  $("bm").addEventListener("click", () => setB(st.budget - 100));
-  $("bp").addEventListener("click", () => setB(st.budget + 100));
-  $("presetSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { st.preset = +b.dataset.d; save(); solve(); render(); }));
+  // budget: typed (per week or per day), re-planned only when they press I-apply; the old result dims until then
+  budgetEditor($("weekBud"), {
+    value: st.budget, mode: st.bmode, region: st.loc.region, n: st.members.length,
+    onChange: (v) => $("budRes").classList.toggle("stale", v != null && v !== st.budget),
+    onMode: (m) => { st.bmode = m; save(); },
+    onApply: (v) => { st.budget = v; st.preset = 0; save(); solve(); render(); toast(T().applied(peso(v), plan ? Math.round(bestShare() * 100) + "%" : "–")); $("budRes").scrollIntoView({ block: "nearest" }); },
+  });
   $("v-week").querySelectorAll("[data-day]").forEach((b) => b.addEventListener("click", () => { st.day = +b.dataset.day; save(); render(); }));
   wireMeals($("v-week"));
 }

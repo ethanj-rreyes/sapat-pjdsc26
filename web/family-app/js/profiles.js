@@ -4,10 +4,10 @@
 "use strict";
 
 // ---------------------------------------------------------------- switching
-function switchProfile(id, msg) {
+function switchProfile(id, msg, tab) {
   openProfile(id); closeSheet();
   if (!PL[st.loc.region]) st.loc = { region: "R08", prov: "Leyte", city: null, market: null };
-  refreshPrices(); solve(); save(); drawChrome(); drawNav(); go("today");
+  refreshPrices(); solve(); save(); drawChrome(); drawNav(); go(tab || "today");
   if (msg !== false) toast(msg || T().switched(profileName(pid)));
 }
 const savedState = (id) => store.get(pkey(id, "state"), null) || {};
@@ -35,12 +35,11 @@ function showChooser(el, close) {
 // ---------------------------------------------------------------- new profile: who eats, where they shop, the weekly budget
 function showSetup() {
   const host = $("screen") || document.body, tt0 = T();
-  const draft = { name: "", members: [{ name: tt0.me, age: 30, sex: "F", status: "none" }], region: null, prov: null, preset: 1, budget: null };
+  const draft = { name: "", members: [{ name: tt0.me, age: 30, sex: "F", status: "none" }], region: null, prov: null, budget: null, bmode: "week" }; // no budget until they enter one
   let step = 0;
   const el = document.createElement("div"); el.className = "setup"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-labelledby", "suH"); host.appendChild(el);
   const close = () => el.remove();
-  const presetB = (d) => budgetFor(d, draft.region, draft.members.length);
-  const budgetOk = () => draft.budget >= 100 && draft.budget <= 999999;
+  const budgetOk = () => draft.budget != null; // the editor reports null until the amount is valid
   const body = () => {
     const tt = T();
     if (step === 0) return `
@@ -53,14 +52,7 @@ function showSetup() {
       <label class="f">${tt.region}<select id="suReg"><option value="">${tt.pickRegion}</option>${D.regions.filter((r) => r.key !== "PH").map((r) => `<option value="${r.key}"${r.key === draft.region ? " selected" : ""}>${esc(regionName(r.key))}</option>`).join("")}</select></label>
       ${provs.length ? `<label class="f">${tt.province}<select id="suProv"><option value="">${tt.wholeRegion}</option>${provs.map((p) => `<option value="${esc(p.name)}"${p.name === draft.prov ? " selected" : ""}>${esc(p.name)}</option>`).join("")}</select></label>` : ""}`;
     }
-    if (draft.budget == null && draft.preset) draft.budget = presetB(draft.preset);
-    return `
-      <label class="bigmoney"><span class="lbl">${tt.budgetType}</span>
-        <span class="mfield"><span class="cur">₱</span><input type="text" id="suBudget" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="0" value="${draft.budget ? fmt(draft.budget) : ""}" aria-describedby="suPer"></span>
-        <small id="suPer"></small></label>
-      <span class="lbl">${tt.orPick}</span>
-      <div class="seg" id="suSeg">${[1, 3, 5].map((d, k) => `<button type="button" data-d="${d}" aria-pressed="${draft.preset === d}">${tt.presets[k]}<small>${peso(presetB(d))}</small></button>`).join("")}</div>
-      <p class="quiet left">${tt.budgetHint(draft.members.length)}</p>`;
+    return `<div id="suBud"></div>`;
   };
   const keepName = () => { const n = $("suName"); if (n) draft.name = n.value.trim(); };
   const draw = () => {
@@ -72,42 +64,24 @@ function showSetup() {
     $("suNext").addEventListener("click", () => { keepName(); if (!last) { step++; draw(); } else finish(); });
     if (step === 0) {
       el.querySelectorAll("[data-m]").forEach((b) => b.addEventListener("click", () => { keepName(); editMember(+b.dataset.m, { list: draft.members, onDone: draw }); }));
-      $("suAdd").addEventListener("click", () => { keepName(); draft.members.push({ name: T().newM, age: 10, sex: "F", status: "none" }); draft.budget = null; editMember(draft.members.length - 1, { list: draft.members, onDone: draw }); });
+      $("suAdd").addEventListener("click", () => { keepName(); draft.members.push({ name: T().newM, age: 10, sex: "F", status: "none" }); editMember(draft.members.length - 1, { list: draft.members, onDone: draw }); });
     }
     if (step === 1) {
-      $("suReg").addEventListener("change", (e) => { draft.region = e.target.value || null; draft.prov = null; draft.budget = null; draw(); });
+      $("suReg").addEventListener("change", (e) => { draft.region = e.target.value || null; draft.prov = null; draw(); });
       if ($("suProv")) $("suProv").addEventListener("change", (e) => { draft.prov = e.target.value || null; });
     }
-    if (step === 2) {
-      // typed budget: digits only, live per-day line; the three estimates fill the box and stay highlighted while they match
-      const inp = $("suBudget");
-      const fit = () => (inp.style.width = Math.max(2, inp.value.length || 1) + 0.6 + "ch"); // the box hugs the digits so ₱ sits next to them
-      const sync = () => { fit();
-        const tt = T();
-        $("suPer").textContent = budgetOk() ? `${tt.perWeek} · ${peso(draft.budget / 7)} ${tt.perDay}` : tt.budgetMin;
-        $("suPer").classList.toggle("warn", !budgetOk() && inp.value !== "");
-        $("suSeg").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(+b.dataset.d === draft.preset)));
-        $("suNext").disabled = !budgetOk();
-      };
-      inp.addEventListener("focus", () => inp.select());
-      inp.addEventListener("input", () => {
-        const digits = inp.value.replace(/\D/g, "").slice(0, 6);
-        draft.budget = digits ? +digits : null;
-        draft.preset = [1, 3, 5].find((d) => presetB(d) === draft.budget) || 0;
-        sync();
-      });
-      inp.addEventListener("blur", () => { inp.value = draft.budget ? fmt(draft.budget) : ""; fit(); });
-      inp.addEventListener("keydown", (e) => { if (e.key === "Enter" && budgetOk()) finish(); });
-      $("suSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { draft.preset = +b.dataset.d; draft.budget = presetB(draft.preset); inp.value = fmt(draft.budget); sync(); }));
-      sync();
-    }
+    if (step === 2) budgetEditor($("suBud"), {
+      value: draft.budget, mode: draft.bmode, region: draft.region, n: draft.members.length,
+      onChange: (v) => { draft.budget = v; $("suNext").disabled = !budgetOk(); },
+      onMode: (m) => { draft.bmode = m; },
+    });
   };
   const finish = () => {
     const tt = T(), id = "f" + Date.now().toString(36);
     const name = draft.name || tt.pNameDef(draft.members[0].name);
-    const s = { name, members: draft.members, who: 0, tab: "today", loc: { region: draft.region, prov: draft.prov, city: null, market: null }, prices: {}, budget: draft.budget, preset: draft.preset, halal: false, example: false, day: null, saved: 0 };
+    const s = { name, members: draft.members, who: 0, tab: "today", loc: { region: draft.region, prov: draft.prov, city: null, market: null }, prices: {}, budget: draft.budget, preset: 0, bmode: draft.bmode, halal: false, example: false, day: null, saved: 0 };
     store.set(pkey(id, "state"), s); profiles.list.push({ id, name }); store.set("profiles", profiles);
-    close(); switchProfile(id, tt.created(name));
+    close(); switchProfile(id, tt.created(name), "week"); // land on Linggo: what the budget buys, right after it's set
   };
   draw();
 }

@@ -13,7 +13,7 @@ let plan = null, planFull = null, tracked = 1, week = null, lastDec = 1;
 const nearestDecile = () => lastDec;
 function solve() {
   if (st.preset) st.budget = presetBudget(st.preset);
-  if (!st.budget) st.budget = presetBudget(1);
+  if (!st.budget) st.budget = presetBudget(1); // safety net only: Tita Baby has her preset and every new profile enters its own budget in setup
   const exclude = st.halal ? foodsNow.filter((f) => f.key.startsWith("pork")).map((f) => f.key) : [];
   const excludeFor = UI.dietExclude(st.members, foodsNow);
   const pp = st.budget / 7 / st.members.length / inflator(st.loc.region);
