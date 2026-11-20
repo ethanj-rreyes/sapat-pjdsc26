@@ -8,6 +8,8 @@ const TOUR = [
     p: "Choose the region and the month (the arrows step one month). Status shows only the Alert, Watch or Steady areas, and Find jumps to a province by name. Everything below follows these filters." },
   { view: "lgu", el: "#view-lgu .answer", h: "2. This month's answer",
     p: "One line: how many provinces are on Alert or Watch, and what a healthy day costs per person across the country (or region)." },
+  { view: "lgu", el: "#view-lgu .viz", h: "The month in pictures",
+    p: "How many provinces are on Alert, Watch or Steady (click a part to show only those), whether that number is rising over the last two years (click a month to open it), and which key foods moved." },
   { view: "lgu", el: "#view-lgu .mapbox", h: "3. The map",
     p: "Colour shows the measure you pick (cost of a healthy day, its change, or the alert level; 6 more under More measures). ▲ is Alert and ● is Watch on every measure. Point at a province for its numbers; click to select it." },
   { view: "lgu", el: "#view-lgu .apanel", h: "4. What needs attention",
@@ -79,7 +81,7 @@ function tourStep(k) {
   const r = t.getBoundingClientRect(), fits = r.height < window.innerHeight * 0.62;
   window.scrollTo({ top: window.scrollY + r.top - (fits ? Math.max(16, (window.innerHeight * 0.62 - r.height) / 2) : 16), behavior: "auto" });
   const { card } = tourEls;
-  card.innerHTML = `<p class="tstep">${k + 1} of ${TOUR.length}${k >= 6 ? ` · ${s.view === "focus" ? "Province close-up" : "Feeding program"} tab` : ` · Price alerts tab`}</p>
+  card.innerHTML = `<p class="tstep">${k + 1} of ${TOUR.length}${k >= 7 ? ` · ${s.view === "focus" ? "Province close-up" : "Feeding program"} tab` : ` · Price alerts tab`}</p>
     <h2 id="tH">${esc(s.h.replace(/^\d+\.\s*/, ""))}</h2><p>${esc(s.p)}</p>
     <div class="tbar"><button type="button" class="linkbtn" id="tEnd">End tour</button>
       <span class="tnav">${k ? `<button type="button" class="btn small" id="tPrev">${icon("left")}Back</button>` : ""}<button type="button" class="btn small primary" id="tNext">${k === TOUR.length - 1 ? "Finish" : "Next"}${k === TOUR.length - 1 ? "" : chev()}</button></span></div>`;

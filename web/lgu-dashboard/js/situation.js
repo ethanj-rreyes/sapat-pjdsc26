@@ -346,11 +346,12 @@ function renderDetail(list) {
       <div class="num"><span class="nl">Change vs past 3 months</span><b>${pctSigned(c3)}</b><span class="nu">vs the ${span3} average (${peso(prev3)})</span><span class="ns">SAPAT, from PSA retail prices</span></div>
       <div class="num"><span class="nl">Alert level</span><b class="lvw">${lv == null ? "–" : LEVELS[lv].word}</b><span class="nu">${esc(fired)}</span><span class="ns">SAPAT early-warning rule (Price alerts tab)</span></div>
     </div>
+    ${rankStrip(a, i)}
     <div class="dgrid">
       <figure class="dchart"><figcaption><b>Cost of a healthy day, last 3 years</b><span>₱ per person per day. The dashed line is the Alert line: 10% above the 3 months before.</span></figcaption>${areaChart(a, i)}</figure>
       <div class="kf"><h3>Key food prices, ${monthName(m)}</h3>
         <div class="kfwrap"><table><thead><tr><th scope="col">Food</th><th scope="col" class="n">Price</th><th scope="col" class="n">vs past 3 months</th><th scope="col" class="n">vs last year</th></tr></thead>
-        <tbody>${KEY_FOODS.map((f) => { const d = kf.find((x) => x.f.k === f.k), now = a.food(f.k, i), yy = fy(f.k); return `<tr><th scope="row">${f.label}<small>${f.unit}</small></th><td class="n">${now == null ? "–" : peso(now, 2)}</td><td class="n${d && d.chg >= 0.05 ? " up" : ""}">${d ? pctSigned(d.chg) : "–"}</td><td class="n${yy >= 0.15 ? " up" : ""}">${yy == null ? "–" : pctSigned(yy)}</td></tr>`; }).join("")}</tbody></table></div>
+        <tbody>${KEY_FOODS.map((f) => { const d = kf.find((x) => x.f.k === f.k), now = a.food(f.k, i), yy = fy(f.k); return `<tr><th scope="row"><span class="kfn"><span class="fic">${icon(FOOD_IC[f.k])}</span><span>${f.label}<small>${f.unit}</small></span></span></th><td class="n">${now == null ? "–" : peso(now, 2)}</td><td class="n${d && d.chg >= 0.05 ? " up" : ""}"><span class="chgc">${d ? miniBar(d.chg) : ""}${d ? pctSigned(d.chg) : "–"}</span></td><td class="n${yy >= 0.15 ? " up" : ""}">${yy == null ? "–" : pctSigned(yy)}</td></tr>`; }).join("")}</tbody></table></div>
         <p class="src">PSA retail prices${a.kind === "prov" ? (a.psa ? ", province survey" : ", regional") : ", regional average"}. A dash means PSA had no price that month.</p>
       </div>
     </div>
@@ -369,7 +370,7 @@ function renderDetail(list) {
 // 36 months of cost, with the Alert line and shapes (not just colour) for Watch and Alert months
 function areaChart(a, i, opt) {
   opt = opt || {};
-  const W = opt.w || (window.innerWidth < 640 ? 380 : 640), H = opt.h || (window.innerWidth < 640 ? 240 : 220), L = 44, R = 12, T = 12, B = 26;
+  const W = opt.w || (window.innerWidth < 640 ? 380 : 520), H = opt.h || (window.innerWidth < 640 ? 240 : 220), L = 44, R = 12, T = 12, B = 26;
   const i0 = Math.max(3, i - 35), idx = []; for (let k = i0; k <= i; k++) idx.push(k);
   const cost = idx.map((k) => a.cond[k]), line = idx.map((k) => (a.cond[k - 1] + a.cond[k - 2] + a.cond[k - 3]) / 3 * (1 + RULE.alert3));
   const vals = cost.concat(line).filter((v) => v != null);
@@ -417,11 +418,14 @@ function renderFocus() {
   const m = sit.month, i = MI[m], base = areaList(sit.level).filter((a) => sit.level === "region" || fc.area === "PH" || a.region === fc.area);
   $("fMonth").value = m; $("fArea").value = fc.area; $("fArea").disabled = sit.level === "region";
   statusSeg($("fStatus"), fc.status, countsOf(base.filter((a) => nameHit(a, fc.q)), i), [["alert", "Alert"], ["attn", "Alert + Watch"], ["all", "All"]]);
-  const list = focusRows();
+  let list = focusRows(), widened = "";
+  // nothing on Alert this month: widen to Alert + Watch, then to all, and say so (never an empty page)
+  while (!list.length && !fc.q && fc.status !== "all") { widened = fc.status === "alert" ? "on Alert" : "on Alert or Watch"; fc.status = fc.status === "alert" ? "attn" : "all"; list = focusRows(); }
+  if (widened) statusSeg($("fStatus"), fc.status, countsOf(base, i), [["alert", "Alert"], ["attn", "Alert + Watch"], ["all", "All"]]);
   if (!sit.sel || !list.some((a) => a.key === sit.sel)) { if (!sit._keepSel) sit.sel = (list[0] || {}).key || null; }
   sit._keepSel = false;
   $("frH").textContent = fc.status === "alert" ? `On Alert (${list.length})` : fc.status === "attn" ? `On Alert or Watch (${list.length})` : `All ${unitWord(2)} (${list.length})`;
-  $("frSub").textContent = `${monthLong(m)}. Most urgent first.`;
+  $("frSub").textContent = widened ? `No ${unitWord(2)} ${widened} in ${monthLong(m)}, so the list shows ${fc.status === "attn" ? "Alert and Watch" : "all of them"}.` : `${monthLong(m)}. Most urgent first.`;
   $("flist").innerHTML = list.length ? list.map((a) => { const lv = lvOf(a, i); return `<li class="frow${a.key === sit.sel ? " sel" : ""}" data-k="${esc(a.key)}" tabindex="0" role="button" aria-pressed="${a.key === sit.sel}">
       ${tag(lv)}<span class="sname"><b>${esc(a.name)}</b><small>${a.kind === "prov" ? esc(regionName(a.region)) : "Region"}</small></span>
       <span class="schg ${lv == null ? "" : LEVELS[lv].k}">${pctSigned(a.vs3[i])}<small>${peso(a.cond[i])}/day</small></span></li>`; }).join("")
@@ -445,5 +449,5 @@ function renderSituation() {
   $("mPrev").disabled = MONTHS.indexOf(sit.month) <= 0; $("mNext").disabled = sit.month === lastMonth;
   $("levelSeg").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.l === sit.level)));
   statusSeg($("statusSeg"), sit.status, countsOf(rowsNow(), MI[sit.month]), STATUS);
-  renderAnswer(); renderSide(); renderMeasures(); paintMap(); renderTable();
+  renderAnswer(); renderVisuals(); renderSide(); renderMeasures(); paintMap(); renderTable();
 }
