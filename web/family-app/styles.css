@@ -523,7 +523,7 @@ nav.bottom button[aria-current="page"] .pill { background: var(--leaf); color: #
 .hero .mact { display: grid; grid-template-columns: 1.4fr 1fr; width: 100%; }
 .hero .btn.big { white-space: nowrap; padding: 0 16px; font-size: 17px; }
 .nudge .mact { flex-wrap: wrap; } .nudge .btn.link { min-height: 40px; font-size: 15px; padding: 0 6px; }
-details.helpnote { display: block; } details.helpnote > summary { list-style: none; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+details.helpnote { display: block; padding: 10px 12px; } details.helpnote > summary { list-style: none; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
 details.helpnote > summary::-webkit-details-marker { display: none; } details.helpnote > summary > span { flex: 1; display: grid; } details.helpnote small { color: var(--ink-2); font-size: 14px; }
 details.helpnote p { margin: 10px 0 0 36px; font-size: 15px; } details.helpnote[open] .chev { transform: rotate(90deg); }
 /* fit the phone: grid children may shrink, nothing pushes the page sideways */
@@ -597,7 +597,7 @@ main, .sheet .sb { overflow-x: hidden; }
 .pcard .tx small { font-size: 14px; color: var(--ink-2); line-height: 1.3; }
 .pcard.new { border-style: dashed; background: transparent; }
 .pcard .plus { width: 52px; height: 52px; border-radius: 50%; background: var(--leaf-soft); color: var(--leaf); display: grid; place-items: center; flex: none; }
-.ptag { position: absolute; top: -10px; right: 14px; background: var(--leaf); color: var(--leaf-ink); font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
+.pcard .ptag { position: absolute; top: -10px; right: 14px; background: var(--leaf); color: var(--leaf-ink); font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
 .pfigs { display: flex; flex: none; align-items: center; padding-left: 10px; }
 .pfigs .figwrap { margin-left: -10px; display: block; }
 .pfigs .fig { width: 34px; height: 34px; box-shadow: 0 0 0 2px var(--surface); }
@@ -738,3 +738,46 @@ details.nums[open] > summary .chev { transform: rotate(90deg); }
 .morein .famcard .famrow { margin: 0; padding: 2px 0; }
 .budline { grid-template-columns: minmax(0, 1fr); }
 .budline > * { min-width: 0; }
+
+/* ---------------------------------------------------------------- revision 6: variety, cooking time and gas, your own price, babies under 1 */
+/* Palitan on every lunch and dinner card on Linggo, with its word (was an icon only) */
+.swapb { flex: none; min-height: 40px; padding: 0 12px; font-size: 14px; background: var(--leaf-soft); color: var(--leaf); border: none; font-weight: 800; }
+.swapb svg { width: 16px; height: 16px; }
+/* cooking minutes and gas: replaces "umaga / tanghali" next to the meal name */
+.meal .mt small .cooks { white-space: nowrap; }
+.cooks svg, .cookh svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 2px; color: var(--warn); }
+.hero .cookh { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+/* the week's gas, under the budget line */
+.gasln { display: inline-flex; align-items: center; gap: 4px; justify-self: start; min-height: 32px; margin: 2px 0 -6px; padding: 0; border: none; background: none; text-align: left; font: inherit; font-size: 14px; font-weight: 800; color: var(--warn); cursor: pointer; }
+.gasln svg { flex: none; width: 16px; height: 16px; }
+.gasln span { min-width: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.gastab { display: grid; gap: 6px; }
+.gastab > div { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; }
+.gastab span { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); font-weight: 700; }
+.gastab span svg { width: 16px; height: 16px; color: var(--warn); }
+.gastab b { font-variant-numeric: tabular-nums; }
+.gastab .tot { border-top: 1px solid var(--line); padding-top: 6px; font-size: 18px; }
+.gastab .tot span { color: var(--ink); }
+/* one-row weekly balance on Linggo */
+.balsum { display: grid; gap: 8px; width: 100%; padding: 0 0 12px; border: none; border-bottom: 1px solid var(--line); background: none; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.bshead { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bshead b { flex: 1; min-width: 0; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bshead small { font-size: 13px; font-weight: 800; padding: 2px 10px; border-radius: 12px; white-space: nowrap; }
+.bshead small.ok { background: var(--good-soft); color: var(--good); }
+.bshead small.warn { background: var(--warn-soft); color: var(--warn); }
+.bschips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.bschip { position: relative; display: grid; justify-items: center; align-content: center; gap: 1px; min-height: 40px; padding: 3px 2px; border-radius: 10px; background: var(--good-soft); color: var(--good); }
+.bschip.mid { background: var(--warn-soft); color: var(--warn); box-shadow: inset 0 0 0 2px var(--warn); }
+.bschip > svg { flex: none; width: 16px; height: 16px; }
+.bschip small { font-size: 12px; line-height: 1.1; font-weight: 800; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bschip i { display: none; }
+/* the price on each Palengke row is a button: a pencil says so, and "Sarili mo" shows once you've entered your own */
+.paid b { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.paid .pen { width: 14px; height: 14px; color: var(--leaf); }
+.paid .lvl.yours { display: inline-flex; align-items: center; gap: 2px; padding: 1px 8px; font-size: 12px; }
+.paid .lvl.yours svg, .lvl.yours svg { width: 12px; height: 12px; }
+/* babies under 1 */
+.babynote { display: grid; gap: 6px; padding: 12px 14px; border-radius: 14px; background: var(--sky-soft); }
+.babynote b { display: flex; align-items: center; gap: 6px; }
+.babynote b svg { width: 18px; height: 18px; color: var(--sky); }
+.babynote p { margin: 0; font-size: 15px; line-height: 1.45; }

@@ -41,12 +41,26 @@ function balanceRows() {
     { ok: B.top[1] <= 3, ic: "bowl", lab: tt.bal.vary, val: tt.balTimes(B.top[1]), note: B.top[1] <= 3 ? tt.balVaryOk : tt.balVaryHi(esc(B.top[0])) },
   ];
 }
+const balRowsHtml = (R) => R.map((r) => `<div class="balrow ${r.ok ? "ok" : "mid"}"><span class="bico">${icon(r.ic)}</span><span class="tx"><b>${r.lab}</b><small>${r.note}</small></span><span class="bv">${r.val}</span></div>`).join("");
 function balanceCard() {
   const tt = T(), R = balanceRows(); if (!R.length) return "";
   const n = R.filter((r) => !r.ok).length;
   return `<details class="card balc"><summary class="head"><span class="bubble ${n ? "sun" : ""}">${icon("shield")}</span><span class="htx"><h2>${tt.balH}</h2><small>${n ? tt.balN(n) : tt.balAllOk}</small></span>${chev()}</summary>
-    ${R.map((r) => `<div class="balrow ${r.ok ? "ok" : "mid"}"><span class="bico">${icon(r.ic)}</span><span class="tx"><b>${r.lab}</b><small>${r.note}</small></span><span class="bv">${r.val}</span></div>`).join("")}
+    ${balRowsHtml(R)}
     <p class="quiet left">${icon("info")}${tt.balS} · ${tt.balSrc}</p></details>`;
+}
+// revision 6: the week's balance as one short row on Linggo (eggs, meat, fish, vegetables, sugar); tapping it opens every row
+const BAL5 = ["egg", "red", "fish", "veg", "sugar"];
+function balanceSummary() {
+  const tt = T(), R = balanceRows(); if (!R.length) return "";
+  const five = R.slice(0, 5), n = R.filter((r) => !r.ok).length;
+  return `<button class="balsum" type="button" id="balBtn" aria-label="${tt.balSumH}: ${n ? tt.balWarnN(n) : tt.balAllGood}. ${tt.balSee}">
+    <span class="bshead"><b>${tt.balSumH}</b><small class="${n ? "warn" : "ok"}">${n ? tt.balWarnN(n) : tt.balAllGood}</small>${chev()}</span>
+    <span class="bschips">${five.map((r, k) => `<span class="bschip ${r.ok ? "ok" : "mid"}" title="${r.lab}: ${r.ok ? tt.balOkA : tt.balWarnA}">${icon(r.ic)}<small>${tt.balChip[BAL5[k]]}</small><i>${icon(r.ok ? "check" : "warn")}</i></span>`).join("")}</span></button>`;
+}
+function openBalance() {
+  const tt = T(), R = balanceRows();
+  openSheet(tt.balH, `${balRowsHtml(R)}<p class="quiet left">${icon("info")}${tt.balS} · ${tt.balSrc}</p>`);
 }
 // one health note for the home screen: the first thing worth acting on, or else a food tip
 function healthNudge() {

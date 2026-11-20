@@ -6,10 +6,11 @@
 // ---------------------------------------------------------------- FAMILY + one member's day
 function renderFamily() {
   const tt = T();
+  // SAFETY LINE (keep): the BNS / health-center note under the members when the family has a mother or a child under 5 (bnsFam)
   $("v-family").innerHTML = `
     <div class="card full"><button class="setrow" type="button" id="profBtn"><span class="bubble sun">${icon("users")}</span><span class="tx"><b>${esc(profileName(pid))}${isSample() ? ` <span class="sbadge">${tt.sample}</span>` : ""}</b><small>${isSample() ? tt.sampleNote : tt.profileS}</small></span>${chev()}</button></div>
     <div class="card full"><div class="head"><span class="bubble">${icon("users")}</span><h2>${tt.famH}</h2><span class="meta">${tt.ofBudget}</span></div>
-      <div class="members">${st.members.map((m, i) => { const s = score(memberDay(i, todayIdx)); return `<button class="mcard" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<span class="nm">${esc(m.name)}</span><small>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}</small><span class="word ${scoreState(s)}">${scoreWord(s)}</span>${(m.diet || "regular") !== "regular" ? `<span class="dietchip">${icon(UI.dietOf(m).icon)}${UI.dietOf(m)[st.lang]}</span>` : ""}</button>`; }).join("")}
+      <div class="members">${st.members.map((m, i) => { const s = score(memberDay(i, todayIdx)); return `<button class="mcard" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<span class="nm">${esc(m.name)}</span><small>${tt.ageL(m.age)}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}</small><span class="word ${scoreState(s)}">${scoreWord(s)}</span>${(m.diet || "regular") !== "regular" ? `<span class="dietchip">${icon(UI.dietOf(m).icon)}${UI.dietOf(m)[st.lang]}</span>` : ""}</button>`; }).join("")}
         <button class="mcard addcard" type="button" id="addM"><span class="plus">${icon("plus")}</span><span>${tt.add}</span></button></div>${st.members.some((m) => m.status === "pregnant" || m.status === "lactating" || m.age < 5) ? `<p class="quiet left">${icon("shield")}${tt.bnsFam}</p>` : ""}</div>
     ${moreBox("family", [[tt.setShort, `<div class="card">
       <div class="setrow"><span class="bubble">${icon("globe")}</span><span class="tx"><b>${tt.langH}</b><small>${tt.langS}</small></span><span class="seg" style="width:120px" id="langSeg"><button type="button" data-l="tl" aria-pressed="${st.lang === "tl"}">TL</button><button type="button" data-l="en" aria-pressed="${st.lang === "en"}">EN</button></span></div>
@@ -53,8 +54,9 @@ function renderPerson() {
   const BODY = [["energy_kcal", "bolt"], ["protein_g", "grow"], ["iron_mg", "drop"], ["vit_a_ug", "eye"], ["calcium_mg", "bone"]];
   const bodyRows = BODY.map(([k, ic], n) => { const r = e[k] > 0 ? Math.min(g[k] / e[k], 1) : null, w = r == null ? "none" : r >= 0.9 ? "ok" : r >= 0.6 ? "mid" : "low";
     return `<div class="brow ${w}"><span class="bico">${icon(ic)}</span><span class="bn">${tt.body[n]}</span><span class="bbar"><i class="grow" style="--w:${(r || 0) * 100}%"></i></span><span class="bw">${tt.bw[w]}</span></div>`; }).join("");
+  // SAFETY LINE (keep): the BNS / health-center note for pregnant or breastfeeding mothers (bnsMom) and under-5s (bnsKid)
   $("v-person").innerHTML = `
-    <div class="who">${figure(m, ringCol(s), true)}<div class="tx"><h2>${esc(tt.bodyH(m.name))}</h2><p>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}${(m.diet || "regular") !== "regular" ? " · " + UI.dietOf(m)[st.lang] : ""}</p></div><button class="iconbtn" type="button" id="editM" aria-label="${tt.editM}">${icon("edit")}</button></div>
+    <div class="who">${figure(m, ringCol(s), true)}<div class="tx"><h2>${esc(tt.bodyH(m.name))}</h2><p>${tt.ageL(m.age)}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}${(m.diet || "regular") !== "regular" ? " · " + UI.dietOf(m)[st.lang] : ""}</p></div><button class="iconbtn" type="button" id="editM" aria-label="${tt.editM}">${icon("edit")}</button></div>
     ${m.status === "pregnant" || m.status === "lactating" ? `<p class="quiet left">${icon("shield")}${tt.bnsMom}</p>` : m.age < 5 ? `<p class="quiet left">${icon("shield")}${tt.bnsKid}</p>` : ""}
     <div class="card"><div class="head"><span class="bubble">${icon("heart")}</span><span class="htx"><h2>${s == null ? tt.notyet : scoreWord(s)}</h2><small>${tt.bodyS}</small></span></div><div class="body5">${bodyRows}</div></div>
     ${tip}

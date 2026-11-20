@@ -10,6 +10,7 @@ function showWelcome() {
     () => { const f = priceBy.galunggong || priceBy.tilapia; return `<div class="wprice">${pic("fish", "lg")}${f ? `<span class="ptag">${icon("tag")}<span><b>${peso(f.price_g * 1000)}</b>/kg<small>${esc(fname(f.key))} · ${esc(st.loc.prov || regionName(st.loc.region))}</small></span></span>` : ""}${pic("vegetables", "lg")}</div>`; }];
   const draw = () => {
     const tt = T(), [h, p] = tt.welcome[i], last = i === tt.welcome.length - 1;
+    // SAFETY LINE (keep): the last slide carries the "not medical advice" disclaimer (medDisc)
     el.innerHTML = `<button class="btn link wskip" type="button" id="wSkip">${tt.skip}</button>
       <div class="wslide" key="${i}"><div class="wart">${art[i]()}</div><div class="wbrand">sapat<span>.</span></div><h2>${h}</h2><p>${p}</p>${last ? `<p class="quiet left">${icon("shield")}${tt.medDisc}</p>` : ""}</div>
       <div class="wfoot"><div class="dots">${tt.welcome.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("")}</div>

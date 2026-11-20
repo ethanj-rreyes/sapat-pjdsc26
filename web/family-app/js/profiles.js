@@ -44,7 +44,7 @@ function showSetup() {
     const tt = T();
     if (step === 0) return `
       <label class="f">${tt.pName}<input type="text" id="suName" value="${esc(draft.name)}" placeholder="${tt.pNamePh}" autocomplete="off"></label>
-      <div class="sulist">${draft.members.map((m, i) => `<button class="opt" type="button" data-m="${i}">${figure(m, "var(--leaf)")}<span class="tx"><b>${esc(m.name)}</b><small>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}${(m.diet || "regular") !== "regular" ? " · " + UI.dietOf(m)[st.lang] : ""}</small></span>${chev()}</button>`).join("")}</div>
+      <div class="sulist">${draft.members.map((m, i) => `<button class="opt" type="button" data-m="${i}">${figure(m, "var(--leaf)")}<span class="tx"><b>${esc(m.name)}</b><small>${tt.ageL(m.age)}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}${(m.diet || "regular") !== "regular" ? " · " + UI.dietOf(m)[st.lang] : ""}</small></span>${chev()}</button>`).join("")}</div>
       <button class="btn block" type="button" id="suAdd">${icon("plus")}${tt.addPerson}</button>`;
     if (step === 1) {
       const provs = draft.region ? (PL[draft.region] || { provinces: [] }).provinces : [];

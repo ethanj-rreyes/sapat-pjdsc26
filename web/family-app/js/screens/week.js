@@ -1,5 +1,6 @@
 /* SAPAT family app · Linggo (Week). Its one job: this week's menu and budget. A one-line budget card (the typing box opens in a
- * sheet) and the 7-day menu; weekly balance, usual-vs-SAPAT, price trend and local situation fold under "Higit pa".
+ * sheet) with the week's cooking gas, a one-row weekly balance, and the 7-day menu with Palitan on each lunch and dinner;
+ * usual-vs-SAPAT, price trend and local situation fold under "Higit pa".
  * One of several ordered scripts; see js/README.md. */
 "use strict";
 
@@ -28,19 +29,22 @@ function renderWeek() {
       <p class="quiet">${tt.fies}</p></details>` : "";
   $("v-week").innerHTML = `
     <div class="card budline">
-      <div class="bl1"><span class="htx"><small>${tt.budgetCard}</small><b>${peso(st.budget)} <small>${tt.perWeek}</small></b></span><button class="btn sm" type="button" id="budEdit">${icon("edit")}${tt.change}</button></div>
+      <div class="bl1"><span class="htx"><small>${tt.budgetCard}</small><b>${peso(st.budget)} <small>${tt.perWeek}</small></b><button class="gasln" type="button" id="gasBtn" aria-label="${tt.gasH}: ${tt.gasLine(pesoN(gasWeek()))} ${tt.perWeek}">${icon("flame")}<span>${tt.gasLine(pesoN(gasWeek()))}</span>${chev()}</button></span><button class="btn sm" type="button" id="budEdit">${icon("edit")}${tt.change}</button></div>
       <div class="budres" id="budRes">
       <div class="cmp"><div class="lab"><span>${tt.bestShort(pct(best))}</span>${needWord(best)}</div><div class="bar"><i style="width:${Math.min(best, 1) * 100}%;background:${ringCol(best)}"></i></div></div>
       ${gap > 50 ? `<details class="helpnote"><summary>${icon("heart")}<span><b>${tt.gapShort(pesoN(gap))}</b></span>${chev()}</summary><p>${tt.help}</p><p class="quiet left">${tt.fullCost(pesoN(fullWeek))}</p></details>` : `<div class="helpnote ok">${icon("check")}<span>${tt.covers}</span></div>`}
       </div>
     </div>
     <div class="card">
+      ${balanceSummary()}
       <div class="days" role="tablist">${tt.days.map((n, k) => `<button type="button" role="tab" data-day="${k}" aria-selected="${k === d}">${k === todayIdx ? "●" + n : n}</button>`).join("")}</div>
       <div class="meals plain">${[0, 1, 2, 3].filter((mi) => week.days[d][mi].length).map((mi) => mealCard(d, mi, { swapOnly: true })).join("")}</div>
     </div>
-    ${moreBox("week", [[tt.balShort, balanceCard()], [tt.cmpShort, compareCard()], [tt.trendShort, trendCard], [tt.situShort, situCard]])}`;
+    ${moreBox("week", [[tt.cmpShort, compareCard()], [tt.trendShort, trendCard], [tt.situShort, situCard]])}`;
   // budget: typed (per week or per day), re-planned only when they press I-apply; the old result dims until then
   $("budEdit").addEventListener("click", openBudget);
+  $("gasBtn").addEventListener("click", openFuel);
+  if ($("balBtn")) $("balBtn").addEventListener("click", openBalance);
   $("v-week").querySelectorAll("[data-day]").forEach((b) => b.addEventListener("click", () => { st.day = +b.dataset.day; save(); render(); }));
   wireMeals($("v-week"));
 }

@@ -26,6 +26,7 @@ function renderToday() {
       <h2 class="dish">${esc(mealName(items, hero, todayIdx))}</h2>
       <p class="cost">${tt.forAll(pesoN(sumT(items.map((x) => [x.key, x.g]))))}${calc(() => explainList(items.map((x) => [x.key, x.g]), esc(mealName(items, hero, todayIdx)), n))}</p>
       <p class="crange">${tt.rangeS(pesoR(cr))}</p>
+      ${(() => { const c = cookOf(items, hero, todayIdx); return c.min ? `<p class="cookh">${icon("flame")}${tt.cookHero(c.min, php(c.gas))}</p>` : ""; })()}
       <div class="bens">${benefits(items, 1)}</div>
       <div class="ings">${chips}</div>
       <div class="mact"><button class="btn primary big" type="button" data-eat="${todayIdx}-${hero}">${icon("check")}${tt.ate}</button>${hero % 2 ? `<button class="btn" type="button" data-swap="${todayIdx}-${hero}">${icon("swap")}${tt.swap}</button>` : ""}</div>

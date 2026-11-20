@@ -33,7 +33,7 @@ function renderShop() {
       <div class="cmp"><div class="lab"><span>${tt.bought(n, rows.length)}</span><b>${tt.spentOf(peso(spent), peso(st.budget))}</b></div><div class="bar"><i style="width:${Math.min(spent / st.budget, 1) * 100}%;background:var(--sun)"></i></div>${outSpent ? `<small class="quiet left">${tt.outSpentL(peso(outSpent))}</small>` : ""}</div>
       ${note && note[0] !== "ok" ? `<div class="nodata">${icon("info")}<span>${note[1]}</span></div>` : ""}
     </div>
-    <div class="card checklist"><div class="chkhead">${estTip(tt.pricesEst)}</div>${rows.map((r) => { const s = wk.shop[r.key] || {}, fk = r.food || r.key; return `<div class="chk${s.done ? " done" : ""}"><button class="tick" type="button" data-tick="${r.key}" aria-pressed="${!!s.done}" aria-label="${esc(fname(fk))}">${icon("check")}</button>${pic(r.group, "sm")}<span class="tx"><b>${esc(fname(fk))}${r.swap ? ` <span class="tag">${tt.swap}</span>` : ""}${(priceBy[fk] || {}).level === "yours" ? ` <span class="lvl yours">${tt.lvl.yours}</span>` : ""}</b><small>${UI.gloss(fk, st.lang) ? esc(UI.gloss(fk, st.lang)) + " · " : ""}${UI.buyLabel(FBY[fk], r.buy, st.lang)}</small></span><button class="paid" type="button" data-paid="${r.key}"><b>${s.paid != null ? pesoN(s.paid) : pesoN(r.cost_week)}</b><small>${s.paid != null ? tt.paid : `<span class="rg">${pesoR(r.range)}</span>`}${calc(() => explainFood(fk, r.buy.grams, UI.buyLabel(FBY[fk], r.buy, st.lang)) + `<p class="quiet left">${icon("info")}${T().cRound(gtxt((r.gw != null ? r.gw : r.grams_day * 7)), UI.buyLabel(FBY[fk], r.buy, st.lang))}</p>`)}</small></button></div>`; }).join("")}</div>
+    <div class="card checklist"><div class="chkhead">${estTip(tt.pricesEst)}</div>${rows.map((r) => { const s = wk.shop[r.key] || {}, fk = r.food || r.key; return `<div class="chk${s.done ? " done" : ""}"><button class="tick" type="button" data-tick="${r.key}" aria-pressed="${!!s.done}" aria-label="${esc(fname(fk))}">${icon("check")}</button>${pic(r.group, "sm")}<span class="tx"><b>${esc(fname(fk))}${r.swap ? ` <span class="tag">${tt.swap}</span>` : ""}</b><small>${UI.gloss(fk, st.lang) ? esc(UI.gloss(fk, st.lang)) + " · " : ""}${UI.buyLabel(FBY[fk], r.buy, st.lang)}</small></span><button class="paid" type="button" data-paid="${r.key}" aria-label="${tt.priceEdit(esc(fname(fk)))}"><b>${s.paid != null ? pesoN(s.paid) : pesoN(r.cost_week)}${icon("edit", "pen")}</b><small>${s.paid != null ? tt.paid : (priceBy[fk] || {}).level === "yours" ? `<span class="lvl yours">${icon("check")}${tt.ownSaved}</span>` : `<span class="rg">${pesoR(r.range)}</span>`}${calc(() => explainFood(fk, r.buy.grams, UI.buyLabel(FBY[fk], r.buy, st.lang)) + `<p class="quiet left">${icon("info")}${T().cRound(gtxt((r.gw != null ? r.gw : r.grams_day * 7)), UI.buyLabel(FBY[fk], r.buy, st.lang))}</p>`)}</small></button></div>`; }).join("")}</div>
     ${moreBox("shop", [[tt.whereShort(esc(placeName())), `<div class="card"><button class="prow" type="button" id="placeBtn"><span class="bubble">${icon("pin")}</span><span class="tx"><small>${tt.whereShop}</small><b>${esc(placeName())}</b></span>${chev()}</button></div>`], [tt.sulitShort, `<details class="card"><summary class="head"><span class="bubble sun">${icon("coins")}</span><h2>${tt.sulitH}</h2>${chev()}</summary><div class="sulit">${sul}</div></details>`], [tt.priceShort, `<details class="card" id="plistBox"${priceQ || priceOpen ? " open" : ""}><summary class="head"><span class="bubble">${icon("tag")}</span><h2>${tt.priceH}</h2><span class="meta">${foodsAll.length}</span>${chev()}</summary>
       ${UI.mixBar(foodsAll, tt)}
       ${mine ? `<button class="btn link" type="button" id="clrP">${tt.resetMine}</button>` : ""}
@@ -44,7 +44,7 @@ function renderShop() {
   $("placeBtn").addEventListener("click", openPlaces);
   $("v-shop").querySelectorAll("[data-tick]").forEach((b) => b.addEventListener("click", () => { const k = b.dataset.tick, r = b.getBoundingClientRect(); const s = wk.shop[k] = wk.shop[k] || {}; s.done = !s.done; save(); render();
     const left = rows.filter((x) => !(wk.shop[x.key] || {}).done).length; if (s.done && left === 0) { burst($("v-shop").querySelector(".bayong").getBoundingClientRect()); toast(T().allBought); } }));
-  $("v-shop").querySelectorAll("[data-paid]").forEach((b) => b.addEventListener("click", () => editPaid(b.dataset.paid, rows.find((r) => r.key === b.dataset.paid))));
+  $("v-shop").querySelectorAll("[data-paid]").forEach((b) => b.addEventListener("click", () => { const r = rows.find((x) => x.key === b.dataset.paid); editPrice(r.food || r.key, r); }));
   $("plistBox").addEventListener("toggle", (e) => { priceOpen = e.target.open; });
   $("pq").addEventListener("input", (e) => { priceQ = e.target.value.toLowerCase(); const pos = e.target.selectionStart; renderShop(); const q = $("pq"); q.focus(); q.setSelectionRange(pos, pos); });
   if ($("clrP")) $("clrP").addEventListener("click", () => { st.prices = {}; reprice(); });
@@ -88,14 +88,18 @@ function pickPlace(lv) {
   draw();
 }
 function reprice() { save(); refreshPrices(); solve(); go(st.tab); }
-function editPrice(key) {
-  const tt = T(), f = priceBy[key], u = UI.buyUnits(FBY[key])[0], per = st.lang === "tl" ? "kada" : "per";
+// the market price of one food. From the Palengke list (r = that list row) it also shows what's on the list and links to "what you paid".
+function editPrice(key, r) {
+  const tt = T(), f = priceBy[key], u = UI.buyUnits(FBY[key])[0], mine = !!st.prices[key];
+  $("toast").hidden = true; // keep the sheet's buttons clear
   openSheet(esc(fname(key)), `
-    <div style="display:flex;gap:16px;align-items:center">${pic(f.group, "lg")}<div style="display:grid;gap:6px;justify-items:start"><span class="pl big">${priceLine(key)}</span><span class="lvl ${f.level}">${tt.lvl[f.level]}</span></div></div>
+    <div style="display:flex;gap:16px;align-items:center">${pic(f.group, "lg")}<div style="display:grid;gap:6px;justify-items:start">${r ? `<b>${UI.buyLabel(FBY[key], r.buy, st.lang)} · ${pesoN(r.cost_week)}</b>` : ""}<span class="pl big">${priceLine(key)}</span><span class="lvl ${f.level}">${f.level === "yours" ? icon("check") : ""}${tt.lvl[f.level]}</span></div></div>
     <details class="nums"><summary>${tt.numbers}${chev()}</summary><p class="quiet left">${unit2Line(key)}</p></details>
-    <label class="f">${tt.howMuchU(UI.ul(u, st.lang))}<input type="number" id="myP" inputmode="decimal" min="1" step="1" placeholder="${Math.round(f.price_g * u[2])}"></label>
+    <label class="f">${r && !mine ? `<b>${tt.ownH}</b>` : ""}${tt.howMuchU(UI.ul(u, st.lang))}<input type="number" id="myP" inputmode="decimal" min="1" step="1" placeholder="${Math.round(f.price_g * u[2])}"${mine ? ` value="${Math.round(st.prices[key] * u[2] / 1000)}"` : ""}></label>
     <button class="btn primary block" type="button" id="saveP">${icon("check")}${tt.save}</button>
-    ${st.prices[key] ? `<button class="btn block" type="button" id="delP">${tt.useOfficial}</button>` : ""}`);
-  $("saveP").addEventListener("click", () => { const v = +$("myP").value; if (v > 0) st.prices[key] = Math.round(v * 1000 / u[2]); closeSheet(); reprice(); toast(T().learned); });
+    ${mine ? `<button class="btn block" type="button" id="delP">${tt.useOfficial}</button>` : ""}
+    ${r ? `<button class="btn link block" type="button" id="toPaid">${tt.paidLink}</button>` : ""}`);
+  $("saveP").addEventListener("click", () => { const v = +$("myP").value; if (v > 0) st.prices[key] = Math.round(v * 1000 / u[2]); closeSheet(); reprice(); if (v > 0) toast(T().learned); });
   if ($("delP")) $("delP").addEventListener("click", () => { delete st.prices[key]; closeSheet(); reprice(); });
+  if ($("toPaid")) $("toPaid").addEventListener("click", () => editPaid(r.key, r));
 }

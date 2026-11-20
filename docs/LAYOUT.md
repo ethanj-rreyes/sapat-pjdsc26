@@ -5,7 +5,7 @@ Measured with Tita Baby's sample on a 400 × 860 phone screen ("screens tall" = 
 | Tab | Its one job | Before | After |
 |---|---|---|---|
 | **Ngayon** | What we eat today, and logging it. | 2.1 | **1.22** |
-| **Linggo** | This week's menu and budget. | 2.8 | **1.37** |
+| **Linggo** | This week's menu and budget. | 2.8 | **1.37** (1.49 after revision 6) |
 | **Palengke** | What to buy, and how much. | 2.1 | **1.41** |
 | **Pamilya** | Who eats, and how they're doing. | 2.2 | **1.17** |
 
@@ -30,10 +30,10 @@ Keep = stays on the tab · Higit pa = folded under one "Higit pa" row at the bot
 ### Linggo
 | Card | Decision |
 |---|---|
-| Budget line: ₱ per week, "Kaya ng budget: X%" + word + bar, one-sentence gap | Keep (one compact card) |
+| Budget line: ₱ per week, "Kaya ng budget: X%" + word + bar, one-sentence gap | Keep (one compact card; revision 6 adds "+ mga ₱X na gas" under the amount) |
 | Budget typing box (weekly/daily, quick amounts, Hindi sigurado?, I-apply) | Sheet, from **Baguhin** |
-| 7-day menu | Keep (Palitan is a small button at the end of each lunch/dinner's ingredients) |
-| Balanse ngayong linggo | Higit pa |
+| 7-day menu | Keep (revision 6: Palitan is a labeled button on each lunch/dinner; cooking minutes beside each meal) |
+| Balanse ngayong linggo | Revision 6: one row of 5 at the top of the menu; all rows in a sheet |
 | Karaniwang bili vs SAPAT | Higit pa |
 | Halaga ng masustansyang araw (price trend) | Higit pa |
 | Kalagayan sa rehiyon | Higit pa |
