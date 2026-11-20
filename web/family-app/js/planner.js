@@ -11,6 +11,8 @@ const budgetFor = (d, region, n) => Math.round(decilesOf(region)[d].food_home_pc
 const presetBudget = (d) => budgetFor(d, st.loc.region, st.members.length);
 let plan = null, planFull = null, tracked = 1, week = null, lastDec = 1;
 const nearestDecile = () => lastDec;
+// "Iba-ibang ulam" switch (off by default): no ulam protein or vegetable over a quarter of its group, so at least 4 of each rotate
+const VARIETY = { protein: 0.25, veg: 0.25 };
 function solve() {
   if (st.preset) st.budget = presetBudget(st.preset);
   if (!st.budget) st.budget = presetBudget(1); // safety net only: Tita Baby has her preset and every new profile enters its own budget in setup
@@ -19,7 +21,8 @@ function solve() {
   const pp = st.budget / 7 / st.members.length / inflator(st.loc.region);
   let dec = 1, bd = Infinity; Object.entries(deciles()).forEach(([d, v]) => { const x = Math.abs(v.food_home_pc_day - pp); if (x < bd) { bd = x; dec = +d; } });
   tracked = S.trackedShare(deciles()[dec]); lastDec = dec;
-  try { plan = S.solvePlan(st.members, foodsNow, { budgetDay: st.budget / 7 * tracked, exclude, excludeFor }); planFull = S.solvePlan(st.members, foodsNow, { exclude, excludeFor }); } catch (e) { plan = null; planFull = null; }
+  const variety = st.variety ? VARIETY : null;
+  try { plan = S.solvePlan(st.members, foodsNow, { budgetDay: st.budget / 7 * tracked, exclude, excludeFor, variety }); planFull = S.solvePlan(st.members, foodsNow, { exclude, excludeFor, variety }); } catch (e) { plan = null; planFull = null; }
   week = plan ? buildWeek(plan) : null;
 }
 

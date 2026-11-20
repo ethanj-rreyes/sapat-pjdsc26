@@ -7,12 +7,15 @@
 // ---------------------------------------------------------------- WEEK (plan + money, calmly)
 // Share of the family's needs the budget-limited plan meets (capped at 100% per nutrient), as in "Pinakamabuting kaya ng budget".
 function bestShare() { const cov = S.coverage(plan); return cov.reduce((a, c) => a + CORE.reduce((x, k) => x + Math.min(c[k], 1), 0) / CORE.length, 0) / cov.length; }
+let weekAll = false; // Linggo shows 3 days (today and the next two) until "Show the whole week" is tapped; not saved
+const dayStart = () => Math.min(todayIdx, 4);
 function renderWeek() {
   const tt = T();
   if (!plan) { $("v-week").innerHTML = `<div class="card"><p class="quiet">${tt.noPlan}</p></div>`; return; }
   const best = bestShare();
   const fullWeek = planFull ? planFull.cost_day * 7 / tracked : 0, gap = planFull ? planFull.cost_day * 7 - st.budget * tracked : 0;
-  const d = st.day;
+  const s0 = dayStart(), shown = weekAll ? [0, 1, 2, 3, 4, 5, 6] : [s0, s0 + 1, s0 + 2];
+  const d = shown.includes(st.day) ? st.day : Math.min(Math.max(st.day, s0), s0 + 2);
   const ix = D.index[st.loc.region], stt = D.stats[regKey(st.loc.region)];
   const li = ix ? ix.months.indexOf(lastMonth) : -1, series = ix ? ix.cond.slice(Math.max(0, li - 23), li + 1) : [];
   const lvl = ix ? ix.level[li] : "normal", yoy = ix ? ix.yoy[li] : null, lvW = { normal: "ok", watch: "mid", alert: "low" };
@@ -37,8 +40,10 @@ function renderWeek() {
     </div>
     <div class="card">
       ${balanceSummary()}
-      <div class="days" role="tablist">${tt.days.map((n, k) => `<button type="button" role="tab" data-day="${k}" aria-selected="${k === d}">${k === todayIdx ? "●" + n : n}</button>`).join("")}</div>
+      <div class="days${weekAll ? "" : " three"}" role="tablist">${shown.map((k) => `<button type="button" role="tab" data-day="${k}" aria-selected="${k === d}">${k === todayIdx ? "●" + tt.days[k] : tt.days[k]}</button>`).join("")}</div>
+      <button class="linkbtn daysmore" type="button" id="weekAll" aria-expanded="${weekAll}">${weekAll ? tt.show3 : tt.show7}${chev()}</button>
       <div class="meals plain">${[0, 1, 2, 3].filter((mi) => week.days[d][mi].length).map((mi) => mealCard(d, mi, { swapOnly: true })).join("")}</div>
+      <label class="setrow variety"><span class="bubble">${icon("heart")}</span><span class="tx"><b>${tt.varietyH}</b><small>${tt.varietyS}</small></span><input type="checkbox" class="toggle" id="variety"${st.variety ? " checked" : ""}></label>
     </div>
     ${moreBox("week", [[tt.cmpShort, compareCard()], [tt.trendShort, trendCard], [tt.situShort, situCard]])}`;
   // budget: typed (per week or per day), re-planned only when they press I-apply; the old result dims until then
@@ -46,6 +51,8 @@ function renderWeek() {
   $("gasBtn").addEventListener("click", openFuel);
   if ($("balBtn")) $("balBtn").addEventListener("click", openBalance);
   $("v-week").querySelectorAll("[data-day]").forEach((b) => b.addEventListener("click", () => { st.day = +b.dataset.day; save(); render(); }));
+  $("weekAll").addEventListener("click", () => { weekAll = !weekAll; render(); });
+  $("variety").addEventListener("change", (e) => { st.variety = e.target.checked; save(); solve(); render(); toast((st.variety ? T().varietyOn : T().varietyOff)(plan ? pct(bestShare()) : "–")); });
   wireMeals($("v-week"));
 }
 // the typing box from revision 3, in a sheet: re-plans only on I-apply, then shows what the new budget buys

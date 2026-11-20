@@ -79,7 +79,7 @@ function showSetup() {
   const finish = () => {
     const tt = T(), id = "f" + Date.now().toString(36);
     const name = draft.name || tt.pNameDef(draft.members[0].name);
-    const s = { name, members: draft.members, who: 0, tab: "today", loc: { region: draft.region, prov: draft.prov, city: null, market: null }, prices: {}, budget: draft.budget, preset: 0, bmode: draft.bmode, halal: false, example: false, day: null, saved: 0 };
+    const s = { name, members: draft.members, who: 0, tab: "today", loc: { region: draft.region, prov: draft.prov, city: null, market: null }, prices: {}, budget: draft.budget, preset: 0, bmode: draft.bmode, halal: false, variety: false, example: false, day: null, saved: 0 };
     store.set(pkey(id, "state"), s); profiles.list.push({ id, name }); store.set("profiles", profiles);
     close(); switchProfile(id, tt.created(name), "week"); // land on Linggo: what the budget buys, right after it's set
   };

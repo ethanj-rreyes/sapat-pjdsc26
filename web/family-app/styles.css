@@ -541,6 +541,11 @@ main, .sheet .sb { overflow-x: hidden; }
 .famcard .fam .word { font-size: 12px; padding: 2px 8px; text-align: center; justify-content: center; }
 .days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; overflow: visible; }
 .days button { min-width: 0; padding: 0 2px; font-size: 14px; border-radius: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.days.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.daysmore { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; min-height: 44px; border: none; background: none; color: var(--leaf); font-weight: 800; font-size: 15px; }
+.daysmore .chev { width: 18px; height: 18px; }
+.daysmore[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.setrow.variety { border-top: 1px solid var(--line); margin-top: 8px; }
 .chips { flex-wrap: wrap; overflow: visible; margin: 0; padding: 0; }
 .strip { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
 .swapc .swaprow { grid-template-columns: auto minmax(0, 1fr) auto auto minmax(0, 1fr); }

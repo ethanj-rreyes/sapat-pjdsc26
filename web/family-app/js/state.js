@@ -18,7 +18,7 @@ const store = { get(k, d) { try { const v = localStorage.getItem(NS + k); return
 const SAMPLE = "sample";
 const prefs = store.get("prefs", null) || (() => { const o = store.get("state", null) || {}; return { lang: o.lang || "tl", theme: o.theme || null }; })();
 const profiles = store.get("profiles", null) || { list: [], last: SAMPLE };
-const sampleState = () => ({ name: null, members: UI.EXAMPLE_FAMILY.map((m) => Object.assign({}, m)), who: 1, tab: "today", loc: { region: "R08", prov: "Leyte", city: null, market: null }, prices: {}, budget: null, preset: 1, halal: false, example: true, day: null, saved: 0 });
+const sampleState = () => ({ name: null, members: UI.EXAMPLE_FAMILY.map((m) => Object.assign({}, m)), who: 1, tab: "today", loc: { region: "R08", prov: "Leyte", city: null, market: null }, prices: {}, budget: null, preset: 1, halal: false, variety: false, example: true, day: null, saved: 0 });
 let pid = SAMPLE;
 const isSample = () => pid === SAMPLE;
 const pkey = (id, k) => "p:" + id + ":" + k;
