@@ -66,30 +66,35 @@ function buildWeek(pl) {
   const share = F.map((_, j) => pl.grams.map((g) => (hh[j] > 0 ? g[j] / hh[j] : 1 / nM)));
   return { days, share, hh, F };
 }
-// Dish names stay Filipino in both languages: they are what families actually call their food.
+// Dish names follow the language: Filipino dishes in Tagalog mode, plain English descriptions in English mode.
 function mealName(items, mi, d) {
   d = d || 0;
-  const tt = T(), en = st.lang === "en";
+  const tt = T(), en = st.lang === "en", and = en ? " and " : " at ";
   if (!items.length) return tt.noMeal;
   const low = (k) => fname(k).replace(/ \(.*\)$/, "").toLowerCase();
-  if (mi === 0) { const egg = items.find((x) => FBY[x.key].group === "eggs"); const cer = items.find((x) => FBY[x.key].group === "cereals"); const base = cer ? (cer.key.startsWith("corn") ? "Mais" : "Kanin") : fname(items[0].key);
-    const sug = items.find((x) => FBY[x.key].group === "sugar"); return egg ? `${base} at ${low(egg.key)}` : base; }
-  if (mi === 2) return items.map((x) => fname(x.key).replace(/ \(.*\)$/, "")).slice(0, 2).join(" at ") || tt.snackName("");
+  if (mi === 0) { const egg = items.find((x) => FBY[x.key].group === "eggs"); const cer = items.find((x) => FBY[x.key].group === "cereals");
+    const base = cer ? (cer.key.startsWith("corn") ? (en ? "Corn" : "Mais") : (en ? "Rice" : "Kanin")) : fname(items[0].key);
+    return egg ? `${base}${and}${low(egg.key)}` : base; }
+  if (mi === 2) return items.map((x) => fname(x.key).replace(/ \(.*\)$/, "")).slice(0, 2).join(and) || tt.snackName("");
   const prot = items.filter((x) => ["fish", "meat", "pulses", "eggs"].includes(FBY[x.key].group)).sort((a, b) => b.g - a.g)[0];
   const veg = items.filter((x) => FBY[x.key].group === "vegetables").sort((a, b) => b.g - a.g).map((x) => low(x.key)).filter((v, i, a) => a.indexOf(v) === i).slice(0, 2);
-  const vs = veg.length ? (en ? " with " : " na may ") + veg.join(en ? " and " : " at ") : "";
-  if (!prot) return `Ginisang ${veg.join(" at ") || "gulay"}`;
+  const vs = veg.length ? (en ? " with " : " na may ") + veg.join(and) : "";
+  const vegs = veg.join(and) || (en ? "vegetables" : "gulay");
+  if (!prot) return en ? `Sautéed ${vegs}` : `Ginisang ${vegs}`;
   const k = prot.key, g = FBY[k].group, nm = low(k);
+  const turn = (d * 2 + (mi === 3 ? 1 : 0));
   let base;
   // the same food cooked different ways across the week, the way families already do
   const hasGata = items.some((x) => x.key === "coconut");
-  if (k === "monggo") base = (hasGata ? ["Ginisang monggo", "Ginataang monggo", "Monggo na may sabaw"] : ["Ginisang monggo", "Monggo na may sabaw", "Monggo guisado na may talbos"])[(d * 2 + (mi === 3 ? 1 : 0)) % 3];
-  else if (k.startsWith("peanut")) { if ((d * 2 + (mi === 3 ? 1 : 0)) % 2) return `Ginataang ${veg.join(" at ") || "gulay"} na may mani`; base = "Kare-kareng gulay"; }
-  else if (g === "eggs") base = "Tortang itlog";
-  else if (k === "chicken") base = "Tinolang manok";
-  else if (g === "meat") base = `Sinigang na ${nm.replace("baboy (kasim)", "baboy")}`;
-  else if (["suahe", "sugpo", "alimango"].includes(k)) base = `Ginataang ${nm}`;
-  else base = `Paksiw na ${nm}`;
+  if (k === "monggo") base = en
+    ? (hasGata ? ["Sautéed mung beans", "Mung beans in coconut milk", "Mung bean soup"] : ["Sautéed mung beans", "Mung bean soup", "Mung beans with greens"])[turn % 3]
+    : (hasGata ? ["Ginisang monggo", "Ginataang monggo", "Monggo na may sabaw"] : ["Ginisang monggo", "Monggo na may sabaw", "Monggo guisado na may talbos"])[turn % 3];
+  else if (k.startsWith("peanut")) { if (turn % 2) return en ? `${vegs.charAt(0).toUpperCase() + vegs.slice(1)} in coconut milk with peanuts` : `Ginataang ${vegs} na may mani`; base = en ? "Vegetables in peanut sauce" : "Kare-kareng gulay"; }
+  else if (g === "eggs") base = en ? "Egg omelette" : "Tortang itlog";
+  else if (k === "chicken") base = en ? "Chicken and ginger soup" : "Tinolang manok";
+  else if (g === "meat") base = en ? `Sour ${nm.replace(/ \(.*\)$/, "")} soup` : `Sinigang na ${nm.replace("baboy (kasim)", "baboy")}`;
+  else if (["suahe", "sugpo", "alimango"].includes(k)) base = en ? `${nm.charAt(0).toUpperCase() + nm.slice(1)} in coconut milk` : `Ginataang ${nm}`;
+  else base = en ? `${nm.charAt(0).toUpperCase() + nm.slice(1)} stewed in vinegar` : `Paksiw na ${nm}`;
   return base + vs;
 }
 const mealCost = (items) => items.reduce((a, x) => a + x.g * (priceBy[x.key] ? priceBy[x.key].price_g : 0), 0);
