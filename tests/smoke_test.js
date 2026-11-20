@@ -36,5 +36,18 @@ check(Math.round(usual * 100) === 46, `usual spending meets 46% (got ${(usual * 
 check(plan.cost_day <= budget / 7 * tracked + 0.01, `plan stays within the budget (PHP ${plan.cost_day.toFixed(2)}/day)`);
 check(plan.ms < 2000, `solved in ${plan.ms.toFixed(0)} ms`);
 
+// 3. optional variety rule (family app's "More variety" switch): no ulam protein or vegetable over a quarter of its group
+const VARIETY = { protein: 0.25, veg: 0.25 };
+const vplan = S.solvePlan(fam, foods, { budgetDay: budget / 7 * tracked, variety: VARIETY });
+const tot = (p, grp) => p.foods.map((f, j) => (grp.includes(f.group) ? p.grams.reduce((a, g) => a + g[j], 0) : 0));
+const share = (arr) => { const s = arr.reduce((a, x) => a + x, 0); return s ? Math.max(...arr) / s : 0; };
+const vProt = tot(vplan, ["meat", "fish", "pulses"]), vVeg = tot(vplan, ["vegetables"]);
+check(share(vProt) <= VARIETY.protein + 1e-6, `variety: no ulam protein over 25% (top ${(share(vProt) * 100).toFixed(0)}%)`);
+check(share(vVeg) <= VARIETY.veg + 1e-6, `variety: no vegetable over 25% (top ${(share(vVeg) * 100).toFixed(0)}%)`);
+check(vProt.filter((x) => x > 1).length >= 4, `variety: at least 4 ulam proteins (got ${vProt.filter((x) => x > 1).length})`);
+const vs = mean(S.coverage(vplan));
+check(vs <= sapat + 1e-9 && vs > sapat - 0.12, `variety trades some needs met (${(sapat * 100).toFixed(1)}% to ${(vs * 100).toFixed(1)}%)`);
+check(vplan.cost_day <= budget / 7 * tracked + 0.01, "variety plan stays within the budget");
+
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll checks passed");
 process.exit(failed ? 1 : 0);

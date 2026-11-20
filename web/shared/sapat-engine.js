@@ -202,6 +202,18 @@
       r = row(); for (let j = 0; j < nJ; j++) if (foods[j].group === "vegetables") r[ix(m, j)] = -1;
       for (let t = 0; t < nT; t++) r[ivv(m, t)] = -V; A.push(r); b.push(-V);
     }
+    // Variety (optional, off unless opt.variety is set): no single ulam protein (meat, fish, beans; eggs are breakfast) is more than
+    // opt.variety.protein of the household's ulam-protein grams, and no single vegetable more than opt.variety.veg of its vegetable grams.
+    // At 0.25 that means at least 4 of each, so lunches and dinners don't just alternate two foods all week.
+    // The Python reference model has no such rule, so the parity test runs with it off.
+    const ULAM_GROUPS = ["meat", "fish", "pulses"];
+    if (opt.variety) {
+      const capRow = (inG, w, s) => { for (let j = 0; j < nJ; j++) if (inG(foods[j])) { const r = row();
+        for (let m = 0; m < nM; m++) for (let jj = 0; jj < nJ; jj++) if (inG(foods[jj])) r[ix(m, jj)] = -s * w(foods[jj]);
+        for (let m = 0; m < nM; m++) r[ix(m, j)] += w(foods[j]); A.push(r); b.push(0); } };
+      if (opt.variety.protein) capRow((f) => ULAM_GROUPS.includes(f.group), () => 1, opt.variety.protein);
+      if (opt.variety.veg) capRow((f) => f.group === "vegetables", () => 1, opt.variety.veg);
+    }
     if (budget != null) { const r = row(); for (let m = 0; m < nM; m++) for (let j = 0; j < nJ; j++) r[ix(m, j)] = foods[j].price_g; A.push(r); b.push(budget); }
     const u = new Float64Array(nvar), up = new Uint8Array(nvar), c = new Float64Array(nvar);
     const capScale = opt.capScale || 1;

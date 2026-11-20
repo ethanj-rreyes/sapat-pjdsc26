@@ -30,6 +30,8 @@ The same model is implemented twice: `sapat/model.py` (reference, solved with Hi
 | Pinggang Pinoy vegetables: 100 g per 1,000 kcal | Σ_veg x[m,j] + V[m] Σ_t v[m,t] ≥ V[m] |
 | Budget (budget mode) | Σ_m Σ_j p[j] x[m,j] ≤ B |
 
+**Optional variety rule (web app only, off by default).** For the household, each ulam protein (meat, fish, beans) is at most 25% of all ulam-protein grams, and each vegetable at most 25% of vegetable grams: Σ_m x[m,j] ≤ 0.25 Σ_m Σ_{j'∈G} x[m,j'] for every j in group G. This guarantees at least four of each, so lunches and dinners rotate more than two foods. It costs needs met (demo family: 63% → 54%), so the headline figures use the model without it, and the Python model does not implement it.
+
 ## Objective
 
 - **Full mode** (cheapest plan that meets all needs): minimise Σ p x + 500 × Σ w[m,k] × tier[t] × s[m,k,t]. Each 100% of a need left unmet costs PHP 500 at the first tier, so gaps remain only where the food list cannot close them within the portion rules.
