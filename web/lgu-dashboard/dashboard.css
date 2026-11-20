@@ -123,7 +123,7 @@ select, input[type="number"] { background: var(--surface); border: 1px solid var
 .seg button svg.i { width: 1em; height: 1em; }
 .seg.full { display: flex; } .seg.full button { flex: 1; flex-direction: column; justify-content: center; gap: 0; padding: 6px 6px; line-height: 1.2; font-size: 14px; }
 .seg .sl { display: inline-flex; gap: 5px; align-items: center; white-space: nowrap; } .seg.full .ct { margin: 0; font-size: 13px; }
-@media (max-width: 760px) { #statusSeg button, #adStatus button { flex-direction: column; gap: 0; line-height: 1.2; padding-block: 5px; } #statusSeg .ct, #adStatus .ct { margin: 0; font-size: 13px; }
+@media (max-width: 760px) { #statusSeg button, #adStatus button { flex-direction: column; gap: 0; line-height: 1.2; padding-block: 5px; } #statusSeg .ct, #adStatus .ct { margin: 0; font-size: 13px; } }
 @media (max-width: 760px) { #area, .monthctl select { min-width: 0; } .ctl { flex: 1 1 100%; } .monthctl select { flex: 1; } .seg { display: flex; } .seg button { flex: 1; justify-content: center; padding-inline: 6px; font-size: 14px; } }
 
 /* the answer: one line and its context */
