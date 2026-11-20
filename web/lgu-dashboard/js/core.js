@@ -86,6 +86,8 @@ const IP = {
   sort: '<path d="M8 9l4-4 4 4M8 15l4 4 4-4"/>',
   sortUp: '<path d="M8 14l4-4 4 4"/>',
   sortDown: '<path d="M8 10l4 4 4-4"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  search: '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
 };
 const icon = (n, cls) => `<svg class="i${cls ? " " + cls : ""}" viewBox="0 0 24 24" aria-hidden="true">${IP[n] || ""}</svg>`;
 const chev = () => icon("chev", "chev");
@@ -102,12 +104,12 @@ const LEVELS = [
 const tag = (lv, cls) => lv == null ? `<span class="tag none${cls ? " " + cls : ""}">No data</span>` : `<span class="tag ${LEVELS[lv].k}${cls ? " " + cls : ""}">${icon(LEVELS[lv].icon)}${LEVELS[lv].word}</span>`;
 
 // ---------------------------------------------------------------- tabs
-const VIEWS = ["lgu", "menu", "about"];
+const VIEWS = ["lgu", "focus", "menu", "about"];
 function showView(v) {
   if (!VIEWS.includes(v)) v = "lgu";
   document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === v)));
   VIEWS.forEach((x) => ($("view-" + x).hidden = x !== v));
-  if (v === "lgu") renderSituation(); if (v === "menu") renderMenu();
+  if (v === "lgu") renderSituation(); if (v === "focus") renderFocus(); if (v === "menu") renderMenu();
   store.set("view", v);
 }
 

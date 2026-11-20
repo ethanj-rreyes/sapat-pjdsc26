@@ -21,13 +21,13 @@ function exportTable() {
       a.kind === "prov" ? (a.psa ? "Province prices (PSA) where surveyed" : "Regional prices (no province survey)") : "Regional average prices",
       sentence(a, m) + (why(a, m) ? " " + why(a, m) : ""), lv == null ? "" : ACTIONS[lv].short];
   });
-  return { head, body, title: `SAPAT price alerts: ${sit.level === "prov" && sit.area !== "PH" ? regionName(sit.area) : sit.level === "prov" ? "all provinces" : "all regions"}, ${monthLong(m)}` };
+  return { head, body, title: `SAPAT price alerts: ${sit.level === "prov" && sit.area !== "PH" ? regionName(sit.area) : sit.level === "prov" ? "all provinces" : "all regions"}${filterNote() ? " (" + filterNote() + ")" : ""}, ${monthLong(m)}` };
 }
 const fileBase = () => `sapat-price-alerts-${sit.month}-${sit.level === "prov" ? (sit.area === "PH" ? "provinces" : sit.area.toLowerCase()) : "regions"}`;
 const NOTES = () => [
   ["SAPAT price alerts"],
   ["Month", monthLong(sit.month)],
-  ["Areas", sit.level === "prov" ? (sit.area === "PH" ? "All provinces" : "Provinces in " + regionName(sit.area)) : "All regions"],
+  ["Areas", (sit.level === "prov" ? (sit.area === "PH" ? "All provinces" : "Provinces in " + regionName(sit.area)) : "All regions") + (filterNote() ? ", " + filterNote() : "")],
   ["Cost of a healthy day", "Cheapest basket meeting a reference family of five's needs for energy, protein, iron, vitamin A and calcium (PDRI 2015), per person per day, at PSA retail prices."],
   ["Watch", "At least 5% above the average of the 3 months before."],
   ["Alert", "At least 10% above the average of the 3 months before, or at least 15% above the same month last year."],

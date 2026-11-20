@@ -12,9 +12,9 @@
 <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-<!-- Revision 7: built for a nutrition action officer, provincial health officer or dietitian seeing it for the first time.
-     Order on the page: the answer (one sentence per area that needs attention) → map and table side by side → the chosen
-     area in detail with what to do → how the levels are set. See docs/REVISION7.md. -->
+<!-- Revision 8: built for a nutrition action officer, provincial health officer or dietitian seeing it for the first time.
+     Price alerts (country view): filters → one-line answer → map with the Alert/Watch list beside it (full view in a window)
+     → filtered table → how the levels are set. Province close-up (micro view): the areas on Alert in a list, one in detail. -->
 <a class="skip" href="#ansH">Skip to this month's answer</a>
 <header class="top">
   <div class="wrap">
@@ -23,7 +23,8 @@
       <span class="tagline">for LGU nutrition offices</span>
     </div>
     <nav class="tabs" role="tablist" aria-label="Views">
-      <button role="tab" id="tab-lgu" aria-selected="true" data-view="lgu" data-icon="siren">Price alerts</button>
+      <button role="tab" id="tab-lgu" aria-selected="true" data-view="lgu" data-icon="map">Price alerts</button>
+      <button role="tab" id="tab-focus" aria-selected="false" data-view="focus" data-icon="siren">Province close-up</button>
       <button role="tab" id="tab-menu" aria-selected="false" data-view="menu" data-icon="pot">Feeding program</button>
       <button role="tab" id="tab-about" aria-selected="false" data-view="about" data-icon="info">How it works</button>
     </nav>
@@ -33,9 +34,9 @@
 
 <main><div class="wrap">
 
-<!-- ============================================================ PRICE ALERTS -->
+<!-- ============================================================ PRICE ALERTS (the whole country at a glance) -->
 <section id="view-lgu" class="sit" role="tabpanel" aria-labelledby="tab-lgu" hidden>
-  <div class="controls" role="group" aria-label="What to show">
+  <div class="controls card" role="group" aria-label="Filters">
     <label class="ctl"><span>Area</span><select id="area"></select></label>
     <div class="ctl"><span id="monthLab">Month</span>
       <div class="monthctl">
@@ -45,52 +46,74 @@
       </div>
     </div>
     <div class="ctl"><span id="lvlLab">Show</span><div class="seg" id="levelSeg" role="group" aria-labelledby="lvlLab"></div></div>
-    <p class="fresh" id="fresh"></p>
+    <div class="ctl"><span id="stLab">Status</span><div class="seg" id="statusSeg" role="group" aria-labelledby="stLab"></div></div>
+    <label class="ctl grow"><span>Find</span><input type="search" id="find" placeholder="Province or region name" autocomplete="off"></label>
   </div>
 
   <section class="answer" aria-labelledby="ansH">
     <h1 id="ansH" tabindex="-1"></h1>
-    <p class="anssub" id="ansSub"></p>
-    <ol class="alist" id="alist"></ol>
-    <button type="button" class="linkbtn" id="aMore" hidden></button>
+    <p class="anssub"><span id="ansSub"></span> <span class="fresh" id="fresh"></span></p>
   </section>
 
-  <section class="look" aria-label="Map and table">
-    <div class="lookhead">
+  <section class="look" aria-label="Map and alerts">
+    <figure class="mapbox card">
+      <div class="boxhead"><div><h2 id="mapTitle"></h2><p id="mapUnit"></p></div></div>
       <div class="measures" id="measures" role="group" aria-label="The map and table show"></div>
-      <div class="seg panes" id="panes" role="group" aria-label="Map or table">
-        <button type="button" data-p="map" aria-pressed="true" data-icon="map">Map</button>
-        <button type="button" data-p="table" aria-pressed="false" data-icon="table">Table</button>
+      <div class="mapsvg" id="phMap"></div>
+      <div class="legend" id="mapLegend"></div>
+      <figcaption class="src" id="mapNote"></figcaption>
+    </figure>
+    <aside class="apanel card" aria-labelledby="apH">
+      <div class="aphead">
+        <div><h2 id="apH"></h2><p id="apSub"></p></div>
+        <button type="button" class="btn small" id="aFull" data-icon="table">Full view</button>
       </div>
-    </div>
-    <div class="lookbody" id="lookBody">
-      <figure class="mapbox">
-        <div class="boxhead"><h2 id="mapTitle"></h2><p id="mapUnit"></p></div>
-        <div class="mapsvg" id="phMap"></div>
-        <div class="legend" id="mapLegend"></div>
-        <figcaption class="src" id="mapNote"></figcaption>
-      </figure>
-      <div class="tablebox">
-        <div class="boxhead tbhead">
-          <div><h2 id="tblTitle"></h2><p id="tblSub">Click a column name to sort. Click a row to see that area below.</p></div>
-          <div class="exports" role="group" aria-label="Save or print the table">
-            <button type="button" class="btn small" id="dlCsv" data-icon="down">CSV</button>
-            <button type="button" class="btn small" id="dlXlsx" data-icon="down">Excel</button>
-            <button type="button" class="btn small" id="prTable" data-icon="print">Print table</button>
-          </div>
-        </div>
-        <div class="tablewrap" id="tblWrap"><table id="tbl"></table></div>
-        <p class="src" id="tblNote"></p>
-      </div>
-    </div>
+      <ol class="alist" id="alist"></ol>
+      <p class="aphint">Scroll the list. Click an area to find it on the map; <b>Close-up</b> opens its details.</p>
+    </aside>
     <div class="maptip" id="mapTip" role="tooltip" hidden></div>
   </section>
 
-  <section class="detail" id="detail" aria-live="polite" aria-label="Selected area"></section>
+  <section class="tablebox card" aria-labelledby="tblTitle">
+    <div class="boxhead tbhead">
+      <div><h2 id="tblTitle"></h2><p id="tblSub">Click a column name to sort. Click a row to find the area on the map.</p></div>
+      <div class="exports" role="group" aria-label="Save or print the table">
+        <button type="button" class="btn small" id="dlCsv" data-icon="down">CSV</button>
+        <button type="button" class="btn small" id="dlXlsx" data-icon="down">Excel</button>
+        <button type="button" class="btn small" id="prTable" data-icon="print">Print table</button>
+      </div>
+    </div>
+    <div class="tablewrap" id="tblWrap"><table id="tbl"></table></div>
+    <p class="src" id="tblNote"></p>
+  </section>
 
   <section class="rules" id="rules" aria-labelledby="rulesH"></section>
 
   <p class="disc" data-icon="info">SAPAT is planning guidance for programs, not medical advice. Diets for people who are ill, pregnant or under 5 should follow a doctor, a nutritionist-dietitian or the health center.</p>
+
+  <dialog class="adialog" id="aDialog" aria-labelledby="adH">
+    <div class="adhead">
+      <div><h2 id="adH"></h2><p id="adSub"></p></div>
+      <button type="button" class="ib" id="adClose" aria-label="Close"></button>
+    </div>
+    <div class="adbar"><div class="seg" id="adStatus" role="group" aria-label="Status"></div><input type="search" id="adFind" placeholder="Province or region name" autocomplete="off" aria-label="Find"></div>
+    <ol class="alist full" id="adList"></ol>
+  </dialog>
+</section>
+
+<!-- ============================================================ PROVINCE CLOSE-UP (one area at a time) -->
+<section id="view-focus" class="focus" role="tabpanel" aria-labelledby="tab-focus" hidden>
+  <aside class="frail card" aria-labelledby="frH">
+    <div><h2 id="frH">Areas to look at</h2><p class="hint" id="frSub"></p></div>
+    <div class="fctl">
+      <label class="ctl"><span>Month</span><select id="fMonth"></select></label>
+      <label class="ctl"><span>Area</span><select id="fArea"></select></label>
+      <div class="ctl"><span id="fsLab">Status</span><div class="seg full" id="fStatus" role="group" aria-labelledby="fsLab"></div></div>
+      <label class="ctl"><span>Find</span><input type="search" id="fFind" placeholder="Province or region name" autocomplete="off"></label>
+    </div>
+    <ol class="flist" id="flist"></ol>
+  </aside>
+  <section class="detail card" id="detail" aria-live="polite" aria-label="Selected area"></section>
 </section>
 
 <!-- ============================================================ FEEDING PROGRAM -->

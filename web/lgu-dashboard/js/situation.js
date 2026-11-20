@@ -1,84 +1,142 @@
-/* SAPAT LGU dashboard · Price alerts (the main view). Top to bottom: the answer (one sentence per area that needs attention,
- * with why and what to do), the map and the table side by side (3 measures up front, 6 more one click away), the chosen area in
- * detail, and how the levels are set (rule, back-test, what to do at each level). */
+/* SAPAT LGU dashboard · Price alerts (the country view) and Province close-up (one area at a time).
+ * Price alerts: filters, a one-line answer, the map with the Alert/Watch list beside it (scrolls; "Full view" opens all of it
+ * in a window), the filtered table, and how the levels are set. Close-up: the areas on Alert in a list, the chosen one in detail. */
 "use strict";
 
-const sit = Object.assign({ area: "PH", month: lastMonth, level: "prov", measure: "cost", sel: null, sort: null, pane: "map", showAll: false }, store.get("sit", {}));
+const sit = Object.assign({ area: "PH", month: lastMonth, level: "prov", measure: "cost", sel: null, sort: null, status: "all", q: "" }, store.get("sit", {}));
+sit.q = ""; // a search is never carried over to the next visit
 if (!MONTHS.includes(sit.month)) sit.month = lastMonth;
 if (!PROV) sit.level = "region";
-const saveSit = () => store.set("sit", { area: sit.area, month: sit.month, level: sit.level, measure: sit.measure, sel: sit.sel, sort: sit.sort, pane: sit.pane });
-const SHOW_FIRST = { 2: 5, 1: 3 }; // rows shown per level before "Show all"
+const fc = Object.assign({ status: "alert", area: "PH", q: "" }, store.get("focus", {})); fc.q = "";
+const saveSit = () => { store.set("sit", { area: sit.area, month: sit.month, level: sit.level, measure: sit.measure, sel: sit.sel, sort: sit.sort, status: sit.status }); store.set("focus", { status: fc.status, area: fc.area }); };
 
 // the areas in view: provinces in the chosen area, or every region
 const inArea = (a) => sit.level === "region" || sit.area === "PH" || a.region === sit.area;
 const rowsNow = () => areaList(sit.level).filter(inArea);
 const unitWord = (n) => (sit.level === "region" ? (n === 1 ? "region" : "regions") : (n === 1 ? "province" : "provinces"));
+// filters: status (all, alert, watch, steady) and a name search over the area and its region
+const STATUS = [["all", "All"], ["alert", "Alert"], ["watch", "Watch"], ["steady", "Steady"]];
+const ST_LV = { alert: 2, watch: 1, steady: 0 };
+const norm = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const nameHit = (a, q) => !q || norm(a.name).includes(norm(q)) || (a.kind === "prov" && norm(regionName(a.region)).includes(norm(q)));
+const stHit = (a, i, st) => st === "all" || (st === "attn" ? lvOf(a, i) >= 1 : lvOf(a, i) === ST_LV[st]);
+const passes = (a, i) => stHit(a, i, sit.status) && nameHit(a, sit.q);
+const filtered = () => { const i = MI[sit.month]; return rowsNow().filter((a) => passes(a, i)); };
+const filterNote = () => [sit.status !== "all" ? STATUS.find((x) => x[0] === sit.status)[1] + " only" : "", sit.q ? `matching "${sit.q}"` : ""].filter(Boolean).join(", ");
 // attention order: Alert, then Watch, then steady; within a level the bigger rise first
 function attentionSort(list, i) {
   const rise = (a) => Math.max(a.vs3[i] == null ? -9 : a.vs3[i], a.level[i] === 2 && a.yoy[i] != null ? a.yoy[i] - RULE.alertYoy + RULE.alert3 : -9);
   return list.slice().sort((x, y) => (lvOf(y, i) ?? -1) - (lvOf(x, i) ?? -1) || rise(y) - rise(x));
 }
+const statusSeg = (el, cur, counts, opts) => {
+  el.innerHTML = opts.map(([k, l]) => `<button type="button" data-st="${k}" aria-pressed="${k === cur}"><span class="sl">${k !== "all" && k !== "attn" ? icon(LEVELS[ST_LV[k]].icon) : ""}${l}</span>${counts ? ` <span class="ct">${counts[k]}</span>` : ""}</button>`).join("");
+};
+const countsOf = (rows, i) => ({ all: rows.length, attn: rows.filter((a) => lvOf(a, i) >= 1).length, alert: rows.filter((a) => lvOf(a, i) === 2).length, watch: rows.filter((a) => lvOf(a, i) === 1).length, steady: rows.filter((a) => lvOf(a, i) === 0).length });
 
 // ---------------------------------------------------------------- controls
 function setupControls() {
-  $("area").innerHTML = [["PH", "Whole Philippines"]].concat(REGIONS.map((r) => [r, regionName(r)])).map(([k, n]) => `<option value="${k}">${esc(n)}</option>`).join("");
-  $("month").innerHTML = MONTHS.slice().reverse().map((m) => `<option value="${m}">${monthLong(m)}${m === lastMonth ? " (latest)" : ""}</option>`).join("");
-  $("mPrev").innerHTML = icon("left"); $("mNext").innerHTML = icon("chev");
-  $("area").addEventListener("change", (e) => { sit.area = e.target.value; sit.showAll = false; sit.sel = null; if (sit.level === "region" && sit.area !== "PH") sit.sel = sit.area; drawMap(); renderSituation(); });
+  const areaOpts = [["PH", "Whole Philippines"]].concat(REGIONS.map((r) => [r, regionName(r)])).map(([k, n]) => `<option value="${k}">${esc(n)}</option>`).join("");
+  const monthOpts = MONTHS.slice().reverse().map((m) => `<option value="${m}">${monthLong(m)}${m === lastMonth ? " (latest)" : ""}</option>`).join("");
+  $("area").innerHTML = areaOpts; $("fArea").innerHTML = areaOpts;
+  $("month").innerHTML = monthOpts; $("fMonth").innerHTML = monthOpts;
+  $("mPrev").innerHTML = icon("left"); $("mNext").innerHTML = icon("chev"); $("adClose").innerHTML = icon("close");
+  $("area").addEventListener("change", (e) => { sit.area = e.target.value; sit.sel = null; if (sit.level === "region" && sit.area !== "PH") sit.sel = sit.area; drawMap(); renderSituation(); });
   $("month").addEventListener("change", (e) => setSitMonth(e.target.value));
   $("mPrev").addEventListener("click", () => { const k = MONTHS.indexOf(sit.month); if (k > 0) setSitMonth(MONTHS[k - 1]); });
   $("mNext").addEventListener("click", () => { const k = MONTHS.indexOf(sit.month); if (k < MONTHS.length - 1) setSitMonth(MONTHS[k + 1]); });
   $("levelSeg").innerHTML = (PROV ? [["prov", "Provinces"], ["region", "Regions"]] : [["region", "Regions"]]).map(([k, l]) => `<button type="button" data-l="${k}">${l}</button>`).join("");
-  $("levelSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { sit.level = b.dataset.l; sit.sel = sit.level === "region" && sit.area !== "PH" ? sit.area : null; sit.showAll = false; drawMap(); renderSituation(); }));
-  $("panes").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { sit.pane = b.dataset.p; saveSit(); paintPanes(); }));
-  $("aMore").addEventListener("click", () => { sit.showAll = !sit.showAll; renderAnswer(); });
+  $("levelSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { sit.level = b.dataset.l; sit.sel = sit.level === "region" && sit.area !== "PH" ? sit.area : null; drawMap(); renderSituation(); }));
+  $("statusSeg").addEventListener("click", (e) => { const b = e.target.closest("[data-st]"); if (b) { sit.status = b.dataset.st; renderSituation(); } });
+  $("adStatus").addEventListener("click", (e) => { const b = e.target.closest("[data-st]"); if (b) { sit.status = b.dataset.st; renderSituation(); } });
+  const onFind = (v) => { sit.q = v; $("find").value = v; $("adFind").value = v; renderFiltered(); };
+  $("find").addEventListener("input", (e) => onFind(e.target.value));
+  $("adFind").addEventListener("input", (e) => onFind(e.target.value));
+  $("aFull").addEventListener("click", () => { renderDialog(); $("aDialog").showModal(); });
+  $("adClose").addEventListener("click", () => $("aDialog").close());
+  $("aDialog").addEventListener("click", (e) => { if (e.target === $("aDialog")) $("aDialog").close(); }); // click on the backdrop
+  // Province close-up
+  $("fMonth").addEventListener("change", (e) => { sit.month = e.target.value; saveSit(); renderFocus(); });
+  $("fArea").addEventListener("change", (e) => { fc.area = e.target.value; saveSit(); renderFocus(); });
+  $("fStatus").addEventListener("click", (e) => { const b = e.target.closest("[data-st]"); if (b) { fc.status = b.dataset.st; saveSit(); renderFocus(); } });
+  $("fFind").addEventListener("input", (e) => { fc.q = e.target.value; renderFocus(); });
   // the "More measures" list closes on a click outside it or on Escape
   document.addEventListener("click", (e) => { const det = document.querySelector(".moreM"); if (det && det.open && !det.contains(e.target)) det.open = false; });
   document.addEventListener("keydown", (e) => { const det = document.querySelector(".moreM"); if (e.key === "Escape" && det && det.open) { det.open = false; det.querySelector("summary").focus(); } });
-  $("fresh").innerHTML =`${icon("cal")}<span>Latest PSA prices: <b>${monthLong(lastMonth)}</b></span>`;
+  $("fresh").innerHTML = `${icon("cal")}<span>Latest PSA prices: <b>${monthLong(lastMonth)}</b></span>`;
 }
 function setSitMonth(m) { sit.month = m; renderSituation(); }
-function paintPanes() {
-  $("panes").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.p === sit.pane)));
-  $("lookBody").dataset.pane = sit.pane;
-}
 
-// ---------------------------------------------------------------- the answer
+// ---------------------------------------------------------------- the answer (one line)
 function renderAnswer() {
-  const m = sit.month, i = MI[m], rows = rowsNow(), sorted = attentionSort(rows, i);
-  const na = rows.filter((a) => lvOf(a, i) === 2).length, nw = rows.filter((a) => lvOf(a, i) === 1).length, n = rows.length;
-  const where = sit.level === "prov" && sit.area !== "PH" ? `${regionName(sit.area)}, ` : "";
-  const when = monthLong(m);
+  const m = sit.month, i = MI[m], rows = rowsNow(), c = countsOf(rows, i), n = rows.length;
+  const where = sit.level === "prov" && sit.area !== "PH" ? `${regionName(sit.area)}, ` : "", when = monthLong(m);
   let head;
-  if (!na && !nw) head = `${where}${when}: ${n === 1 ? "the" : "all " + n} ${unitWord(n)} ${n === 1 ? "is" : "are"} steady.`;
-  else if (na && nw) head = `${where}${when}: ${na} of ${n} ${unitWord(n)} on Alert, ${nw} on Watch.`;
-  else head = `${where}${when}: ${na || nw} of ${n} ${unitWord(n)} on ${na ? "Alert" : "Watch"}.`;
+  if (!c.alert && !c.watch) head = `${where}${when}: ${n === 1 ? "the" : "all " + n} ${unitWord(n)} ${n === 1 ? "is" : "are"} steady.`;
+  else if (c.alert && c.watch) head = `${where}${when}: ${c.alert} of ${n} ${unitWord(n)} on Alert, ${c.watch} on Watch.`;
+  else head = `${where}${when}: ${c.alert || c.watch} of ${n} ${unitWord(n)} on ${c.alert ? "Alert" : "Watch"}.`;
   $("ansH").textContent = head;
   const costs = rows.map((a) => a.cond[i]).filter((v) => v != null);
-  const ns = n - na - nw;
-  $("ansSub").textContent = (na || nw ? `${ns} ${ns === 1 ? "is" : "are"} steady. ` : "") +
+  $("ansSub").textContent = (c.alert || c.watch ? `${c.steady} ${c.steady === 1 ? "is" : "are"} steady. ` : "") +
     (costs.length > 1 ? `A healthy day costs ${peso(Math.min(...costs))} to ${peso(Math.max(...costs))} per person, depending on the ${unitWord(1)}.` : costs.length ? `A healthy day costs ${peso(costs[0])} per person.` : "");
-  // one group per level (Alert, then Watch); what to do is said once for the group, the rows say what's happening and why
-  const row = (a) => {
-    const lv = lvOf(a, i), w = why(a, m);
-    return `<li class="arow ${lv == null ? "none" : LEVELS[lv].k}${a.key === sit.sel ? " sel" : ""}">${tag(lv)}
-      <div class="atx"><p class="s">${esc(sentence(a, m))}</p>${w ? `<p class="w">${esc(w)}</p>` : ""}</div>
-      <button type="button" class="btn small ghost" data-see="${esc(a.key)}" aria-label="Details for ${esc(a.name)}">Details${chev()}</button></li>`;
-  };
-  const groups = [2, 1].map((lv) => ({ lv, items: sorted.filter((a) => lvOf(a, i) === lv) })).filter((g) => g.items.length);
-  let html = "", hidden = 0;
-  if (!groups.length) html = `<li class="calm">${icon("shield")}<span>Nothing needs attention this month. The biggest changes:</span></li>` + sorted.slice(0, 3).map(row).join("");
-  groups.forEach((g) => {
-    const cut = sit.showAll ? g.items.length : SHOW_FIRST[g.lv];
-    hidden += Math.max(0, g.items.length - cut);
-    html += `<li class="ghead ${LEVELS[g.lv].k}"><b>${g.items.length} on ${LEVELS[g.lv].word}.</b> <span>${esc(ACTIONS[g.lv].short)}</span></li>` + g.items.slice(0, cut).map(row).join("") +
-      (g.items.length > cut ? `<li class="gmore">and ${g.items.length - cut} more on ${LEVELS[g.lv].word}</li>` : "");
+}
+
+// ---------------------------------------------------------------- the Alert/Watch list beside the map, and its full view
+// The side list shows what needs attention (Alert and Watch) unless the status filter asks for something else.
+const sideRows = () => { const i = MI[sit.month], st = sit.status === "all" ? "attn" : sit.status; return attentionSort(rowsNow().filter((a) => stHit(a, i, st) && nameHit(a, sit.q)), i); };
+function alertItems(list, full) {
+  const m = sit.month, i = MI[m];
+  if (!list.length) return `<li class="calm">${icon("shield")}<span>${sit.q ? `Nothing matches "${esc(sit.q)}".` : sit.status === "all" ? `No ${unitWord(2)} on Alert or Watch this month.` : `No ${unitWord(2)} on ${STATUS.find((x) => x[0] === sit.status)[1]} this month.`}</span></li>`;
+  let html = "", cur = -2;
+  list.forEach((a) => {
+    const lv = lvOf(a, i);
+    if (lv !== cur) { cur = lv; const n = list.filter((x) => lvOf(x, i) === lv).length;
+      html += `<li class="ghead ${lv == null ? "none" : LEVELS[lv].k}"><b>${n} on ${lv == null ? "no data" : LEVELS[lv].word}.</b>${lv != null && full ? ` <span>${esc(ACTIONS[lv].short)}</span>` : ""}</li>`; }
+    const w = why(a, m), c3 = a.vs3[i];
+    html += full
+      ? `<li class="arow ${lv == null ? "none" : LEVELS[lv].k}${a.key === sit.sel ? " sel" : ""}" data-k="${esc(a.key)}">${tag(lv)}
+          <div class="atx"><p class="s">${esc(sentence(a, m))}</p>${w ? `<p class="w">${esc(w)}</p>` : ""}</div>
+          <button type="button" class="btn small ghost" data-see="${esc(a.key)}" aria-label="Close-up of ${esc(a.name)}">Close-up${chev()}</button></li>`
+      : `<li class="srow${a.key === sit.sel ? " sel" : ""}" data-k="${esc(a.key)}" tabindex="0">
+          <span class="sname"><b>${esc(a.name)}</b><small>${a.kind === "prov" && sit.area === "PH" ? esc(regionName(a.region)) + " · " : ""}${peso(a.cond[i])} a day</small></span>
+          <span class="schg ${lv == null ? "" : LEVELS[lv].k}">${pctSigned(c3)}<small>vs 3 mo.</small></span>
+          ${w ? `<span class="swhy">${esc(w)}</span>` : ""}
+          <button type="button" class="btn small ghost" data-see="${esc(a.key)}" aria-label="Close-up of ${esc(a.name)}">Close-up${chev()}</button></li>`;
   });
-  $("alist").innerHTML = html;
-  $("alist").querySelectorAll("[data-see]").forEach((b) => b.addEventListener("click", () => { pickArea(b.dataset.see); $("detail").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }));
-  const total = groups.reduce((s, g) => s + g.items.length, 0);
-  $("aMore").hidden = !sit.showAll && !hidden;
-  $("aMore").textContent = sit.showAll ? "Show fewer" : `Show all ${total} that need attention`;
+  return html;
+}
+function wireAlertList(root) {
+  root.querySelectorAll("[data-see]").forEach((b) => b.addEventListener("click", (e) => { e.stopPropagation(); if ($("aDialog").open) $("aDialog").close(); openFocus(b.dataset.see); }));
+  root.querySelectorAll("li[data-k]").forEach((li) => {
+    const go = () => { pickArea(li.dataset.k); if ($("aDialog").open) $("aDialog").close(); };
+    li.addEventListener("click", go);
+    li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+    li.addEventListener("mouseenter", () => hot(li.dataset.k)); li.addEventListener("mouseleave", () => hot(null));
+  });
+}
+function renderSide() {
+  const list = sideRows(), i = MI[sit.month];
+  const what = sit.status === "all" ? "Needs attention" : STATUS.find((x) => x[0] === sit.status)[1];
+  $("apH").textContent = `${what} (${list.length})`;
+  $("apSub").textContent = `${monthLong(sit.month)}${sit.q ? `, matching "${sit.q}"` : ""}. Most urgent first.`;
+  $("alist").innerHTML = alertItems(list, false); if (!sit._scrollSide) $("alist").scrollTop = 0;
+  wireAlertList($("alist"));
+  const sel = $("alist").querySelector("li.sel"); if (sel && sit._scrollSide) { sel.scrollIntoView({ block: "nearest" }); sit._scrollSide = false; }
+  if ($("aDialog").open) renderDialog();
+}
+function renderDialog() {
+  const list = sideRows(), i = MI[sit.month];
+  $("adH").textContent = `${sit.status === "all" ? "Everything that needs attention" : STATUS.find((x) => x[0] === sit.status)[1] + " only"}: ${list.length} ${unitWord(list.length)}`;
+  $("adSub").textContent = `${sit.level === "prov" && sit.area !== "PH" ? regionName(sit.area) + ", " : ""}${monthLong(sit.month)}. What to do is said once per group.`;
+  statusSeg($("adStatus"), sit.status, countsOf(rowsNow().filter((a) => nameHit(a, sit.q)), i), STATUS);
+  $("adFind").value = sit.q;
+  $("adList").innerHTML = alertItems(list, true);
+  hydrateIcons($("adList")); wireAlertList($("adList"));
+}
+function openFocus(k) {
+  const a = areaBy(k); if (!a) return; sit.sel = k;
+  if (fc.status !== "all" && !stHit(a, MI[sit.month], fc.status)) fc.status = lvOf(a, MI[sit.month]) >= 1 ? "attn" : "all";
+  if (a.kind === "prov" && fc.area !== "PH" && fc.area !== a.region) fc.area = a.region;
+  fc.q = ""; $("fFind").value = ""; saveSit(); showView("focus"); window.scrollTo(0, 0);
 }
 
 // ---------------------------------------------------------------- measures
@@ -159,6 +217,7 @@ function paintMap() {
   $("phMap").querySelectorAll("path.rg").forEach((p) => {
     const k = p.dataset.u; p.style.fill = p.classList.contains("out") ? "" : colorOf(M, binOf(M, vals[k], list));
     p.classList.toggle("sel", k === sit.sel);
+    const a = areaBy(k); p.classList.toggle("fade", !!a && !p.classList.contains("out") && !passes(a, i));
   });
   // Watch and Alert marks on every measure, so status never depends on colour alone
   const r = viewW / 80;
@@ -187,6 +246,7 @@ function hot(k) {
   $("phMap").classList.toggle("dim", !!k);
   $("phMap").querySelectorAll("path.rg").forEach((p) => p.classList.toggle("hot", p.dataset.u === k));
   $("tbl").querySelectorAll("tr[data-k]").forEach((t) => t.classList.toggle("hot", t.dataset.k === k));
+  $("alist").querySelectorAll("li[data-k]").forEach((t) => t.classList.toggle("hot", t.dataset.k === k));
 }
 function showTip(k, ev) {
   const a = areaBy(k); if (!a) return; const M = measureBy(sit.measure), m = sit.month, i = MI[m], v = valOf(M, a, m), lv = lvOf(a, i);
@@ -211,7 +271,7 @@ function colDef(k, m) {
   return { k, h: M.name, sub: (M.k === "level" ? "" : M.short + ", ") + (M.timed ? mo : "2023"), M, val: (a) => valOf(M, a, m) };
 }
 function sortedRows() {
-  const m = sit.month, i = MI[m], rows = rowsNow();
+  const m = sit.month, i = MI[m], rows = filtered();
   if (!sit.sort) return attentionSort(rows, i);
   const c = colDef(sit.sort.k, m), dir = sit.sort.dir === "asc" ? 1 : -1;
   return rows.slice().sort((x, y) => {
@@ -222,12 +282,13 @@ function sortedRows() {
 }
 function renderTable() {
   const m = sit.month, i = MI[m], cols = COLS().map((k) => colDef(k, m)), rows = sortedRows();
-  $("tblTitle").textContent = `${rows.length} ${unitWord(rows.length)}${sit.level === "prov" && sit.area !== "PH" ? " in " + regionName(sit.area) : ""}, ${monthLong(m)}`;
+  const all = rowsNow().length, fn = filterNote();
+  $("tblTitle").textContent = `${fn ? `${rows.length} of ${all}` : rows.length} ${unitWord(fn ? all : rows.length)}${sit.level === "prov" && sit.area !== "PH" ? " in " + regionName(sit.area) : ""}, ${monthLong(m)}${fn ? ` (${fn})` : ""}`;
   const ariaSort = (k) => !sit.sort ? (k === "level" ? "descending" : "none") : sit.sort.k === k ? (sit.sort.dir === "asc" ? "ascending" : "descending") : "none";
   const sortIc = (k) => { const s = ariaSort(k); return icon(s === "ascending" ? "sortUp" : s === "descending" ? "sortDown" : "sort", "si"); };
   $("tbl").innerHTML = `<caption class="vh">${esc($("tblTitle").textContent)}. Sorted by ${sit.sort ? esc(colDef(sit.sort.k, m).h) : "alert level"}.</caption>
     <thead><tr>${cols.map((c) => `<th scope="col" class="${c.txt || c.k === "level" ? "" : "n"} c-${c.k}" aria-sort="${ariaSort(c.k)}"><button type="button" data-sort="${c.k}"><span>${esc(c.h)}${c.sub ? `<small>${esc(c.sub)}</small>` : ""}</span>${sortIc(c.k)}</button></th>`).join("")}</tr></thead>
-    <tbody>${rows.map((a) => `<tr data-k="${esc(a.key)}" tabindex="0" class="${a.key === sit.sel ? "sel" : ""}">${cols.map((c) => cell(c, a, i, m)).join("")}</tr>`).join("")}</tbody>`;
+    <tbody>${rows.length ? "" : `<tr class="empty"><td colspan="${cols.length}">No ${unitWord(2)} match the filters. <button type="button" class="linkbtn" id="clrF">Clear the filters</button></td></tr>`}${rows.map((a) => `<tr data-k="${esc(a.key)}" tabindex="0" class="${a.key === sit.sel ? "sel" : ""}">${cols.map((c) => cell(c, a, i, m)).join("")}</tr>`).join("")}</tbody>`;
   $("tbl").querySelectorAll("[data-sort]").forEach((b) => b.addEventListener("click", () => {
     // each click: first direction → other direction → back to attention order
     const k = b.dataset.sort, order = k === "name" ? ["asc", "desc"] : ["desc", "asc"];
@@ -240,6 +301,7 @@ function renderTable() {
     t.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickArea(t.dataset.k, true); } });
     t.addEventListener("mouseenter", () => hot(t.dataset.k)); t.addEventListener("mouseleave", () => hot(null));
   });
+  if ($("clrF")) $("clrF").addEventListener("click", () => { sit.status = "all"; sit.q = ""; $("find").value = ""; renderSituation(); });
   const sel = $("tbl").querySelector("tr.sel"); if (sel && sit._scrollRow) { sel.scrollIntoView({ block: "nearest" }); sit._scrollRow = false; }
   $("tblNote").textContent = `Sources: SAPAT cost of a healthy diet from PSA retail prices, ${monthLong(m)}; reference family of five. Key-food change is on the same basis as the alert (past 3 months, or last year when that triggered it).`;
 }
@@ -254,13 +316,13 @@ function cell(c, a, i, m) {
 // ---------------------------------------------------------------- the chosen area
 function pickArea(k, fromTable) {
   const a = areaBy(k); if (!a) return;
-  sit.sel = k; sit._scrollRow = !fromTable; saveSit();
-  renderAnswer(); paintMap(); renderTable(); renderDetail();
+  sit.sel = k; sit._scrollRow = !fromTable; sit._scrollSide = true; saveSit();
+  renderSide(); paintMap(); renderTable();
 }
-function renderDetail() {
-  const m = sit.month, i = MI[m], rows = rowsNow();
-  if (!sit.sel || !rows.some((a) => a.key === sit.sel)) sit.sel = (attentionSort(rows, i)[0] || {}).key || null;
-  const a = areaBy(sit.sel); if (!a) { $("detail").innerHTML = ""; return; }
+function renderDetail(list) {
+  const m = sit.month, i = MI[m];
+  const a = areaBy(sit.sel); if (!a) { $("detail").innerHTML = `<div class="dempty">${icon("shield")}<p>Pick an area from the list to see it in detail.</p></div>`; return; }
+  const pos = list.findIndex((x) => x.key === a.key);
   const lv = lvOf(a, i), basis = trigger(a, i), c3 = a.vs3[i], y = a.yoy[i];
   const prev3 = i >= 3 ? (a.cond[i - 1] + a.cond[i - 2] + a.cond[i - 3]) / 3 : null;
   const span3 = i >= 3 ? `${monthName(D.months[i - 3])} to ${monthName(D.months[i - 1])}` : "";
@@ -269,6 +331,11 @@ function renderDetail() {
   const kf = drivers(a, i, "3m"), kfY = drivers(a, i, "yoy");
   const fy = (k) => (kfY.find((d) => d.f.k === k) || {}).chg;
   $("detail").innerHTML = `
+    <div class="dnav">
+      <button type="button" class="btn small" id="dPrev" ${pos > 0 ? "" : "disabled"}>${icon("left")}Previous</button>
+      <span class="q">${pos >= 0 ? `${pos + 1} of ${list.length} in the list` : "Not in the list's filter"}</span>
+      <button type="button" class="btn small" id="dNext" ${pos >= 0 && pos < list.length - 1 ? "" : "disabled"}>Next${chev()}</button>
+    </div>
     <div class="dhead">
       <div><h2>${esc(a.name)}</h2><p>${a.kind === "prov" ? `Province in ${esc(regionName(a.region))}` : "Region"}${a.kind === "prov" && !a.psa ? ". No province price survey, so regional prices are used" : ""}</p></div>
       ${tag(lv, "big")}
@@ -277,7 +344,7 @@ function renderDetail() {
     <div class="nums">
       <div class="num"><span class="nl">Cost of a healthy day</span><b>${peso(a.cond[i])}</b><span class="nu">per person per day, ${monthLong(m)}</span><span class="ns">SAPAT, from PSA retail prices</span></div>
       <div class="num"><span class="nl">Change vs past 3 months</span><b>${pctSigned(c3)}</b><span class="nu">vs the ${span3} average (${peso(prev3)})</span><span class="ns">SAPAT, from PSA retail prices</span></div>
-      <div class="num"><span class="nl">Alert level</span><b class="lvw">${lv == null ? "–" : LEVELS[lv].word}</b><span class="nu">${esc(fired)}</span><span class="ns">SAPAT early-warning rule (below)</span></div>
+      <div class="num"><span class="nl">Alert level</span><b class="lvw">${lv == null ? "–" : LEVELS[lv].word}</b><span class="nu">${esc(fired)}</span><span class="ns">SAPAT early-warning rule (Price alerts tab)</span></div>
     </div>
     <div class="dgrid">
       <figure class="dchart"><figcaption><b>Cost of a healthy day, last 3 years</b><span>₱ per person per day. The dashed line is the Alert line: 10% above the 3 months before.</span></figcaption>${areaChart(a, i)}</figure>
@@ -295,6 +362,8 @@ function renderDetail() {
     </div>`;
   hydrateIcons($("detail"));
   $("prSummary").addEventListener("click", () => printSummary(a.key));
+  $("dPrev").addEventListener("click", () => { sit.sel = list[pos - 1].key; saveSit(); renderFocus(); });
+  $("dNext").addEventListener("click", () => { sit.sel = list[pos + 1].key; saveSit(); renderFocus(); });
   $("toMenu").addEventListener("click", () => { mn.region = a.region === "NIR" ? "NIR" : a.region; mn.month = sit.month; syncMenuInputs(); showView("menu"); window.scrollTo(0, 0); });
 }
 // 36 months of cost, with the Alert line and shapes (not just colour) for Watch and Alert months
@@ -339,15 +408,42 @@ function renderRules() {
       <p>From ${monthLong(bt.from)} to ${monthLong(bt.to)}, the rule raised <b>${fmt(bt.alerts)} Alerts</b> across ${bt.provinces} provinces. In ${fmt(bt.confirmed)} of them the cost stayed at least 5% higher for the next two months. The other ${fmt(bt.falseA)} were false alarms: <b>about 1 false alert per province every ${Math.round(bt.yearsPerFalse)} years</b>.</p>
       <div class="shocks"><span class="q">See how it caught past price shocks:</span>${PAST_SHOCKS.map(([mo, l]) => `<button type="button" class="btn small" data-shock="${mo}">${icon("siren")}${l}</button>`).join("")}<button type="button" class="btn small" data-shock="${lastMonth}">${icon("cal")}Back to latest</button></div>
     </div>`;
-  $("rules").querySelectorAll("[data-shock]").forEach((b) => b.addEventListener("click", () => { sit.month = b.dataset.shock; sit.showAll = false; sit.sel = null; renderSituation(); $("ansH").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }));
+  $("rules").querySelectorAll("[data-shock]").forEach((b) => b.addEventListener("click", () => { sit.month = b.dataset.shock; sit.sel = null; renderSituation(); $("ansH").focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }));
+}
+
+// ---------------------------------------------------------------- Province close-up: the list, then one area in detail
+const focusRows = () => { const i = MI[sit.month]; return attentionSort(areaList(sit.level).filter((a) => (sit.level === "region" || fc.area === "PH" || a.region === fc.area) && stHit(a, i, fc.status) && nameHit(a, fc.q)), i); };
+function renderFocus() {
+  const m = sit.month, i = MI[m], base = areaList(sit.level).filter((a) => sit.level === "region" || fc.area === "PH" || a.region === fc.area);
+  $("fMonth").value = m; $("fArea").value = fc.area; $("fArea").disabled = sit.level === "region";
+  statusSeg($("fStatus"), fc.status, countsOf(base.filter((a) => nameHit(a, fc.q)), i), [["alert", "Alert"], ["attn", "Alert + Watch"], ["all", "All"]]);
+  const list = focusRows();
+  if (!sit.sel || !list.some((a) => a.key === sit.sel)) { if (!sit._keepSel) sit.sel = (list[0] || {}).key || null; }
+  sit._keepSel = false;
+  $("frH").textContent = fc.status === "alert" ? `On Alert (${list.length})` : fc.status === "attn" ? `On Alert or Watch (${list.length})` : `All ${unitWord(2)} (${list.length})`;
+  $("frSub").textContent = `${monthLong(m)}. Most urgent first.`;
+  $("flist").innerHTML = list.length ? list.map((a) => { const lv = lvOf(a, i); return `<li class="frow${a.key === sit.sel ? " sel" : ""}" data-k="${esc(a.key)}" tabindex="0" role="button" aria-pressed="${a.key === sit.sel}">
+      ${tag(lv)}<span class="sname"><b>${esc(a.name)}</b><small>${a.kind === "prov" ? esc(regionName(a.region)) : "Region"}</small></span>
+      <span class="schg ${lv == null ? "" : LEVELS[lv].k}">${pctSigned(a.vs3[i])}<small>${peso(a.cond[i])}/day</small></span></li>`; }).join("")
+    : `<li class="calm">${icon("shield")}<span>${fc.q ? `Nothing matches "${esc(fc.q)}".` : `No ${unitWord(2)} on ${fc.status === "alert" ? "Alert" : "Alert or Watch"} in ${monthLong(m)}.`} <button type="button" class="linkbtn" id="fAll">Show all</button></span></li>`;
+  $("flist").querySelectorAll("li[data-k]").forEach((li) => {
+    const go = () => { sit.sel = li.dataset.k; saveSit(); renderFocus(); if (window.innerWidth < 900) $("detail").scrollIntoView({ block: "start" }); };
+    li.addEventListener("click", go);
+    li.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  });
+  if ($("fAll")) $("fAll").addEventListener("click", () => { fc.status = "all"; fc.q = ""; $("fFind").value = ""; saveSit(); renderFocus(); });
+  const sel = $("flist").querySelector("li.sel"); if (sel) sel.scrollIntoView({ block: "nearest" });
+  renderDetail(list);
 }
 
 // ---------------------------------------------------------------- render all
+// filters that only change which rows show (the search box): list, map fading and table
+function renderFiltered() { renderSide(); paintMap(); renderTable(); }
 function renderSituation() {
   saveSit();
   $("area").value = sit.area; $("month").value = sit.month;
   $("mPrev").disabled = MONTHS.indexOf(sit.month) <= 0; $("mNext").disabled = sit.month === lastMonth;
   $("levelSeg").querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.l === sit.level)));
-  paintPanes();
-  renderAnswer(); renderMeasures(); paintMap(); renderTable(); renderDetail();
+  statusSeg($("statusSeg"), sit.status, countsOf(rowsNow(), MI[sit.month]), STATUS);
+  renderAnswer(); renderSide(); renderMeasures(); paintMap(); renderTable();
 }
