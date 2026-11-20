@@ -58,8 +58,8 @@ nav.bottom button[aria-current="page"] .pill { background: var(--leaf-soft); col
 /* ---------- shared */
 .card { background: var(--surface); border-radius: var(--r); padding: 18px; display: grid; gap: 14px; min-width: 0; box-shadow: var(--shadow); }
 .head { display: flex; align-items: center; gap: 12px; }
-.head h2 { font-size: 19px; flex: 1; min-width: 0; }
-.head .meta { font-size: 15px; color: var(--ink-2); font-weight: 700; }
+.head h2 { font-size: 19px; flex: 1; min-width: min-content; } /* never narrower than its longest word (revision 8: "Household" ran into its label in English) */
+.head .meta { font-size: 15px; color: var(--ink-2); font-weight: 700; min-width: 0; text-align: right; line-height: 1.25; }
 .bubble { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: var(--leaf-soft); color: var(--leaf); flex: none; }
 .bubble svg { width: 22px; height: 22px; }
 .bubble.sun { background: var(--sun-soft); color: var(--warn); }
