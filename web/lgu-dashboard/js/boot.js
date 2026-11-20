@@ -11,3 +11,6 @@ renderRules();
 renderAbout();
 drawMap();
 showView((location.hash || "").replace("#", "") || store.get("view", "lgu"));
+$("tourBtn").addEventListener("click", startTour);
+// prototype: the welcome opens on every load (as in the family app); a link with #nowelcome skips it
+if (!/nowelcome/.test(location.hash)) showWelcome();

@@ -106,6 +106,7 @@ const tag = (lv, cls) => lv == null ? `<span class="tag none${cls ? " " + cls : 
 // ---------------------------------------------------------------- tabs
 const VIEWS = ["lgu", "focus", "menu", "about"];
 function showView(v) {
+  if (!VIEWS.includes(v)) v = store.get("view", "lgu");
   if (!VIEWS.includes(v)) v = "lgu";
   document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === v)));
   VIEWS.forEach((x) => ($("view-" + x).hidden = x !== v));
