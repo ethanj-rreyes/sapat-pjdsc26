@@ -62,7 +62,7 @@ const W2 = {
     gcat: { all: "Lahat", sick: "May sakit", daily: "Araw-araw", preg: "Buntis", study: "Pag-aaral" },
     guideDisc: "Pantulong ang pagkain, hindi pamalit sa gamot o doktor. Basahin ang \"Kailan magpatingin\" sa bawat gabay.", ev: { 3: "Matibay ang ebidensya", 2: "May ebidensya", 1: "Kaunting ebidensya" },
     // SAFETY LINES: keep medDisc (welcome) and bnsFam / bnsMom / bnsKid (Pamilya, mothers, under-5s) through every redesign. Checked by the revision 6 test (docs/REVISION6.md).
-    medDisc: "Gabay sa pagpaplano ang SAPAT, hindi payong medikal. Para sa buntis, nagpapasuso at batang wala pang 5, kumonsulta sa BNS o health center.",
+    medDisc: "Gabay sa pagpaplano ang SAPAT, hindi payong medikal. May espesyal na pangangailangan sa kalusugan o pagkain? Kumonsulta sa BNS, health center o doktor.",
     bnsFam: "May buntis, nagpapasuso o batang wala pang 5 sa pamilya. Ipakita ang plano sa barangay nutrition scholar (BNS) o sa health center.",
     bnsMom: "Buntis o nagpapasuso: magpa-check-up sa health center at itanong ang iron-folic acid. Ipakita ang plano sa BNS. Gabay ito, hindi payong medikal.",
     bnsKid: "Wala pang 5 taon: ipatimbang buwan-buwan sa BNS o health center, at ipakita ang plano. Gabay ito, hindi payong medikal.",
@@ -184,7 +184,7 @@ const W2 = {
     gcat: { all: "All", sick: "When sick", daily: "Every day", preg: "Pregnancy", study: "Study" },
     guideDisc: "Food supports care; it does not replace medicine or a doctor. Read \"When to see a health worker\" in each guide.", ev: { 3: "Strong evidence", 2: "Some evidence", 1: "Little evidence" },
     // SAFETY LINES: keep medDisc (welcome) and bnsFam / bnsMom / bnsKid (Pamilya, mothers, under-5s) through every redesign. Checked by the revision 6 test (docs/REVISION6.md).
-    medDisc: "SAPAT is a planning guide, not medical advice. For pregnant or breastfeeding mothers and children under 5, check with a barangay nutrition scholar (BNS) or the health center.",
+    medDisc: "SAPAT is a planning guide, not medical advice. Special health or dietary needs? Check with a barangay nutrition scholar (BNS), the health center or a doctor.",
     bnsFam: "Your family includes a pregnant or breastfeeding mother or a child under 5. Show the plan to your barangay nutrition scholar (BNS) or health center.",
     bnsMom: "Pregnant or breastfeeding: get check-ups at the health center and ask about iron-folic acid. Show the plan to your BNS. This is a guide, not medical advice.",
     bnsKid: "Under 5: have them weighed monthly by the BNS or health center, and show them the plan. This is a guide, not medical advice.",
