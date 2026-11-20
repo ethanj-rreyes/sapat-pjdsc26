@@ -5,7 +5,7 @@ Static HTML, CSS and JavaScript. No build step, no server code, no account. The 
 | Folder | For | Open |
 |---|---|---|
 | `family-app/` | Families (the main prototype). On a laptop it shows inside a phone frame; on a phone it fills the screen. | `family-app/index.html` |
-| `lgu-dashboard/` | LGU nutrition offices and feeding programs: province map of the cost of a healthy diet, Watch/Alert levels, feeding-program menu | `lgu-dashboard/index.html` |
+| `lgu-dashboard/` | LGU nutrition offices, health officers and dietitians: which provinces need attention this month and why, map and sortable table, CSV/Excel download, one-page province summary, feeding-program menu | `lgu-dashboard/index.html` |
 | `shared/` | Code and data both apps load: `sapat-engine.js` (model and solver), `sapat-ui.js` (words, icons, units), `data/` (generated bundles) | — |
 
 ## Run
@@ -33,3 +33,20 @@ The family app's code is split into small files under `family-app/js/`, one job 
 | The model | `shared/sapat-engine.js` · `solvePlan`, `memberNeeds`, `foodTable` |
 
 State is saved in the browser's `localStorage` under the prefix `sapatm3:`. To reset, clear site data in DevTools.
+
+## LGU dashboard: where things are
+
+Split into ordered scripts under `lgu-dashboard/js/` (loaded by `index.html`; no build). See [docs/REVISION7.md](../docs/REVISION7.md).
+
+| To change | File · name |
+|---|---|
+| Words of the answer sentences, the "why" line | `js/areas.js` · `sentence`, `why` |
+| What to do at each level | `js/areas.js` · `ACTIONS` |
+| Alert thresholds (must match the data pipeline) and the back-test | `js/areas.js` · `RULE`, `BACKTEST` |
+| Measures on the map and table (3 up front, the rest under "More measures") | `js/areas.js` · `MEASURES` (`main: true` = up front) |
+| Map, table, chosen-area panel | `js/situation.js` · `drawMap`/`paintMap`, `renderTable`, `renderDetail` |
+| CSV, Excel, printing | `js/export.js` · `exportTable`, `downloadXlsx`, `printSummary` |
+| Colours (status, map ramps, dark mode) | `lgu-dashboard/dashboard.css` · `:root` tokens |
+
+Dashboard settings are saved in the browser's `localStorage` under the prefix `sapat-lgu7:`.
+
