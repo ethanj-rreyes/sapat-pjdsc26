@@ -7,6 +7,6 @@
   "engines": { "node": ">=18" },
   "scripts": {
     "start": "npx --yes serve -l 5500 web",
-    "test": "node tests/smoke_test.js && node tests/parity_test.js"
+    "test": "node tests/smoke_test.js && node tests/parity_test.js && node tests/privacy_test.js"
   }
 }

@@ -33,7 +33,7 @@ function openPortion(key) {
     <div style="display:flex;gap:16px;align-items:center">${pic(f.group, "lg")}<div style="display:grid;gap:6px;justify-items:start"><span style="color:var(--ink-2);font-weight:700">${tt.meals[keep.meal]} · ${keep.who.map((w) => esc(st.members[w].name)).join(", ")}</span>${priceBy[key] ? `<span class="pl">${priceLine(key)}</span>` : ""}</div></div>
     <div class="portions" id="pp">${ps.map((p, k) => `<button type="button" data-k="${k}" aria-pressed="${k === sel}"><b>${UI.pshort(p, st.lang)}</b><small>${p[2] ? UI.U[st.lang][p[2]] + " · " : ""}${fmt(p[3])} g</small></button>`).join("")}</div>
     <div class="qty"><button class="step" type="button" id="qm" aria-label="−">${icon("minus")}</button><output id="qo" aria-live="polite"></output><button class="step" type="button" id="qp" aria-label="+">${icon("plus")}</button></div>
-    <div class="preview" id="pv"></div>
+    <details class="nums"><summary>${tt.numbers}${chev()}</summary><div class="preview" id="pv"></div></details>
     <button class="btn primary block" type="button" id="doAdd">${icon("plus")}${tt.addFood}</button>`, () => { openAdd(keep.meal, null); addState.who = keep.who; });
   const upd = () => {
     const g = ps[sel][3] * mult, n = nutr(key, g);
@@ -48,28 +48,36 @@ function openPortion(key) {
   upd();
 }
 function addMember() { st.members.push({ name: T().newM, age: 10, sex: "F", status: "none" }); save(); solve(); editMember(st.members.length - 1); }
-function editMember(i) {
-  const m = st.members[i];
+// opts (optional): { list, onDone } edits a member of another list (the new-profile setup) and calls onDone instead of re-planning.
+function editMember(i, opts) {
+  const list = (opts && opts.list) || st.members, m = list[i];
   const fix = () => { if (m.sex === "M" || m.age < 13 || m.age > 55) m.status = "none"; };
+  let baby = false; // pressed − at 1 year: SAPAT plans from age 1, so say what to do for a younger baby instead of doing nothing
   const draw = () => {
     const tt = T(), canStatus = m.sex === "F" && m.age >= 13 && m.age <= 55;
     openSheet(esc(m.name), `
       <div style="display:grid;justify-items:center">${figure(m, "var(--leaf)", true)}</div>
       <label class="f">${tt.name}<input type="text" id="mName" value="${esc(m.name)}" autocomplete="off"></label>
-      <div style="display:grid;gap:8px"><span class="lbl">${tt.age}</span><div class="qty"><button class="step" type="button" id="am" aria-label="−">${icon("minus")}</button><output>${m.age} ${tt.yrs}</output><button class="step" type="button" id="ap" aria-label="+">${icon("plus")}</button></div></div>
+      <div style="display:grid;gap:8px"><span class="lbl">${tt.age}</span><div class="qty"><button class="step" type="button" id="am" aria-label="−">${icon("minus")}</button><output>${tt.ageL(m.age)}</output><button class="step" type="button" id="ap" aria-label="+">${icon("plus")}</button></div></div>
+      ${baby ? `<div class="babynote" role="status"><b>${icon("heart")}${tt.babyH}</b><p>${tt.babyS}</p><p>${tt.babyMom(tt.status[2])}</p></div>` : ""}
       <div class="seg" id="sexSeg"><button type="button" data-s="F" aria-pressed="${m.sex === "F"}">${tt.female}</button><button type="button" data-s="M" aria-pressed="${m.sex === "M"}">${tt.male}</button></div>
       ${canStatus ? `<div class="seg" id="stSeg">${["none", "pregnant", "lactating"].map((k, n) => `<button type="button" data-s="${k}" aria-pressed="${m.status === k}">${tt.status[n]}</button>`).join("")}</div>` : ""}
       <div style="display:grid;gap:8px"><span class="lbl">${tt.diet}</span><div class="diets" id="dietSeg">${UI.DIETS.map((d) => `<button type="button" data-d="${d.k}" aria-pressed="${(m.diet || "regular") === d.k}"><span class="bubble">${icon(d.icon)}</span><span><b>${d[st.lang]}</b><small>${d[st.lang + "S"]}</small></span></button>`).join("")}</div></div>
       <button class="btn primary block" type="button" id="mDone">${icon("check")}${tt.done}</button>
-      ${st.members.length > 1 ? `<button class="btn link block" type="button" id="mDel" style="color:var(--bad)">${tt.remove}</button>` : ""}`);
+      ${list.length > 1 ? `<button class="btn link block" type="button" id="mDel" style="color:var(--bad)">${tt.remove}</button>` : ""}`);
     const keep = () => { m.name = $("mName").value.trim() || m.name; };
-    $("am").addEventListener("click", () => { keep(); m.age = Math.max(1, m.age - 1); fix(); draw(); });
-    $("ap").addEventListener("click", () => { keep(); m.age = Math.min(100, m.age + 1); fix(); draw(); });
+    $("am").addEventListener("click", () => { keep(); baby = m.age <= 1; m.age = Math.max(1, m.age - 1); fix(); if (baby) $("toast").hidden = true; draw(); if (baby) $("sheet").querySelector(".babynote").scrollIntoView({ block: "nearest" }); });
+    $("ap").addEventListener("click", () => { keep(); baby = false; m.age = Math.min(100, m.age + 1); fix(); draw(); });
     $("sexSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { keep(); m.sex = b.dataset.s; fix(); draw(); }));
     if ($("stSeg")) $("stSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { keep(); m.status = b.dataset.s; draw(); }));
     $("dietSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { keep(); m.diet = b.dataset.d; $("dietSeg").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); }));
-    $("mDone").addEventListener("click", () => { keep(); closeSheet(); save(); solve(); render(); });
-    if ($("mDel")) $("mDel").addEventListener("click", () => { st.members.splice(i, 1); st.who = 0; closeSheet(); save(); solve(); go("family"); });
+    if (opts && opts.onDone) {
+      $("mDone").addEventListener("click", () => { keep(); closeSheet(); opts.onDone(); });
+      if ($("mDel")) $("mDel").addEventListener("click", () => { list.splice(i, 1); closeSheet(); opts.onDone(); });
+    } else {
+      $("mDone").addEventListener("click", () => { keep(); closeSheet(); save(); solve(); render(); });
+      if ($("mDel")) $("mDel").addEventListener("click", () => { st.members.splice(i, 1); st.who = 0; closeSheet(); save(); solve(); go("family"); });
+    }
   };
   draw();
 }

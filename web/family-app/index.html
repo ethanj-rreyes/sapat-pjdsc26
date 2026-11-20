@@ -16,7 +16,7 @@
 .stage { min-height: 100vh; box-sizing: border-box; display: flex; align-items: center; justify-content: center; gap: 56px; padding-block: 8px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .note { max-width: 290px; display: grid; gap: 16px; }
 .note .brand { font: 600 44px/1 var(--font-display); color: var(--leaf); }
-.note .brand span { color: var(--sun); }
+.note .brand span { color: var(--sun); }      
 .note p { color: var(--ink-2); }
 .persona { display: flex; gap: 12px; align-items: center; background: var(--surface); border-radius: var(--r); padding: 14px; box-shadow: var(--shadow); }
 .persona b { display: block; font-family: var(--font-display); font-weight: 600; }
@@ -70,7 +70,7 @@ main { overflow-y: auto; }
       <div class="statusbar" aria-hidden="true"><span id="clock">9:41</span><span class="cam"></span><span class="sys" id="sys"></span></div>
       <header class="appbar">
         <button class="iconbtn" id="backBtn" type="button" hidden></button>
-        <div class="tt"><h1 id="title"></h1><div class="sub" id="subtitle"></div></div>
+        <div class="tt"><h1 id="title"></h1><div class="sub"><span class="sbadge" id="sampBadge" hidden></span><span id="subtitle"></span></div></div>
         <button class="lang" id="langBtn" type="button"><span data-l="tl">TL</span><span data-l="en">EN</span></button>
         <button class="iconbtn" id="themeBtn" type="button"></button>
       </header>
@@ -115,12 +115,15 @@ main { overflow-y: auto; }
 <script src="js/features/swap.js"></script>
 <script src="js/features/balance.js"></script>
 <script src="js/features/guide.js"></script>
+<script src="js/features/budget.js"></script>
+<script src="js/features/cooking.js"></script>
 <script src="js/screens/today.js"></script>
 <script src="js/screens/week.js"></script>
 <script src="js/screens/shop.js"></script>
 <script src="js/screens/family.js"></script>
 <script src="js/sheets/eat-out.js"></script>
 <script src="js/sheets/food-and-members.js"></script>
+<script src="js/profiles.js"></script>
 <script src="js/welcome.js"></script>
 <script src="js/main.js"></script>
 <script>

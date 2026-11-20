@@ -1,25 +1,28 @@
-/* SAPAT family app · Pamilya (Family): household and settings, and one member's day (Lakas, Paglaki, Dugo, Mata, Buto).
+/* SAPAT family app · Pamilya (Family). Its one job: who eats, and how they're doing. Profile and members (three to a row);
+ * settings and data sources fold under "Higit pa". Also one member's day (Lakas, Paglaki, Dugo, Mata, Buto).
  * One of several ordered scripts; see js/README.md. */
 "use strict";
 
 // ---------------------------------------------------------------- FAMILY + one member's day
 function renderFamily() {
   const tt = T();
+  // SAFETY LINE (keep): the BNS / health-center note under the members when the family has a mother or a child under 5 (bnsFam)
   $("v-family").innerHTML = `
+    <div class="card full"><button class="setrow" type="button" id="profBtn"><span class="bubble sun">${icon("users")}</span><span class="tx"><b>${esc(profileName(pid))}${isSample() ? ` <span class="sbadge">${tt.sample}</span>` : ""}</b><small>${isSample() ? tt.sampleNote : tt.profileS}</small></span>${chev()}</button></div>
     <div class="card full"><div class="head"><span class="bubble">${icon("users")}</span><h2>${tt.famH}</h2><span class="meta">${tt.ofBudget}</span></div>
-      <div class="members">${st.members.map((m, i) => { const s = score(memberDay(i, todayIdx)); return `<button class="mcard" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<span class="nm">${esc(m.name)}</span><small>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}</small><span class="word ${scoreState(s)}">${scoreWord(s)}</span>${(m.diet || "regular") !== "regular" ? `<span class="dietchip">${icon(UI.dietOf(m).icon)}${UI.dietOf(m)[st.lang]}</span>` : ""}</button>`; }).join("")}
+      <div class="members">${st.members.map((m, i) => { const s = score(memberDay(i, todayIdx)); return `<button class="mcard" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<span class="nm">${esc(m.name)}</span><small>${tt.ageL(m.age)}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}</small><span class="word ${scoreState(s)}">${scoreWord(s)}</span>${(m.diet || "regular") !== "regular" ? `<span class="dietchip">${icon(UI.dietOf(m).icon)}${UI.dietOf(m)[st.lang]}</span>` : ""}</button>`; }).join("")}
         <button class="mcard addcard" type="button" id="addM"><span class="plus">${icon("plus")}</span><span>${tt.add}</span></button></div>${st.members.some((m) => m.status === "pregnant" || m.status === "lactating" || m.age < 5) ? `<p class="quiet left">${icon("shield")}${tt.bnsFam}</p>` : ""}</div>
-    <div class="card">
+    ${moreBox("family", [[tt.setShort, `<div class="card">
       <div class="setrow"><span class="bubble">${icon("globe")}</span><span class="tx"><b>${tt.langH}</b><small>${tt.langS}</small></span><span class="seg" style="width:120px" id="langSeg"><button type="button" data-l="tl" aria-pressed="${st.lang === "tl"}">TL</button><button type="button" data-l="en" aria-pressed="${st.lang === "en"}">EN</button></span></div>
       <label class="setrow"><span class="bubble">${icon("heart")}</span><span class="tx"><b>${tt.halal}</b><small>${tt.halalS}</small></span><input type="checkbox" class="toggle" id="halal"${st.halal ? " checked" : ""}></label>
       <button class="setrow" type="button" id="guideRow"><span class="bubble">${icon("heart")}</span><span class="tx"><b>${tt.guideH}</b><small>${tt.guideS}</small></span>${chev()}</button>
       <button class="setrow" type="button" id="againW"><span class="bubble sun">${icon("heart")}</span><span class="tx"><b>${tt.again}</b><small>${tt.againS}</small></span>${chev()}</button>
       <label class="setrow"><span class="bubble">${icon("moon")}</span><span class="tx"><b>${tt.theme}</b><small>${tt.themeS}</small></span><input type="checkbox" class="toggle" id="dark"${isDark() ? " checked" : ""}></label>
-    </div>
-    <details class="card"><summary class="head"><span class="bubble">${icon("db")}</span><h2>${tt.dataH}</h2>${chev()}</summary>
-      <div class="src">${tt.src.map((s, k) => `<div>${icon(["tag", "pot", "shield", "info"][k])}<span>${s}</span></div>`).join("")}</div></details>`;
+    </div>`], [tt.dataShort, `<details class="card"><summary class="head"><span class="bubble">${icon("db")}</span><h2>${tt.dataH}</h2>${chev()}</summary>
+      <div class="src">${tt.src.map((s, k) => `<div>${icon(["tag", "pot", "shield", "info"][k])}<span>${s}</span></div>`).join("")}</div></details>`]])}`;
   $("v-family").querySelectorAll("[data-who]").forEach((b) => b.addEventListener("click", () => { st.who = +b.dataset.who; go("person"); }));
   $("addM").addEventListener("click", addMember);
+  $("profBtn").addEventListener("click", openProfiles);
   $("againW").addEventListener("click", showWelcome);
   $("guideRow").addEventListener("click", () => openGuide(null));
   $("langSeg").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.l)));
@@ -45,19 +48,20 @@ function renderPerson() {
     const c = foodsNow.filter((f) => FBY[f.key][gk] > 0 && !["sugar", "condiments", "cereals"].includes(f.group) && !(st.halal && f.key.startsWith("pork")) && !UI.dietOf(m).ex(f))
       .map((f) => { const ps = UI.portions(FBY[f.key]); const p = ps.find((x) => FBY[f.key][gk] * x[3] >= 0.08 * Tg[gk]) || ps[ps.length - 1]; const add = FBY[f.key][gk] * p[3]; return { f, p, add, cost: p[3] * f.price_g, per: p[3] * f.price_g / add }; })
       .filter((c) => c.add / Tg[gk] >= 0.05).sort((a, b) => a.per - b.per)[0];
-    if (c) { tipItem = c; tip = `<button class="tipcard" type="button" id="tipAdd">${pic(c.f.group, "sm")}<span class="tx"><b>${tt.tipLine(gaps[0][1].toLowerCase(), UI.plabel(c.p, st.lang), esc(fname(c.f.key).toLowerCase()))}</b><span>${tt.tipAdds(Math.round(c.add / Tg[gk] * 100), about(c.cost)) + calc(() => explainFood(c.f.key, c.p[3], UI.plabel(c.p, st.lang)))}</span></span><span class="add">${icon("plus")}</span></button>`; }
+    if (c) { tipItem = c; tip = `<button class="tipcard" type="button" id="tipAdd">${pic(c.f.group, "sm")}<span class="tx"><b>${tt.tipLine(gaps[0][1].toLowerCase(), UI.plabel(c.p, st.lang), esc(fname(c.f.key).toLowerCase()))}</b><span>${tt.tipAdds(needTxt(Math.min(g[gk] / Tg[gk], 1)), needTxt(Math.min((g[gk] + c.add) / Tg[gk], 1)), about(c.cost)) + calc(() => explainFood(c.f.key, c.p[3], UI.plabel(c.p, st.lang)))}</span></span><span class="add">${icon("plus")}</span></button>`; }
   }
   const coreFull = CORE.reduce((a, k) => a + Math.min(g[k] / Tg[k], 1), 0) / CORE.length;
   const BODY = [["energy_kcal", "bolt"], ["protein_g", "grow"], ["iron_mg", "drop"], ["vit_a_ug", "eye"], ["calcium_mg", "bone"]];
   const bodyRows = BODY.map(([k, ic], n) => { const r = e[k] > 0 ? Math.min(g[k] / e[k], 1) : null, w = r == null ? "none" : r >= 0.9 ? "ok" : r >= 0.6 ? "mid" : "low";
     return `<div class="brow ${w}"><span class="bico">${icon(ic)}</span><span class="bn">${tt.body[n]}</span><span class="bbar"><i class="grow" style="--w:${(r || 0) * 100}%"></i></span><span class="bw">${tt.bw[w]}</span></div>`; }).join("");
+  // SAFETY LINE (keep): the BNS / health-center note for pregnant or breastfeeding mothers (bnsMom) and under-5s (bnsKid)
   $("v-person").innerHTML = `
-    <div class="who">${figure(m, ringCol(s), true)}<div class="tx"><h2>${esc(tt.bodyH(m.name))}</h2><p>${m.age} ${tt.yrs}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}${(m.diet || "regular") !== "regular" ? " · " + UI.dietOf(m)[st.lang] : ""}</p></div><button class="iconbtn" type="button" id="editM" aria-label="${tt.editM}">${icon("edit")}</button></div>
+    <div class="who">${figure(m, ringCol(s), true)}<div class="tx"><h2>${esc(tt.bodyH(m.name))}</h2><p>${tt.ageL(m.age)}${m.status === "pregnant" ? " · " + tt.preg : m.status === "lactating" ? " · " + tt.lact : ""}${(m.diet || "regular") !== "regular" ? " · " + UI.dietOf(m)[st.lang] : ""}</p></div><button class="iconbtn" type="button" id="editM" aria-label="${tt.editM}">${icon("edit")}</button></div>
     ${m.status === "pregnant" || m.status === "lactating" ? `<p class="quiet left">${icon("shield")}${tt.bnsMom}</p>` : m.age < 5 ? `<p class="quiet left">${icon("shield")}${tt.bnsKid}</p>` : ""}
     <div class="card"><div class="head"><span class="bubble">${icon("heart")}</span><span class="htx"><h2>${s == null ? tt.notyet : scoreWord(s)}</h2><small>${tt.bodyS}</small></span></div><div class="body5">${bodyRows}</div></div>
     ${tip}
     <div class="card"><div class="head"><span class="bubble">${icon("bowl")}</span><h2>${tt.eatenToday}</h2><button class="iconbtn" type="button" id="addX" aria-label="${tt.other}">${icon("plus")}</button></div>
-      ${md.items.length ? md.items.map((x) => `<div class="item">${pic(FBY[x.key].group, "sm")}<div class="tx"><b>${esc(x.lab || fname(x.key))}</b><small>${x.lab ? tt.estTag + " · " : ""}${x.extra != null ? tt.extra + (x.p ? " · " + UI.plabel(x.p, st.lang) : "") : tt.fromMeal + " " + tt.meals[x.meal].toLowerCase()}</small></div>${x.extra != null ? `<button class="x" type="button" data-delx="${x.extra}" aria-label="${tt.remove}">${icon("x")}</button>` : ""}</div>`).join("") : `<p class="quiet">${tt.mealEmpty}</p>`}
+      ${md.items.length ? md.items.map((x) => `<div class="item">${pic(FBY[x.key].group, "sm")}<div class="tx"><b>${esc(x.lab || fname(x.key))}</b><small>${x.lab ? estTip(tt.estTag) + " · " : ""}${x.extra != null ? tt.extra + (x.p ? " · " + UI.plabel(x.p, st.lang) : "") : tt.fromMeal + " " + tt.meals[x.meal].toLowerCase()}</small></div>${x.extra != null ? `<button class="x" type="button" data-delx="${x.extra}" aria-label="${tt.remove}">${icon("x")}</button>` : ""}</div>`).join("") : `<p class="quiet">${tt.mealEmpty}</p>`}
     </div>
     <details class="card"><summary class="head"><span class="bubble">${icon("chart")}</span><h2>${tt.numbers}</h2>${chev()}</summary>
       <div class="energy">

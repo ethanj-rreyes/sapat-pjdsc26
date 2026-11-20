@@ -42,6 +42,7 @@ function go(t) {
   const titles = { today: `${hi}, ${st.members[meIdx()].name}!`, week: tt.tabs[1], shop: tt.tabs[2], family: tt.tabs[3], person: st.members[st.who].name };
   const subs = { today: tt.kumain, week: placeName(), shop: placeName(), family: "", person: dateStr };
   $("title").textContent = titles[t]; $("subtitle").textContent = subs[t];
+  $("sampBadge").hidden = !isSample(); $("sampBadge").textContent = tt.sample; // so no one mistakes Tita Baby's sample for real data
   $("backBtn").hidden = t !== "person";
   window.scrollTo(0, 0); if ($("main") && $("main").scrollTop) $("main").scrollTop = 0;
   render();
@@ -54,15 +55,23 @@ function toast(msg, undo) {
   clearTimeout(toastTimer); toastTimer = setTimeout(() => (t.hidden = true), 4000);
 }
 const chev = () => icon("chev").replace('class="i"', 'class="i chev"');
+// "Higit pa": cards that help but aren't the tab's one job, folded under one row so the tab fits about one screen.
+// Remembers whether it was open while the app is running, so re-drawing the tab doesn't fold it again.
+const MORE = {};
+function moreBox(id, items) {
+  const keep = items.filter((x) => x && x[1]); if (!keep.length) return "";
+  return `<details class="card more" data-more="${id}"${MORE[id] ? " open" : ""}><summary class="head"><span class="bubble">${icon("plus")}</span><span class="htx"><h2>${T().moreH}</h2><small>${keep.map((x) => x[0]).join(" · ")}</small></span>${chev()}</summary><div class="morein">${keep.map((x) => x[1]).join("")}</div></details>`;
+}
+document.addEventListener("toggle", (e) => { const d = e.target; if (d.dataset && d.dataset.more) MORE[d.dataset.more] = d.open; }, true);
 const MI = ["sun", "bowl", "cup", "moon"];
 const famBubble = (m, i, d) => { const md = memberDay(i, d), s = score(md); return `<button class="fam" type="button" data-who="${i}">${figure(m, ringCol(s), true)}<b>${esc(m.name)}</b><span class="word ${scoreState(s)}">${scoreWord(s)}</span></button>`; };
 function mealCard(d, mi, opts) {
-  const tt = T(), items = week.days[d][mi], eaten = !!wk.eaten[d + "-" + mi], cost = pesoR(mealRange(items));
+  const tt = T(), items = week.days[d][mi], eaten = !!wk.eaten[d + "-" + mi], cost = items.length ? typR(sumT(items.map((x) => [x.key, x.g])), mealRange(items)) : "";
   const chips = items.filter((x) => !["condiments", "sugar"].includes(FBY[x.key].group) && (mi === 0 || FBY[x.key].group !== "cereals")).map((x) => `<span class="ing">${pic(FBY[x.key].group, "xs")}${esc(fname(x.key))}</span>`).join("");
   return `<div class="meal${eaten ? " done" : ""}">
-    <div class="mtop"><span class="bubble ${mi === 2 ? "sun" : ""}">${icon(MI[mi])}</span><span class="mt"><small>${tt.meals[mi]} · ${tt.mealHint[mi]}</small><b>${esc(mealName(items, mi, d))}</b></span><span class="mc">${cost}${calc(() => explainList(items.map((x) => [x.key, x.g]), esc(mealName(items, mi, d)), st.members.length))}</span></div>
-    ${items.length ? `<div class="ings">${chips}</div>` : ""}
-    ${opts && opts.actions && items.length ? `<div class="mact"><button class="btn ${eaten ? "done" : "primary"}" type="button" data-eat="${d}-${mi}">${icon("check")}${eaten ? tt.eaten : tt.ate}</button>${mi % 2 && !eaten ? `<button class="btn" type="button" data-swap="${d}-${mi}">${icon("swap")}${tt.swap}</button>` : ""}${opts.other ? `<button class="btn link" type="button" data-other="${mi}">${tt.other}</button>` : ""}</div>` : opts && opts.swapOnly && items.length && mi % 2 ? `<div class="mact"><button class="btn" type="button" data-swap="${d}-${mi}">${icon("swap")}${tt.swap}</button></div>` : ""}
+    <div class="mtop"><span class="bubble ${mi === 2 ? "sun" : ""}">${icon(MI[mi])}</span><span class="mt"><small>${tt.meals[mi]}${(() => { const c = cookTxt(items, mi, d); return c ? ` · <span class="cooks">${icon("flame")}${c}</span>` : ""; })()}</small><b>${esc(mealName(items, mi, d))}</b></span><span class="mc">${cost}${calc(() => explainList(items.map((x) => [x.key, x.g]), esc(mealName(items, mi, d)), st.members.length) + gasExplain(items, mi, d))}</span></div>
+    ${items.length ? `<div class="ingrow"><div class="ings">${chips}</div>${opts && opts.swapOnly && mi % 2 ? `<button class="btn sm swapb" type="button" data-swap="${d}-${mi}" aria-label="${tt.swap}: ${esc(mealName(items, mi, d))}">${icon("swap")}${tt.swap}</button>` : ""}</div>` : ""}
+    ${opts && opts.actions && items.length ? `<div class="mact"><button class="btn ${eaten ? "done" : "primary"}" type="button" data-eat="${d}-${mi}">${icon("check")}${eaten ? tt.eaten : tt.ate}</button>${mi % 2 && !eaten ? `<button class="btn" type="button" data-swap="${d}-${mi}">${icon("swap")}${tt.swap}</button>` : ""}${opts.other ? `<button class="btn link" type="button" data-other="${mi}">${tt.other}</button>` : ""}</div>` : ""}
   </div>`;
 }
 function wireMeals(root) {

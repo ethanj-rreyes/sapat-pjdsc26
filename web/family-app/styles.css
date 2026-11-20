@@ -58,8 +58,8 @@ nav.bottom button[aria-current="page"] .pill { background: var(--leaf-soft); col
 /* ---------- shared */
 .card { background: var(--surface); border-radius: var(--r); padding: 18px; display: grid; gap: 14px; min-width: 0; box-shadow: var(--shadow); }
 .head { display: flex; align-items: center; gap: 12px; }
-.head h2 { font-size: 19px; flex: 1; min-width: 0; }
-.head .meta { font-size: 15px; color: var(--ink-2); font-weight: 700; }
+.head h2 { font-size: 19px; flex: 1; min-width: min-content; } /* never narrower than its longest word (revision 8: "Household" ran into its label in English) */
+.head .meta { font-size: 15px; color: var(--ink-2); font-weight: 700; min-width: 0; text-align: right; line-height: 1.25; }
 .bubble { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; background: var(--leaf-soft); color: var(--leaf); flex: none; }
 .bubble svg { width: 22px; height: 22px; }
 .bubble.sun { background: var(--sun-soft); color: var(--warn); }
@@ -523,7 +523,7 @@ nav.bottom button[aria-current="page"] .pill { background: var(--leaf); color: #
 .hero .mact { display: grid; grid-template-columns: 1.4fr 1fr; width: 100%; }
 .hero .btn.big { white-space: nowrap; padding: 0 16px; font-size: 17px; }
 .nudge .mact { flex-wrap: wrap; } .nudge .btn.link { min-height: 40px; font-size: 15px; padding: 0 6px; }
-details.helpnote { display: block; } details.helpnote > summary { list-style: none; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+details.helpnote { display: block; padding: 10px 12px; } details.helpnote > summary { list-style: none; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
 details.helpnote > summary::-webkit-details-marker { display: none; } details.helpnote > summary > span { flex: 1; display: grid; } details.helpnote small { color: var(--ink-2); font-size: 14px; }
 details.helpnote p { margin: 10px 0 0 36px; font-size: 15px; } details.helpnote[open] .chev { transform: rotate(90deg); }
 /* fit the phone: grid children may shrink, nothing pushes the page sideways */
@@ -580,3 +580,204 @@ main, .sheet .sb { overflow-x: hidden; }
 .ctab th { text-align: left; font-size: 12px; color: var(--ink-2); font-weight: 800; padding: 4px 4px 6px; border-bottom: 1px solid var(--line); }
 .ctab td { padding: 6px 4px; border-bottom: 1px solid var(--line); } .ctab .n { text-align: right; white-space: nowrap; }
 .ctab tfoot td { font-weight: 800; border-bottom: none; }
+
+/* ---------- profiles: sample badge, chooser after the welcome, new-family setup, switcher (js/profiles.js) */
+.sbadge { display: inline-block; vertical-align: 2px; background: var(--sun-soft); color: var(--warn); font: 800 11px/1 var(--font-body); letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; }
+.appbar .sub .sbadge { margin-right: 8px; vertical-align: 1px; }
+.appbar .sub .sbadge[hidden] { display: none; }
+.welcome .chooser { align-content: start; overflow-y: auto; margin: 0 -24px; padding: 4px 24px 8px; gap: 10px; }
+.welcome .chooser h2 { font-size: 28px; margin-top: 4px; }
+.welcome .chooser p { font-size: 16px; }
+.plist { display: grid; gap: 12px; width: 100%; margin-top: 8px; text-align: left; }
+.pcard { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 76px; padding: 14px 16px; border: 2px solid var(--line); border-radius: 24px; background: var(--surface); color: var(--ink); text-align: left; position: relative; }
+.pcard.big { min-height: 96px; }
+.pcard:focus-visible, .pcard:hover { border-color: var(--leaf); }
+.pcard .tx { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.pcard .tx b { font: 600 20px/1.2 var(--font-display); }
+.pcard .tx small { font-size: 14px; color: var(--ink-2); line-height: 1.3; }
+.pcard.new { border-style: dashed; background: transparent; }
+.pcard .plus { width: 52px; height: 52px; border-radius: 50%; background: var(--leaf-soft); color: var(--leaf); display: grid; place-items: center; flex: none; }
+.pcard .ptag { position: absolute; top: -10px; right: 14px; background: var(--leaf); color: var(--leaf-ink); font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; }
+.pfigs { display: flex; flex: none; align-items: center; padding-left: 10px; }
+.pfigs .figwrap { margin-left: -10px; display: block; }
+.pfigs .fig { width: 34px; height: 34px; box-shadow: 0 0 0 2px var(--surface); }
+.pfigs .badge { display: none; }
+.pcard.big { flex-wrap: wrap; row-gap: 10px; }
+.pcard.big .pfigs { flex-basis: 100%; }
+.setup { position: absolute; inset: 0; z-index: 15; background: var(--bg); display: flex; flex-direction: column; padding: 14px 20px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.sutop { display: flex; align-items: center; gap: 8px; }
+.sutop .sustep { flex: 1; font-size: 14px; font-weight: 800; color: var(--ink-2); }
+.subody { flex: 1; overflow-y: auto; display: grid; align-content: start; gap: 16px; padding: 10px 2px 16px; }
+.subody h2 { font-size: 28px; line-height: 1.15; }
+.sup { color: var(--ink-2); font-size: 16px; margin-top: -8px; }
+.sulist { display: grid; background: var(--surface); border-radius: 24px; padding: 2px 16px; box-shadow: var(--shadow); }
+.sulist .opt svg:first-child { width: 44px; height: 44px; flex: none; }
+.subody .seg button { display: grid; gap: 2px; padding: 6px 4px; }
+.subody .seg small { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.subody .quiet.left { text-align: left; }
+.sufoot { flex: none; }
+select { min-height: 52px; width: 100%; border: 2px solid var(--line); border-radius: 18px; background: var(--surface); padding: 0 14px; font: 600 17px var(--font-body); color: var(--ink); }
+select:focus { border-color: var(--leaf); outline: none; }
+.btn[disabled] { opacity: .45; }
+.btn.danger { background: var(--bad); color: #fff; }
+.profrow { display: flex; align-items: center; gap: 4px; }
+.profrow + .profrow { border-top: 1px solid var(--line); }
+.profrow .opt { flex: 1; min-width: 0; }
+.profrow .opt + .opt { border-top: none; }
+.bigmoney { display: grid; justify-items: center; gap: 10px; text-align: center; background: var(--surface); border-radius: 24px; padding: 18px 16px 16px; box-shadow: var(--shadow); }
+.mfield { display: flex; align-items: baseline; justify-content: center; gap: 4px; min-width: 160px; border-bottom: 3px solid var(--line); padding: 0 14px 2px; transition: border-color .15s; }
+.mfield:focus-within { border-color: var(--leaf); }
+.mfield .cur { font: 600 40px/1 var(--font-display); color: var(--ink-2); }
+.mfield input { border: none; background: transparent; min-height: 0; height: auto; width: 4ch; max-width: 9ch; padding: 0; border-radius: 0; text-align: center; font: 600 48px/1.15 var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.mfield input:focus { border: none; }
+.bigmoney small { font-size: 14px; font-weight: 700; color: var(--ink-2); }
+.bigmoney small.warn { color: var(--bad); }
+/* budget input (js/features/budget.js) */
+.bud { display: grid; gap: 14px; }
+.bud .bmode { margin: 0 auto; width: 100%; }
+.bquick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.bquick button { min-height: 48px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); font: 800 16px var(--font-body); color: var(--ink); }
+.bquick button[aria-pressed="true"] { border-color: var(--leaf); background: var(--leaf-soft); color: var(--leaf); }
+.bunsure { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 4px 0; text-align: left; line-height: 1.3; }
+.bunsure svg { flex: none; }
+.mfield input::placeholder { color: var(--ink-2); opacity: .35; }
+.budres { margin: 4px 0 18px; }
+.btyp { display: grid; gap: 8px; }
+.btyp .opt .amt { font: 600 20px var(--font-display); color: var(--leaf); }
+.bpend { text-align: center; margin-top: -6px; }
+.card .bigmoney { box-shadow: none; background: var(--soft); }
+.budres { transition: none; }
+.budres.stale { opacity: .4; }
+/* numbers at a glance: one typical price with its range under it, words with every %, the "Tantiya" bubble */
+.ptr { display: inline-grid; justify-items: end; line-height: 1.15; }
+.ptr b { font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ptr small { font-size: 12px; font-weight: 700; color: var(--ink-2); }
+.mtop .mc { display: inline-flex; align-items: center; gap: 2px; }
+.hero .crange { font-size: 13px; color: var(--ink-2); font-weight: 700; margin-top: -6px; }
+.paid .rg { font-weight: 700; color: var(--ink-2); }
+.cmp .lab { align-items: center; gap: 10px; }
+.cmp .lab .word { flex: none; }
+.vs > div { grid-template-columns: minmax(104px, auto) 1fr 44px auto; }
+.vs .word { padding: 3px 8px 3px 6px; font-size: 13px; }
+.esttip { display: inline-flex; align-items: center; gap: 3px; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; position: relative; }
+.esttip::after { content: ""; position: absolute; inset: -10px -6px; }
+.esttip svg { width: 14px; height: 14px; color: var(--warn); }
+.tipbub { position: absolute; z-index: 35; width: min(300px, calc(100% - 24px)); background: var(--ink); color: var(--bg); border-radius: 16px; padding: 12px 14px; font-size: 14px; line-height: 1.45; box-shadow: var(--shadow); display: grid; gap: 4px; }
+.tipbub b { font-size: 14px; }
+details.nums > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-weight: 800; color: var(--leaf); padding: 6px 0; min-height: 44px; }
+details.nums > summary::-webkit-details-marker { display: none; }
+details.nums[open] > summary .chev { transform: rotate(90deg); }
+/* one job per tab: "Higit pa", the one-line budget card, three members to a row, a compact market header */
+.more > summary .htx small { display: block; color: var(--ink-2); font-size: 13px; font-weight: 700; line-height: 1.3; }
+.morein { display: grid; gap: 12px; }
+.morein > .card { box-shadow: none; background: var(--bg); padding: 14px; }
+.budline { gap: 12px; }
+.budline .bl1 { display: flex; align-items: center; gap: 12px; }
+.budline .htx { flex: 1; display: grid; }
+.budline .htx small { font-size: 13px; font-weight: 800; color: var(--ink-2); }
+.budline .htx b { font: 600 24px/1.15 var(--font-display); }
+.budline .budres { margin: 0; display: grid; gap: 10px; }
+.btn.sm { min-height: 44px; padding: 0 14px; font-size: 15px; gap: 6px; }
+.btn.sm svg { width: 18px; height: 18px; }
+.members { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.mcard { padding: 12px 4px 12px; gap: 4px; border-radius: 22px; }
+.mcard .fig.lg { width: 58px; height: 58px; box-shadow: 0 0 0 3px var(--ring); }
+.mcard .nm { font-size: 16px; }
+.mcard small { font-size: 12px; line-height: 1.25; }
+.mcard .word { font-size: 12px; padding: 2px 8px 2px 5px; }
+.mcard .why { display: none; }
+.addcard { min-height: 0; }
+.addcard .plus { width: 44px; height: 44px; }
+.hero.shop { grid-template-columns: 72px 1fr; justify-items: start; text-align: left; column-gap: 14px; align-items: center; padding: 14px 16px 16px; }
+.hero.shop .bayong { width: 72px; margin: 0; grid-row: 1; }
+.hero.shop h2 { font-size: 19px; grid-row: 1; }
+.hero.shop .cmp { grid-column: 1 / -1; }
+.checklist .chk { padding-top: 10px; padding-bottom: 10px; }
+.paid small { display: flex; align-items: center; justify-content: flex-end; gap: 2px; white-space: nowrap; }
+.hero:not(.shop) .pot { width: 96px; margin: -6px 0 -8px; }
+.hero .dish { font-size: 24px; }
+.bens { gap: 4px; }
+.ben { padding: 4px 12px 4px 6px; font-size: 13px; line-height: 1.3; }
+.ben svg { width: 16px; height: 16px; }
+.hero .ings, .meals.plain .ings { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; max-width: 100%; padding-bottom: 2px; }
+.hero .ings::-webkit-scrollbar, .meals.plain .ings::-webkit-scrollbar { display: none; }
+.hero .ings > *, .meals.plain .ings > * { flex: none; }
+.famcard .fam .fig.lg, .famcard .fig.lg { width: 52px; height: 52px; }
+.famcard { gap: 10px; }
+.meals.plain .meal { gap: 8px; padding: 12px 0; }
+.meals.plain .mtop .mt b { font-size: 17px; }
+.meals.plain .mact .btn { min-height: 44px; }
+.hero.shop .prow { grid-column: 1 / -1; width: 100%; background: var(--surface); border-radius: 18px; padding: 8px 12px; }
+.chkhead { display: flex; justify-content: flex-end; font-size: 13px; font-weight: 700; color: var(--ink-2); margin: -4px 0 -6px; }
+.chk .tx b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chk { min-height: 56px; }
+.checklist .chk { padding-top: 6px; padding-bottom: 6px; }
+.budline .htx b small { font: 700 15px var(--font-body); color: var(--ink-2); }
+.swapic { flex: none; width: 44px; height: 44px; border-radius: 14px; background: var(--soft); }
+.swapic svg { width: 20px; height: 20px; }
+.chk { min-height: 50px; }
+.hero.shop .bayong { width: 60px; }
+.hero.shop { padding-top: 10px; }
+.ingrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ingrow .ings { flex: 1; min-width: 0; }
+.budline .htx b { white-space: nowrap; }
+.chk .tx { flex: 1 1 auto; overflow: hidden; }
+.chk .tx b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chk .paid { flex: none; }
+.checklist { overflow: hidden; }
+.checklist { grid-template-columns: minmax(0, 1fr); }
+.checklist > * { min-width: 0; }
+.chk .tx { display: grid; }
+.chk .tx b { white-space: normal; }
+.chk .tx small { line-height: 1.25; }
+.chk { min-height: 52px; }
+.hero.shop .prow { padding: 4px 10px; min-height: 48px; }
+.hero.shop .prow .bubble { width: 36px; height: 36px; }
+.hero.shop .prow .tx small { font-size: 12px; }
+.hero.shop .prow .tx b { font-size: 16px; }
+.morein .famcard .famrow { margin: 0; padding: 2px 0; }
+.budline { grid-template-columns: minmax(0, 1fr); }
+.budline > * { min-width: 0; }
+
+/* ---------------------------------------------------------------- revision 6: variety, cooking time and gas, your own price, babies under 1 */
+/* Palitan on every lunch and dinner card on Linggo, with its word (was an icon only) */
+.swapb { flex: none; min-height: 40px; padding: 0 12px; font-size: 14px; background: var(--leaf-soft); color: var(--leaf); border: none; font-weight: 800; }
+.swapb svg { width: 16px; height: 16px; }
+/* cooking minutes and gas: replaces "umaga / tanghali" next to the meal name */
+.meal .mt small .cooks { white-space: nowrap; }
+.cooks svg, .cookh svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 2px; color: var(--warn); }
+.hero .cookh { margin: 0; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+/* the week's gas, under the budget line */
+.gasln { display: inline-flex; align-items: center; gap: 4px; justify-self: start; min-height: 32px; margin: 2px 0 -6px; padding: 0; border: none; background: none; text-align: left; font: inherit; font-size: 14px; font-weight: 800; color: var(--warn); cursor: pointer; }
+.gasln svg { flex: none; width: 16px; height: 16px; }
+.gasln span { min-width: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.gastab { display: grid; gap: 6px; }
+.gastab > div { display: flex; justify-content: space-between; gap: 12px; font-size: 16px; }
+.gastab span { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); font-weight: 700; }
+.gastab span svg { width: 16px; height: 16px; color: var(--warn); }
+.gastab b { font-variant-numeric: tabular-nums; }
+.gastab .tot { border-top: 1px solid var(--line); padding-top: 6px; font-size: 18px; }
+.gastab .tot span { color: var(--ink); }
+/* one-row weekly balance on Linggo */
+.balsum { display: grid; gap: 8px; width: 100%; padding: 0 0 12px; border: none; border-bottom: 1px solid var(--line); background: none; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.bshead { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bshead b { flex: 1; min-width: 0; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bshead small { font-size: 13px; font-weight: 800; padding: 2px 10px; border-radius: 12px; white-space: nowrap; }
+.bshead small.ok { background: var(--good-soft); color: var(--good); }
+.bshead small.warn { background: var(--warn-soft); color: var(--warn); }
+.bschips { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.bschip { position: relative; display: grid; justify-items: center; align-content: center; gap: 1px; min-height: 40px; padding: 3px 2px; border-radius: 10px; background: var(--good-soft); color: var(--good); }
+.bschip.mid { background: var(--warn-soft); color: var(--warn); box-shadow: inset 0 0 0 2px var(--warn); }
+.bschip > svg { flex: none; width: 16px; height: 16px; }
+.bschip small { font-size: 12px; line-height: 1.1; font-weight: 800; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bschip i { display: none; }
+/* the price on each Palengke row is a button: a pencil says so, and "Sarili mo" shows once you've entered your own */
+.paid b { display: inline-flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.paid .pen { width: 14px; height: 14px; color: var(--leaf); }
+.paid .lvl.yours { display: inline-flex; align-items: center; gap: 2px; padding: 1px 8px; font-size: 12px; }
+.paid .lvl.yours svg, .lvl.yours svg { width: 12px; height: 12px; }
+/* babies under 1 */
+.babynote { display: grid; gap: 6px; padding: 12px 14px; border-radius: 14px; background: var(--sky-soft); }
+.babynote b { display: flex; align-items: center; gap: 6px; }
+.babynote b svg { width: 18px; height: 18px; color: var(--sky); }
+.babynote p { margin: 0; font-size: 15px; line-height: 1.45; }

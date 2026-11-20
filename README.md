@@ -57,6 +57,9 @@ npm test
 
 - `tests/smoke_test.js`: data bundles load and are consistent; the demo family's result (63% vs 46%) is reproduced; the plan stays within budget.
 - `tests/parity_test.js`: the browser engine (JavaScript) and the reference engine (Python, HiGHS) agree on 40 random planning cases.
+- `tests/privacy_test.js`: nothing leaves the phone. No network calls in the code, no trackers, cookies or accounts, and nothing loaded from other websites except Google Fonts.
+
+Before merging into `main`, go through [docs/MERGE_CHECKLIST.md](docs/MERGE_CHECKLIST.md) (it also shows up when you open a pull request).
 
 ### Verified on 24 Oct 2026
 

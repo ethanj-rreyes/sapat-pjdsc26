@@ -4,13 +4,16 @@
 
 const regKey = (r) => (r === "NIR" ? "R06" : r);
 function inflator(region) { const ix = D.index[region]; if (!ix) return 1; const i = ix.months.indexOf(lastMonth); const b = D.base2023[region]; return i >= 0 && b ? ix.cond[i] / b : 1; }
-const deciles = () => D.deciles[regKey(st.loc.region)] || D.deciles.PH;
-const presetBudget = (d) => Math.round(deciles()[d].food_home_pc_day * st.members.length * 7 * inflator(st.loc.region) / 10) * 10;
+const decilesOf = (region) => D.deciles[regKey(region)] || D.deciles.PH;
+const deciles = () => decilesOf(st.loc.region);
+// Weekly food budget of FIES decile d for a family of n in a region, at this month's prices (rounded to ₱10).
+const budgetFor = (d, region, n) => Math.round(decilesOf(region)[d].food_home_pc_day * n * 7 * inflator(region) / 10) * 10;
+const presetBudget = (d) => budgetFor(d, st.loc.region, st.members.length);
 let plan = null, planFull = null, tracked = 1, week = null, lastDec = 1;
 const nearestDecile = () => lastDec;
 function solve() {
   if (st.preset) st.budget = presetBudget(st.preset);
-  if (!st.budget) st.budget = presetBudget(1);
+  if (!st.budget) st.budget = presetBudget(1); // safety net only: Tita Baby has her preset and every new profile enters its own budget in setup
   const exclude = st.halal ? foodsNow.filter((f) => f.key.startsWith("pork")).map((f) => f.key) : [];
   const excludeFor = UI.dietExclude(st.members, foodsNow);
   const pp = st.budget / 7 / st.members.length / inflator(st.loc.region);
